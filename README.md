@@ -1,4 +1,4 @@
-# Wrapper for hello-world
+# Wrapper for Monerod
 
 `hello-world` is a simple, minimal project to serve as a template for creating an app for the Embassy.
 
