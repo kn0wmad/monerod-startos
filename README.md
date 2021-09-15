@@ -1,6 +1,6 @@
-# Wrapper for Monerod
+# Wrapper for Monero
 
-`hello-world` is a simple, minimal project to serve as a template for creating an app for the Embassy.
+This project wraps Monero for EmbassyOS.  Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.
 
 ## Dependencies
 
