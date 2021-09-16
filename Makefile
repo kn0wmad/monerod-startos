@@ -1,29 +1,28 @@
-ASSETS := $(shell yq e '.assets.[].src' manifest.yaml)
-ASSET_PATHS := $(addprefix assets/,$(ASSETS))
-VERSION := $(shell toml get monero/Cargo.toml package.version)
-HELLO_WORLD_SRC := $(shell find ./monero/src) monero/Cargo.toml monero/Cargo.lock
-S9PK_PATH=$(shell find . -name monero.s9pk -print)
+VERSION := $(shell yq e ".version" manifest.yaml)
+VERSION_STRIPPED := $(shell echo $(VERSION) | sed -E 's/([0-9]+\.[0-9]+\.[0-9]+).*/\1/g')
+MANAGER_SRC := $(shell find ./manager -name '*.rs') manager/Cargo.toml manager/Cargo.lock
 
 .DELETE_ON_ERROR:
 
 all: verify
 
-verify: monero.s9pk $(S9PK_PATH)
-		embassy-sdk verify $(S9PK_PATH)
+clean: 
+		rm monero.s9pk
+		rm image.tar
 
-# install: monero.s9pk
-# 		embassy-cli package install monero
-
-# embassy-sdk pack errors come from here, check your manifest, config, instructions, and icon
-monero.s9pk: manifest.yaml assets/compat/config_spec.yaml config_rules.yaml image.tar docs/instructions.md $(ASSET_PATHS)
+monero.s9pk: manifest.yaml assets/compat/config_spec.yaml config_rules.yaml image.tar docs/instructions.md
 		embassy-sdk pack
+# 		embassy-sdk pack errors come from here, check your manifest, config, instructions, and icon
 
-image.tar: Dockerfile docker_entrypoint.sh monero/target/aarch64-unknown-linux-musl/release/monero
-		DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --tag start9/monero --platform=linux/arm64 -o type=docker,dest=image.tar .
+verify: monero.s9pk
+		embassy-sdk verify monero.s9pk
 
-monero/target/aarch64-unknown-linux-musl/release/monero: $(HELLO_WORLD_SRC)
-		docker run --rm -it -v ~/.cargo/registry:/root/.cargo/registry -v "$(shell pwd)"/monero:/home/rust/src start9/rust-musl-cross:aarch64-musl cargo +beta build --release
-		docker run --rm -it -v ~/.cargo/registry:/root/.cargo/registry -v "$(shell pwd)"/monero:/home/rust/src start9/rust-musl-cross:aarch64-musl musl-strip target/aarch64-unknown-linux-musl/release/monero
+install: monero.s9pk
+		embassy-cli package install monero.s9pk
 
-manifest.yaml: monero/Cargo.toml
-		yq e -i '.version = $(VERSION)' manifest.yaml
+image.tar: Dockerfile docker_entrypoint.sh manager/target/aarch64-unknown-linux-musl/release/monerod-manager manifest.yaml
+		DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --tag start9/monerod/main:$(VERSION) --build-arg MONERO_VERSION=$(VERSION_STRIPPED) --build-arg N_PROC=$(shell nproc) --platform=linux/arm64 -o type=docker,dest=image.tar .
+
+manager/target/aarch64-unknown-linux-musl/release/monerod-manager: $(MANAGER_SRC)
+		docker run --rm -it -v ~/.cargo/registry:/root/.cargo/registry -v "$(shell pwd)"/manager:/home/rust/src start9/rust-musl-cross:aarch64-musl cargo build --release
+		docker run --rm -it -v ~/.cargo/registry:/root/.cargo/registry -v "$(shell pwd)"/manager:/home/rust/src start9/rust-musl-cross:aarch64-musl musl-strip target/aarch64-unknown-linux-musl/release/monerod-manager
