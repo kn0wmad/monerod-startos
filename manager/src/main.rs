@@ -2,22 +2,22 @@ use std::{borrow::Cow, sync::Mutex};
 use std::{env::var, sync::atomic::AtomicBool};
 use std::{error::Error, sync::atomic::Ordering};
 use std::{
-    fs,
+    // fs,
     io::{Read, Write},
     path::Path,
 };
 
-use heck::TitleCase;
+// use heck::TitleCase;
 use linear_map::LinearMap;
 use serde_yaml::{Mapping, Value};
 use tmpl::TemplatingReader;
 
-// lazy_static::lazy_static! {
-//     static ref REQUIRES_REINDEX: AtomicBool = AtomicBool::new({
-//         Path::new("/root/.monero/requires.reindex").exists()
-//     });
-//     static ref CHILD_PID: Mutex<Option<u32>> = Mutex::new(None);
-// }
+lazy_static::lazy_static! {
+    static ref REQUIRES_REINDEX: AtomicBool = AtomicBool::new({
+        Path::new("/root/.monero/requires.reindex").exists()
+    });
+    static ref CHILD_PID: Mutex<Option<u32>> = Mutex::new(None);
+}
 
 pub enum Level {
     Error,
@@ -98,7 +98,7 @@ fn sidecar(config: &Mapping, addr: &str) -> Result<(), Box<dyn Error>> {
             Cow::from("Tor Quick Connect"),
             Stat {
                 value_type: "string",
-                value: format!("btcstandup://{}:{}@{}:8332", user, pass, addr),
+                value: format!("xmrstandup://{}:{}@{}:18080", user, pass, addr),
                 description: Some(Cow::from("Monero-Standup Tor Quick Connect URL")),
                 copyable: true,
                 qr: true,
@@ -110,7 +110,7 @@ fn sidecar(config: &Mapping, addr: &str) -> Result<(), Box<dyn Error>> {
             Cow::from("LAN Quick Connect"),
             Stat {
                 value_type: "string",
-                value: format!("btcstandup://{}:{}@{}:8332", user, pass, addr_local),
+                value: format!("xmrstandup://{}:{}@{}:18080", user, pass, addr_local),
                 description: Some(Cow::from("Monero-Standup LAN Quick Connect URL")),
                 copyable: true,
                 qr: true,
@@ -185,35 +185,35 @@ fn sidecar(config: &Mapping, addr: &str) -> Result<(), Box<dyn Error>> {
                 masked: false,
             },
         );
-        }
-        stats.insert(
-            Cow::from("Disk Usage"),
-            Stat {
-                value_type: "string",
-                value: format!("{:.2} GiB", info.size_on_disk as f64 / 1024_f64.powf(3_f64)),
-                description: Some(Cow::from("The blockchain size on disk")),
-                copyable: false,
-                qr: false,
-                masked: false,
-            },
-        );
-        if info.size_on_disk as f64
-            > (|| -> Option<f64> {
-                let advanced = config.get(&Value::String("advanced".to_owned()))?;
-                let pruning = advanced.get(&Value::String("pruning".to_owned()))?;
-                if pruning.get(&Value::String("mode".to_owned()))? == "manual" {
-                    let size = pruning.get(&Value::String("size".to_owned()))?;
-                    Some(size.as_f64()? * 1024_f64.powf(2_f64))
-                } else {
-                    None
-                }
-            })()
-            .unwrap_or(std::f64::INFINITY)
-        {
-            std::process::Command::new("monero-cli")
-                .arg("-conf=/root/.monero/monero.conf")
-                .status()?;
-        }
+    stats.insert(
+        Cow::from("Disk Usage"),
+        Stat {
+            value_type: "string",
+            value: format!("{:.2} GiB", info.size_on_disk as f64 / 1024_f64.powf(3_f64)),
+            description: Some(Cow::from("The blockchain size on disk")),
+            copyable: false,
+            qr: false,
+            masked: false,
+        },
+    );
+    }
+    // if info.size_on_disk as f64
+    //     > (|| -> Option<f64> {
+    //         let advanced = config.get(&Value::String("advanced".to_owned()))?;
+    //         let pruning = advanced.get(&Value::String("pruning".to_owned()))?;
+    //         if pruning.get(&Value::String("mode".to_owned()))? == "manual" {
+    //             let size = pruning.get(&Value::String("size".to_owned()))?;
+    //             Some(size.as_f64()? * 1024_f64.powf(2_f64))
+    //         } else {
+    //             None
+    //         }
+    //     })()
+    //     .unwrap_or(std::f64::INFINITY)
+    {
+        std::process::Command::new("monero-cli")
+            .arg("-conf=/root/.monero/monero.conf")
+            .status()?;
+    }
     //     if REQUIRES_REINDEX.load(Ordering::SeqCst) {
     //         if match fs::remove_file("/root/.monero/requires.reindex") {
     //             Ok(()) => true,
@@ -256,38 +256,38 @@ fn publish_notification(e: &Notification) -> std::io::Result<()> {
     f.flush()
 }
 
-// fn notification_handler(line: &str) -> std::io::Result<()> {
-//     if line.contains("Prune: last wallet synchronisation goes beyond pruned data.")
-//         || line.contains("Please restart with -reindex or -reindex-chainstate to recover.")
-//     {
-//         publish_notification(&Notification {
-//             time: std::time::UNIX_EPOCH
-//                 .elapsed()
-//                 .map(|t| t.as_secs_f64())
-//                 .unwrap_or(0_f64),
-//             level: Level::Error,
-//             code: 0,
-//             title: "General Error".to_owned(),
-//             message: format!(
-//                 "{}\Monero Core will now be restarted with -reindex.",
-//                 line
-//             ),
-//         })?;
-//         REQUIRES_REINDEX.store(true, Ordering::SeqCst);
-//     } else if line.starts_with("Error:") {
-//         publish_notification(&Notification {
-//             time: std::time::UNIX_EPOCH
-//                 .elapsed()
-//                 .map(|t| t.as_secs_f64())
-//                 .unwrap_or(0_f64),
-//             level: Level::Error,
-//             code: 0,
-//             title: "General Error".to_owned(),
-//             message: line[6..].trim().to_owned(),
-//         })?;
-//     }
-//     Ok(())
-// }
+fn notification_handler(line: &str) -> std::io::Result<()> {
+    // if line.contains("Prune: last wallet synchronisation goes beyond pruned data.")
+    //     || line.contains("Please restart with -reindex or -reindex-chainstate to recover.")
+    // {
+    //     publish_notification(&Notification {
+    //         time: std::time::UNIX_EPOCH
+    //             .elapsed()
+    //             .map(|t| t.as_secs_f64())
+    //             .unwrap_or(0_f64),
+    //         level: Level::Error,
+    //         code: 0,
+    //         title: "General Error".to_owned(),
+    //         message: format!(
+    //             "{}\Monero Core will now be restarted with -reindex.",
+    //             line
+    //         ),
+    //     })?;
+    //     REQUIRES_REINDEX.store(true, Ordering::SeqCst);
+    // } else if line.starts_with("Error:") {
+    //     publish_notification(&Notification {
+    //         time: std::time::UNIX_EPOCH
+    //             .elapsed()
+    //             .map(|t| t.as_secs_f64())
+    //             .unwrap_or(0_f64),
+    //         level: Level::Error,
+    //         code: 0,
+    //         title: "General Error".to_owned(),
+    //         message: line[6..].trim().to_owned(),
+    //     })?;
+    // }
+    Ok(())
+}
 
 pub struct StdOutReader<R: Read> {
     inner: R,
@@ -353,7 +353,7 @@ fn inner_main(reindex: bool) -> Result<(), Box<dyn Error>> {
     let sidecar_poll_interval = std::time::Duration::from_secs(5);
     let peer_addr = var("PEER_TOR_ADDRESS")?;
     let rpc_addr = var("RPC_TOR_ADDRESS")?;
-    let mut btc_args = vec![
+    let mut xmr_args = vec![
         format!("-onion={}:9050", var("HOST_IP")?),
         format!("-externalip={}", peer_addr),
         "-datadir=/root/.monero".to_owned(),
@@ -368,7 +368,7 @@ fn inner_main(reindex: bool) -> Result<(), Box<dyn Error>> {
         .and_then(|v| v.as_bool())
         .unwrap_or(false)
     {
-        btc_args.push(format!("-proxy={}:9050", var("HOST_IP")?));
+        xmr_args.push(format!("-proxy={}:9050", var("HOST_IP")?));
     }
     {
         // disable chain data backup
@@ -378,7 +378,7 @@ fn inner_main(reindex: bool) -> Result<(), Box<dyn Error>> {
         f.flush()?;
     }
     // if reindex {
-    //     btc_args.push("-reindex".to_owned());
+    //     xmr_args.push("-reindex".to_owned());
     // }
 
     std::io::copy(
@@ -391,7 +391,7 @@ fn inner_main(reindex: bool) -> Result<(), Box<dyn Error>> {
         &mut std::fs::File::create("/root/.monero/monero.conf")?,
     )?;
     let mut child = std::process::Command::new("monerod")
-        .args(btc_args)
+        .args(xmr_args)
         .stdout(std::process::Stdio::piped())
         .stderr(std::process::Stdio::piped())
         .spawn()?;
