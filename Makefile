@@ -6,11 +6,11 @@ MANAGER_SRC := $(shell find ./manager -name '*.rs') manager/Cargo.toml manager/C
 
 all: verify
 
-clean: 
+clean:
 		rm monero.s9pk
 		rm image.tar
 
-monero.s9pk: manifest.yaml assets/compat/config_spec.yaml config_rules.yaml image.tar docs/instructions.md
+monero.s9pk: manifest.yaml assets/compat/config_spec.yaml assets/compat/config_rules.yaml image.tar docs/instructions.md
 		embassy-sdk pack
 # 		embassy-sdk pack errors come from here, check your manifest, config, instructions, and icon
 

@@ -126,7 +126,7 @@ RUN set -ex && apk add --update --no-cache \
 		readline \
 		zeromq
 
-COPY --from=builder /usr/local/monero/build /usr/local/bin/
+COPY --from=builder /usr/local/monero/build/release/bin/* /usr/local/bin/
 
 # Contains the blockchain and wallet files
 VOLUME /root/.bitmonero

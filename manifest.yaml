@@ -23,7 +23,7 @@ main:
   entrypoint: "docker_entrypoint.sh"
   args: []
   mounts:
-    main: /root/.monero
+    main: /root/.bitmonero
     compat: /mnt/assets
   io-format: yaml
 health-checks:
@@ -31,7 +31,7 @@ health-checks:
     type: docker
     image: main
     system: false
-    entrypoint: bitcoin-cli
+    entrypoint: monero-cli
     args:
       - "-getinfo"
     mounts:
@@ -44,14 +44,14 @@ config:
     image: compat
     system: true
     entrypoint: compat
-    args: 
+    args:
       - config
       - get
-      - /root/.monero
+      - /root/.bitmonero
       - "/mnt/assets/config_spec.yaml"
     mounts:
       compat: /mnt/assets
-      main: /root/.monero
+      main: /root/.bitmonero
     io-format: yaml
   set:
     type: docker
@@ -62,11 +62,11 @@ config:
       - config
       - set
       - monerod
-      - /root/.monero
+      - /root/.bitmonero
       - "/mnt/assets/config_rules.yaml"
     mounts:
       compat: /mnt/assets
-      main: "/root/.monero"
+      main: "/root/.bitmonero"
     io-format: yaml
 properties:
   type: docker
@@ -75,9 +75,9 @@ properties:
   entrypoint: compat
   args:
     - properties
-    - /root/.monero
+    - /root/.bitmonero
   mounts:
-    main: /root/.monero
+    main: /root/.bitmonero
   io-format: yaml
 volumes:
   main:
@@ -93,11 +93,11 @@ interfaces:
     description: Listens for JSON-RPC commands
     tor-config:
       port-mapping:
-        8332: "8332"
+        18080: "18080"
     lan-config:
-      8332:
+      18080:
         ssl: false
-        mapping: 8332
+        mapping: 18080
     ui: false
     protocols:
       - tcp
@@ -108,7 +108,7 @@ interfaces:
     description: Listens for incoming connections from peers on the monero network
     tor-config:
       port-mapping:
-        8333: "8333"
+        18081: "18081"
     ui: false
     protocols:
       - tcp
@@ -136,9 +136,9 @@ backup:
       - create
       - monerod
       - /mnt/backup
-      - /root/.monero
-      - "--exclude /root/.monero/chainstate"
-      - "--exclude /root/.monero/blocks"
+      - /root/.bitmonero
+      - "--exclude /root/.bitmonero/chainstate"
+      - "--exclude /root/.bitmonero/blocks"
     mounts:
       backup: /mnt/backup
       main: /root/.monerod
@@ -150,25 +150,25 @@ backup:
     args:
       - restore
       - monerod
-      - /root/.monero
+      - /root/.bitmonero
       - /mnt/backup
     mounts:
       backup: "/mnt/backup"
-      main: "/root/.monero" 
+      main: "/root/.bitmonero"
       compat: /mnt/assets
-actions:
-  reindex:
-    name: "Reindex Blockchain"
-    description: "Rebuilds the block and chainstate databases starting from genesis."
-    warning: Blocks not stored on disk will be redownloaded in order to rebuild the database.
-    allowed-statuses:
-      - running
-      - stopped
-    implementation:
-      type: docker
-      image: main
-      system: false
-      entrypoint: reindex.sh
-      args: []
-      mounts:
-        main: /root/.monero
+actions: {}
+#   reindex:
+#     name: "Reindex Blockchain"
+#     description: "Rebuilds the block and chainstate databases starting from genesis."
+#     warning: Blocks not stored on disk will be redownloaded in order to rebuild the database.
+#     allowed-statuses:
+#       - running
+#       - stopped
+#     implementation:
+#       type: docker
+#       image: main
+#       system: false
+#       entrypoint: reindex.sh
+#       args: []
+#       mounts:
+#         main: /root/.bitmonero
