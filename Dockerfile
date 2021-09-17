@@ -112,10 +112,7 @@ RUN set -ex \
 	&& git submodule init \
 	&& git submodule update \
 	# && test `git rev-parse HEAD` = ${MONERO_HASH} || exit 1 \
-	&& make -j7 release-static-linux-armv8
-
-WORKDIR /src
-COPY . .
+	&& make -j15 release-static-linux-armv8
 
 # Runtime stage
 FROM arm64v8/alpine:3.13
@@ -129,7 +126,7 @@ RUN set -ex && apk add --update --no-cache \
 		readline \
 		zeromq
 
-COPY --from=builder /usr/local/monero/biuld/Linux/_no_branch_/release/bin/* /usr/local/bin/
+COPY --from=builder /usr/local/monero/build /usr/local/bin/
 
 # Contains the blockchain and wallet files
 VOLUME /root/.bitmonero
