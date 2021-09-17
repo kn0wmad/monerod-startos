@@ -1,190 +1,144 @@
-# Based on https://github.com/monero-project/monero/blob/master/Dockerfile
-# Multistage docker build
+# Multistage docker build, requires docker 17.05 or greater
 
 # Build stage
 FROM arm64v8/alpine:3.12 as builder
 
+ARG MONERO_VERSION=release-v0.17
+
 RUN sed -i 's/http\:\/\/dl-cdn.alpinelinux.org/https\:\/\/alpine.global.ssl.fastly.net/g' /etc/apk/repositories
-RUN apk --no-cache add tini
+# RUN apk update
+# RUN apk --no-cache add tini
 RUN apk --no-cache add autoconf
 RUN apk --no-cache add automake
+RUN apk --no-cache add boost \
+		boost-atomic \
+		boost-build \
+		boost-build-doc \
+		boost-chrono \
+		boost-container \
+		boost-context \
+		boost-contract \
+		boost-coroutine \
+		boost-date_time \
+		boost-dev \
+		boost-doc \
+		boost-fiber \
+		boost-filesystem \
+		boost-graph \
+		boost-iostreams \
+		boost-libs \
+		boost-locale \
+		boost-log \
+		boost-log_setup \
+		boost-math \
+		boost-prg_exec_monitor \
+		boost-program_options \
+		boost-python3 \
+		boost-random \
+		boost-regex \
+		boost-serialization \
+		boost-stacktrace_basic \
+		boost-stacktrace_noop \
+		boost-static \
+		boost-system \
+		boost-thread \
+		boost-timer \
+		boost-type_erasure \
+		boost-unit_test_framework \
+		boost-wave \
+		boost-wserialization
 RUN apk --no-cache add bzip2
 RUN apk --no-cache add ca-certificates
 RUN apk --no-cache add cmake
 RUN apk --no-cache add curl
 RUN apk --no-cache add doxygen
+RUN apk --no-cache add eudev-dev
 RUN apk --no-cache add g++
+RUN apk --no-cache add git
 RUN apk --no-cache add gperf
 RUN apk --no-cache add graphviz
-RUN apk --no-cache add libtool-bin
+RUN apk --no-cache add libexecinfo-dev
+RUN apk --no-cache add libsodium-dev
+RUN apk --no-cache add libtool
+RUN apk --no-cache add libusb-dev
+RUN apk --no-cache add linux-headers
 RUN apk --no-cache add make
-RUN apk --no-cache add pkg-config
+RUN apk --no-cache add miniupnpc-dev
+RUN apk --no-cache add openssl-dev
+RUN apk --no-cache add pkgconfig
+RUN apk --no-cache add protobuf-dev
+RUN apk --no-cache add readline-dev
+RUN apk --no-cache add unbound-dev
 RUN apk --no-cache add unzip
-RUN apk --no-cache add xsltproc
-
-WORKDIR /usr/local
-
-
-ENV CFLAGS='-fPIC'
-ENV CXXFLAGS='-fPIC'
-
-#Cmake
-ARG CMAKE_VERSION=3.14.6
-ARG CMAKE_VERSION_DOT=v3.14
-ARG CMAKE_HASH=4e8ea11cabe459308671b476469eace1622e770317a15951d7b55a82ccaaccb9
-RUN set -ex \
-    && curl -s -O https://cmake.org/files/${CMAKE_VERSION_DOT}/cmake-${CMAKE_VERSION}.tar.gz \
-    && echo "${CMAKE_HASH}  cmake-${CMAKE_VERSION}.tar.gz" | sha256sum -c \
-    && tar -xzf cmake-${CMAKE_VERSION}.tar.gz \
-    && cd cmake-${CMAKE_VERSION} \
-    && ./configure \
-    && make \
-    && make install
-
-## Boost
-ARG BOOST_VERSION=1_70_0
-ARG BOOST_VERSION_DOT=1.70.0
-ARG BOOST_HASH=430ae8354789de4fd19ee52f3b1f739e1fba576f0aded0897c3c2bc00fb38778
-RUN set -ex \
-    && curl -s -L -o  boost_${BOOST_VERSION}.tar.bz2 https://downloads.sourceforge.net/project/boost/boost/${BOOST_VERSION_DOT}/boost_${BOOST_VERSION}.tar.bz2 \
-    && echo "${BOOST_HASH}  boost_${BOOST_VERSION}.tar.bz2" | sha256sum -c \
-    && tar -xvf boost_${BOOST_VERSION}.tar.bz2 \
-    && cd boost_${BOOST_VERSION} \
-    && ./bootstrap.sh \
-    && ./b2 --build-type=minimal link=static runtime-link=static --with-chrono --with-date_time --with-filesystem --with-program_options --with-regex --with-serialization --with-system --with-thread --with-locale threading=multi threadapi=pthread cflags="$CFLAGS" cxxflags="$CXXFLAGS" stage
-ENV BOOST_ROOT /usr/local/boost_${BOOST_VERSION}
-
-# OpenSSL
-ARG OPENSSL_VERSION=1.1.1i
-ARG OPENSSL_HASH=e8be6a35fe41d10603c3cc635e93289ed00bf34b79671a3a4de64fcee00d5242
-RUN set -ex \
-    && curl -s -O https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz \
-    && echo "${OPENSSL_HASH}  openssl-${OPENSSL_VERSION}.tar.gz" | sha256sum -c \
-    && tar -xzf openssl-${OPENSSL_VERSION}.tar.gz \
-    && cd openssl-${OPENSSL_VERSION} \
-    && ./Configure linux-x86_64 no-shared --static "$CFLAGS" \
-    && make build_generated \
-    && make libcrypto.a \
-    && make install
-ENV OPENSSL_ROOT_DIR=/usr/local/openssl-${OPENSSL_VERSION}
-
-# ZMQ
-ARG ZMQ_VERSION=v4.3.2
-ARG ZMQ_HASH=a84ffa12b2eb3569ced199660bac5ad128bff1f0
-RUN set -ex \
-    && git clone https://github.com/zeromq/libzmq.git -b ${ZMQ_VERSION} \
-    && cd libzmq \
-    && test `git rev-parse HEAD` = ${ZMQ_HASH} || exit 1 \
-    && ./autogen.sh \
-    && ./configure --enable-static --disable-shared \
-    && make \
-    && make install \
-    && ldconfig
+RUN apk --no-cache add libxslt
+RUN apk --no-cache add zeromq-dev
 
 # zmq.hpp
 ARG CPPZMQ_VERSION=v4.4.1
 ARG CPPZMQ_HASH=f5b36e563598d48fcc0d82e589d3596afef945ae
 RUN set -ex \
-    && git clone https://github.com/zeromq/cppzmq.git -b ${CPPZMQ_VERSION} \
-    && cd cppzmq \
-    && test `git rev-parse HEAD` = ${CPPZMQ_HASH} || exit 1 \
-    && mv *.hpp /usr/local/include
+	&& git clone --depth 1 -b ${CPPZMQ_VERSION} https://github.com/zeromq/cppzmq.git \
+	&& cd cppzmq \
+	&& test `git rev-parse HEAD` = ${CPPZMQ_HASH} || exit 1 \
+	&& mkdir /usr/local/include \
+	&& mv *.hpp /usr/local/include/
 
-# Readline
-ARG READLINE_VERSION=8.0
-ARG READLINE_HASH=e339f51971478d369f8a053a330a190781acb9864cf4c541060f12078948e461
-RUN set -ex \
-    && curl -s -O https://ftp.gnu.org/gnu/readline/readline-${READLINE_VERSION}.tar.gz \
-    && echo "${READLINE_HASH}  readline-${READLINE_VERSION}.tar.gz" | sha256sum -c \
-    && tar -xzf readline-${READLINE_VERSION}.tar.gz \
-    && cd readline-${READLINE_VERSION} \
-    && ./configure \
-    && make \
-    && make install
+# # Hidapi
+# ARG HIDAPI_VERSION=hidapi-0.8.0-rc1
+# ARG HIDAPI_HASH=40cf516139b5b61e30d9403a48db23d8f915f52c
+# RUN set -ex \
+#     && git clone https://github.com/signal11/hidapi -b ${HIDAPI_VERSION} \
+#     && cd hidapi \
+#     && test `git rev-parse HEAD` = ${HIDAPI_HASH} || exit 1 \
+#     && ./bootstrap \
+#     && ./configure --enable-static --disable-shared \
+#     && make \
+#     && make install
 
-# Sodium
-ARG SODIUM_VERSION=1.0.18
-ARG SODIUM_HASH=4f5e89fa84ce1d178a6765b8b46f2b6f91216677
-RUN set -ex \
-    && git clone https://github.com/jedisct1/libsodium.git -b ${SODIUM_VERSION} \
-    && cd libsodium \
-    && test `git rev-parse HEAD` = ${SODIUM_HASH} || exit 1 \
-    && ./autogen.sh \
-    && ./configure \
-    && make \
-    && make check \
-    && make install
+WORKDIR /usr/local
 
-# Udev
-ARG UDEV_VERSION=v3.2.8
-ARG UDEV_HASH=d69f3f28348123ab7fa0ebac63ec2fd16800c5e0
-RUN set -ex \
-    && git clone https://github.com/gentoo/eudev -b ${UDEV_VERSION} \
-    && cd eudev \
-    && test `git rev-parse HEAD` = ${UDEV_HASH} || exit 1 \
-    && ./autogen.sh \
-    && ./configure --disable-gudev --disable-introspection --disable-hwdb --disable-manpages --disable-shared \
-    && make \
-    && make install
+ARG NPROC
+ENV CFLAGS='-fPIC'
+ENV CXXFLAGS='-fPIC -DELPP_FEATURE_CRASH_LOG'
 
-# Libusb
-ARG USB_VERSION=v1.0.22
-ARG USB_HASH=0034b2afdcdb1614e78edaa2a9e22d5936aeae5d
+# Monero
+ENV USE_SINGLE_BUILDDIR=1
+ENV MONERO_VERSION=0.17.2.3
+# ENV MONERO_HASH=bbff804dc6fe7d54895ae073f0abfc45ed8819d0585fe00e32080ed2268dc250
 RUN set -ex \
-    && git clone https://github.com/libusb/libusb.git -b ${USB_VERSION} \
-    && cd libusb \
-    && test `git rev-parse HEAD` = ${USB_HASH} || exit 1 \
-    && ./autogen.sh \
-    && ./configure --disable-shared \
-    && make \
-    && make install
-
-# Hidapi
-ARG HIDAPI_VERSION=hidapi-0.8.0-rc1
-ARG HIDAPI_HASH=40cf516139b5b61e30d9403a48db23d8f915f52c
-RUN set -ex \
-    && git clone https://github.com/signal11/hidapi -b ${HIDAPI_VERSION} \
-    && cd hidapi \
-    && test `git rev-parse HEAD` = ${HIDAPI_HASH} || exit 1 \
-    && ./bootstrap \
-    && ./configure --enable-static --disable-shared \
-    && make \
-    && make install
-
-# Protobuf
-ARG PROTOBUF_VERSION=v3.7.1
-ARG PROTOBUF_HASH=6973c3a5041636c1d8dc5f7f6c8c1f3c15bc63d6
-RUN set -ex \
-    && git clone https://github.com/protocolbuffers/protobuf -b ${PROTOBUF_VERSION} \
-    && cd protobuf \
-    && test `git rev-parse HEAD` = ${PROTOBUF_HASH} || exit 1 \
-    && git submodule update --init --recursive \
-    && ./autogen.sh \
-    && ./configure --enable-static --disable-shared \
-    && make \
-    && make install \
-    && ldconfig
+	&& git clone https://github.com/monero-project/monero.git \
+	&& cd monero \
+	&& git checkout tags/v${MONERO_VERSION} \
+	&& git submodule init \
+	&& git submodule update \
+	# && test `git rev-parse HEAD` = ${MONERO_HASH} || exit 1 \
+	&& make -j7 release-static-linux-armv8
 
 WORKDIR /src
 COPY . .
 
-ENV USE_SINGLE_BUILDDIR=1
-ARG NPROC
-RUN set -ex && \
-    git submodule init && git submodule update && \
-    rm -rf build && \
-    if [ -z "$NPROC" ] ; \
-    then make -j$(nproc) release-static ; \
-    else make -j$NPROC release-static ; \
-    fi
-
 # Runtime stage
+FROM arm64v8/alpine:3.13
 
-ADD ./monero/target/aarch64-unknown-linux-musl/release/monero /usr/local/bin/monero
+RUN set -ex && apk add --update --no-cache \
+		ca-certificates \
+		libexecinfo \
+		libsodium \
+		ncurses-libs \
+		pcsc-lite-libs \
+		readline \
+		zeromq
+
+COPY --from=builder /usr/local/monero/biuld/Linux/_no_branch_/release/bin/* /usr/local/bin/
+
+# Contains the blockchain and wallet files
+VOLUME /root/.bitmonero
+WORKDIR /root/.bitmonero
+
+ADD ./manager/target/aarch64-unknown-linux-musl/release/monerod-manager /usr/local/bin/monerod-manager
+RUN chmod a+x /usr/local/bin/monerod-manager
 ADD ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker_entrypoint.sh
-
-WORKDIR /root
 
 EXPOSE 18080 18081
 
