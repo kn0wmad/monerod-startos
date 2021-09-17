@@ -26,18 +26,18 @@ main:
     main: /root/.bitmonero
     compat: /mnt/assets
   io-format: yaml
-health-checks:
-  rpc:
-    type: docker
-    image: main
-    system: false
-    entrypoint: monero-cli
-    args:
-      - "-getinfo"
-    mounts:
-      main: /root/.monero
-    io-format: yaml
-    critical: false
+health-checks: {}
+  # rpc:
+  #   type: docker
+  #   image: main
+  #   system: false
+  #   entrypoint: monero-cli
+  #   args:
+  #     - "-getinfo"
+  #   mounts:
+  #     main: /root/.monero
+  #   io-format: yaml
+  #   critical: false
 config:
   get:
     type: docker
