@@ -7,18 +7,18 @@ MANAGER_SRC := $(shell find ./manager -name '*.rs') manager/Cargo.toml manager/C
 all: verify
 
 clean:
-		rm monero.s9pk
+		rm monerod.s9pk
 		rm image.tar
 
-monero.s9pk: manifest.yaml assets/compat/config_spec.yaml assets/compat/config_rules.yaml image.tar docs/instructions.md
+monerod.s9pk: manifest.yaml assets/compat/config_spec.yaml assets/compat/config_rules.yaml image.tar docs/instructions.md
 		embassy-sdk pack
 # 		embassy-sdk pack errors come from here, check your manifest, config, instructions, and icon
 
-verify: monero.s9pk
-		embassy-sdk verify monero.s9pk
+verify: monerod.s9pk
+		embassy-sdk verify monerod.s9pk
 
-install: monero.s9pk
-		embassy-cli package install monero.s9pk
+install: monerod.s9pk
+		embassy-cli package install monerod.s9pk
 
 image.tar: Dockerfile docker_entrypoint.sh manager/target/aarch64-unknown-linux-musl/release/monerod-manager manifest.yaml
 		DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --tag start9/monerod/main:$(VERSION) --build-arg MONERO_VERSION=$(VERSION_STRIPPED) --build-arg N_PROC=$(shell nproc) --platform=linux/arm64 -o type=docker,dest=image.tar .
