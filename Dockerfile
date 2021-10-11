@@ -112,7 +112,7 @@ RUN set -ex \
 	&& git submodule init \
 	&& git submodule update \
 	# && test `git rev-parse HEAD` = ${MONERO_HASH} || exit 1 \
-	&& make -j15 release-static-linux-armv8
+	&& make -j7 release-static-linux-armv8
 
 # Runtime stage
 FROM arm64v8/alpine:3.13
