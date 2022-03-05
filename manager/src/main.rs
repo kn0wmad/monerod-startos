@@ -14,7 +14,7 @@ use tmpl::TemplatingReader;
 
 lazy_static::lazy_static! {
     static ref REQUIRES_REINDEX: AtomicBool = AtomicBool::new({
-        Path::new("/root/.monero/requires.reindex").exists()
+        Path::new("/root/.bitmonero/requires.reindex").exists()
     });
     static ref CHILD_PID: Mutex<Option<u32>> = Mutex::new(None);
 }
@@ -141,7 +141,7 @@ fn sidecar(config: &Mapping, addr: &str) -> Result<(), Box<dyn Error>> {
         );
     }
     let info_res = std::process::Command::new("monero-cli")
-        .arg("-conf=/root/.monero/monero.conf")
+        .arg("-conf=/root/.bitmonero/monero.conf")
         .arg("getblockchaininfo")
         .output()?;
     if info_res.status.success() {
@@ -211,11 +211,11 @@ fn sidecar(config: &Mapping, addr: &str) -> Result<(), Box<dyn Error>> {
     //     .unwrap_or(std::f64::INFINITY)
     {
         std::process::Command::new("monero-cli")
-            .arg("-conf=/root/.monero/monero.conf")
+            .arg("-conf=/root/.bitmonero/monero.conf")
             .status()?;
     }
     //     if REQUIRES_REINDEX.load(Ordering::SeqCst) {
-    //         if match fs::remove_file("/root/.monero/requires.reindex") {
+    //         if match fs::remove_file("/root/.bitmonero/requires.reindex") {
     //             Ok(()) => true,
     //             Err(_) => false,
     //         } {
@@ -229,15 +229,15 @@ fn sidecar(config: &Mapping, addr: &str) -> Result<(), Box<dyn Error>> {
     //     )
     // }
     serde_yaml::to_writer(
-        std::fs::File::create("/root/.monero/start9/.stats.yaml.tmp")?,
+        std::fs::File::create("/root/.bitmonero/start9/.stats.yaml.tmp")?,
         &Stats {
             version: 2,
             data: stats,
         },
     )?;
     std::fs::rename(
-        "/root/.monero/start9/.stats.yaml.tmp",
-        "/root/.monero/start9/stats.yaml",
+        "/root/.bitmonero/start9/.stats.yaml.tmp",
+        "/root/.bitmonero/start9/stats.yaml",
     )?;
     Ok(())
 }
@@ -247,7 +247,7 @@ fn publish_notification(e: &Notification) -> std::io::Result<()> {
         .write(true)
         .create(true)
         .append(true)
-        .open("/root/.monero/start9/notifications.log")?;
+        .open("/root/.bitmonero/start9/notifications.log")?;
     f.write_all(format!("{}:{}:{}:", e.time, e.level, e.code).as_bytes())?;
     write_to_replacing(&e.title, ':', "\u{A789}", &mut f)?;
     f.write_all(b":")?;
@@ -345,19 +345,19 @@ where
 }
 
 fn inner_main(reindex: bool) -> Result<(), Box<dyn Error>> {
-    while !Path::new("/root/.monero/start9/config.yaml").exists() {
+    while !Path::new("/root/.bitmonero/start9/config.yaml").exists() {
         std::thread::sleep(std::time::Duration::from_secs(1));
     }
     let config: Mapping =
-        serde_yaml::from_reader(std::fs::File::open("/root/.monero/start9/config.yaml")?)?;
+        serde_yaml::from_reader(std::fs::File::open("/root/.bitmonero/start9/config.yaml")?)?;
     let sidecar_poll_interval = std::time::Duration::from_secs(5);
     let peer_addr = var("PEER_TOR_ADDRESS")?;
     let rpc_addr = var("RPC_TOR_ADDRESS")?;
     let mut xmr_args = vec![
         format!("-onion={}:9050", var("HOST_IP")?),
         format!("-externalip={}", peer_addr),
-        "-datadir=/root/.monero".to_owned(),
-        "-conf=/root/.monero/monero.conf".to_owned(),
+        "-datadir=/root/.bitmonero".to_owned(),
+        "-conf=/root/.bitmonero/monero.conf".to_owned(),
     ];
     if config
         .get(&Value::String("advanced".to_owned()))
@@ -372,7 +372,7 @@ fn inner_main(reindex: bool) -> Result<(), Box<dyn Error>> {
     }
     {
         // disable chain data backup
-        let mut f = std::fs::File::create("/root/.monero/.backupignore")?;
+        let mut f = std::fs::File::create("/root/.bitmonero/.backupignore")?;
         writeln!(f, "blocks/")?;
         writeln!(f, "chainstate/")?;
         f.flush()?;
@@ -388,7 +388,7 @@ fn inner_main(reindex: bool) -> Result<(), Box<dyn Error>> {
             &"{{var}}".parse()?,
             b'%',
         ),
-        &mut std::fs::File::create("/root/.monero/monero.conf")?,
+        &mut std::fs::File::create("/root/.bitmonero/monero.conf")?,
     )?;
     let mut child = std::process::Command::new("monerod")
         .args(xmr_args)

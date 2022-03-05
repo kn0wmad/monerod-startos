@@ -3,10 +3,10 @@
 # Build stage
 FROM arm64v8/alpine:3.12 as builder
 
-ARG MONERO_VERSION=release-v0.17
+ARG MONERO_VERSION=release-v0.17.3
 
 RUN sed -i 's/http\:\/\/dl-cdn.alpinelinux.org/https\:\/\/alpine.global.ssl.fastly.net/g' /etc/apk/repositories
-# RUN apk update
+RUN apk update
 # RUN apk --no-cache add tini
 RUN apk --no-cache add autoconf
 RUN apk --no-cache add automake
@@ -103,7 +103,7 @@ ENV CXXFLAGS='-fPIC -DELPP_FEATURE_CRASH_LOG'
 
 # Monero
 ENV USE_SINGLE_BUILDDIR=1
-ENV MONERO_VERSION=0.17.2.3
+ENV MONERO_VERSION=0.17.3.0
 # ENV MONERO_HASH=bbff804dc6fe7d54895ae073f0abfc45ed8819d0585fe00e32080ed2268dc250
 RUN set -ex \
 	&& git clone https://github.com/monero-project/monero.git \
