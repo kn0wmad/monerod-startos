@@ -1,8 +1,8 @@
 id: monerod
 title: "Monero Core"
 version: 0.17.3
-release-notes: Initial release of Monero for EmbassyOS!!
-license: mit
+release-notes: Initial release of Monero Core for EmbassyOS!!
+license: modified-bipcot
 wrapper-repo: https://github.com/kn0wmad/monero-wrapper
 upstream-repo: https://github.com/monero-project/monero
 support-site: https://github.com/monero-project/monero
