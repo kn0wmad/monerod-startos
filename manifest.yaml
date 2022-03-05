@@ -8,7 +8,7 @@ upstream-repo: https://github.com/monero-project/monero
 support-site: https://github.com/monero-project/monero
 marketing-site: https://getmonero.org
 build: ["make"]
-min-os-version: 0.3.0
+min-os-version: "0.3.0"
 description:
   short: A Monero Full Node by Monero Core
   long: Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.
@@ -85,8 +85,8 @@ volumes:
   compat:
     type: assets
 alerts:
-  uninstall: Uninstalling Monero will result in permanent loss of data. Without a backup, any funds stored on your node's default hot wallet will be lost forever. If you are unsure, we recommend making a backup, just to be safe.
-  restore: Restoring Monero will overwrite its current data. You will lose any transactions recorded in watch-only wallets, and any funds you have received to the hot wallet, since the last backup.
+  uninstall-alert: Uninstalling Monero will result in permanent loss of data. Without a backup, any funds stored on your node's default hot wallet will be lost forever. If you are unsure, we recommend making a backup, just to be safe.
+  restore-alert: Restoring Monero will overwrite its current data. You will lose any transactions recorded in watch-only wallets, and any funds you have received to the hot wallet, since the last backup.
 interfaces:
   rpc:
     name: RPC Interface
@@ -96,8 +96,8 @@ interfaces:
         18080: "18080"
     lan-config:
       18080:
-        ssl: false
-        mapping: 18080
+        ssl: true
+        internal: 18080
     ui: false
     protocols:
       - tcp
@@ -140,22 +140,21 @@ backup:
       - "--exclude /root/.bitmonero/chainstate"
       - "--exclude /root/.bitmonero/blocks"
     mounts:
-      backup: /mnt/backup
-      main: /root/.monerod
+      BACKUP: /mnt/backup
+      main: /root/.bitmonero
   restore:
     type: docker
     image: compat
     system: true
-    entrypoint: /mnt/assets/backup-restore.sh
+    entrypoint: compat
     args:
+      - duplicity
       - restore
-      - monerod
-      - /root/.bitmonero
       - /mnt/backup
+      - /root/.bitmonero
     mounts:
-      backup: "/mnt/backup"
-      main: "/root/.bitmonero"
-      compat: /mnt/assets
+      BACKUP: /mnt/backup
+      main: /root/.bitmonero
 actions: {}
 #   reindex:
 #     name: "Reindex Blockchain"

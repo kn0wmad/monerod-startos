@@ -1,1 +1,3 @@
-# Monero
+# Monero Instructions
+
+## Connecting Monerujo
