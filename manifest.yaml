@@ -1,19 +1,19 @@
 id: monerod
-title: "Monero Core"
+title: "Monero"
 version: 0.17.3
-release-notes: Initial release of Monero Core for EmbassyOS!!
+release-notes: Initial release of Monero for EmbassyOS!!
 license: modified-bipcot
-wrapper-repo: https://github.com/kn0wmad/monero-wrapper
+wrapper-repo: https://github.com/kn0wmad/monerod-wrapper
 upstream-repo: https://github.com/monero-project/monero
 support-site: https://github.com/monero-project/monero
 marketing-site: https://getmonero.org
 build: ["make"]
-min-os-version: "0.3.0"
+# min-os-version: "0.3.0"
 description:
-  short: A Monero Full Node by Monero Core
-  long: Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.
+  short: A Monero Full Node
+  long: Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.  This is a headless server, used via a Monero wallet of your choice over Tor.
 assets:
-  license: LICENSE
+  license: LICENSE.md
   icon: icon.png
   instructions: docs/instructions.md
   docker-images: image.tar
@@ -31,11 +31,11 @@ health-checks: {}
   #   type: docker
   #   image: main
   #   system: false
-  #   entrypoint: monero-cli
+  #   entrypoint: monero-wallet-cli
   #   args:
-  #     - "-getinfo"
+  #     - "-status"
   #   mounts:
-  #     main: /root/.monero
+  #     main: /root/.bitmonero
   #   io-format: yaml
   #   critical: false
 config:
@@ -68,36 +68,23 @@ config:
       compat: /mnt/assets
       main: "/root/.bitmonero"
     io-format: yaml
-properties:
-  type: docker
-  image: compat
-  system: true
-  entrypoint: compat
-  args:
-    - properties
-    - /root/.bitmonero
-  mounts:
-    main: /root/.bitmonero
-  io-format: yaml
+dependencies: {}
 volumes:
   main:
     type: data
   compat:
     type: assets
-alerts:
-  uninstall-alert: Uninstalling Monero will result in permanent loss of data. Without a backup, any funds stored on your node's default hot wallet will be lost forever. If you are unsure, we recommend making a backup, just to be safe.
-  restore-alert: Restoring Monero will overwrite its current data. You will lose any transactions recorded in watch-only wallets, and any funds you have received to the hot wallet, since the last backup.
 interfaces:
   rpc:
     name: RPC Interface
     description: Listens for JSON-RPC commands
     tor-config:
       port-mapping:
-        18080: "18080"
+        18081: "18081"
     lan-config:
-      18080:
+      18081:
         ssl: true
-        internal: 18080
+        internal: 18081
     ui: false
     protocols:
       - tcp
@@ -108,7 +95,7 @@ interfaces:
     description: Listens for incoming connections from peers on the monero network
     tor-config:
       port-mapping:
-        18081: "18081"
+        18080: "18080"
     ui: false
     protocols:
       - tcp
@@ -124,7 +111,9 @@ interfaces:
   #   protocols:
   #     - tcp
   #     - zmq
-dependencies: {}
+alerts:
+  uninstall: Uninstalling Monero will result in permanent loss of data. Without a backup, any funds stored on your node's default hot wallet will be lost forever. If you are unsure, we recommend making a backup, just to be safe.
+  restore: Restoring Monero will overwrite its current data. You will lose any transactions recorded in watch-only wallets, and any funds you have received to the hot wallet, since the last backup.
 backup:
   create:
     type: docker
@@ -156,6 +145,17 @@ backup:
       BACKUP: /mnt/backup
       main: /root/.bitmonero
 actions: {}
+properties:
+  type: docker
+  image: compat
+  system: true
+  entrypoint: compat
+  args:
+    - properties
+    - /root/.bitmonero
+  mounts:
+    main: /root/.bitmonero
+  io-format: yaml
 #   reindex:
 #     name: "Reindex Blockchain"
 #     description: "Rebuilds the block and chainstate databases starting from genesis."

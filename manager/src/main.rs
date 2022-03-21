@@ -269,7 +269,7 @@ fn notification_handler(line: &str) -> std::io::Result<()> {
     //         code: 0,
     //         title: "General Error".to_owned(),
     //         message: format!(
-    //             "{}\Monero Core will now be restarted with -reindex.",
+    //             "{}\Monero will now be restarted with -reindex.",
     //             line
     //         ),
     //     })?;
@@ -437,7 +437,7 @@ fn inner_main(reindex: bool) -> Result<(), Box<dyn Error>> {
             level: Level::Error,
             code: code as usize,
             title: "Fatal Error".to_owned(),
-            message: format!("Monero Core has crashed with exit code: {}", code),
+            message: format!("Monero has crashed with exit code: {}", code),
         })?;
     }
     if REQUIRES_REINDEX.load(Ordering::SeqCst) {

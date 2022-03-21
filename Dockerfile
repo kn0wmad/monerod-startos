@@ -1,7 +1,7 @@
 # Multistage docker build, requires docker 17.05 or greater
 
 # Build stage
-FROM arm64v8/alpine:3.12 as builder
+FROM arm64v8/alpine:3.15 as builder
 
 ARG MONERO_VERSION=release-v0.17.3
 
@@ -83,18 +83,6 @@ RUN set -ex \
 	&& mkdir /usr/local/include \
 	&& mv *.hpp /usr/local/include/
 
-# # Hidapi
-# ARG HIDAPI_VERSION=hidapi-0.8.0-rc1
-# ARG HIDAPI_HASH=40cf516139b5b61e30d9403a48db23d8f915f52c
-# RUN set -ex \
-#     && git clone https://github.com/signal11/hidapi -b ${HIDAPI_VERSION} \
-#     && cd hidapi \
-#     && test `git rev-parse HEAD` = ${HIDAPI_HASH} || exit 1 \
-#     && ./bootstrap \
-#     && ./configure --enable-static --disable-shared \
-#     && make \
-#     && make install
-
 WORKDIR /usr/local
 
 ARG NPROC
@@ -104,18 +92,18 @@ ENV CXXFLAGS='-fPIC -DELPP_FEATURE_CRASH_LOG'
 # Monero
 ENV USE_SINGLE_BUILDDIR=1
 ENV MONERO_VERSION=0.17.3.0
-# ENV MONERO_HASH=bbff804dc6fe7d54895ae073f0abfc45ed8819d0585fe00e32080ed2268dc250
+ENV MONERO_HASH=ab18fea3500841fc312630d49ed6840b3aedb34d
 RUN set -ex \
 	&& git clone https://github.com/monero-project/monero.git \
 	&& cd monero \
 	&& git checkout tags/v${MONERO_VERSION} \
 	&& git submodule init \
 	&& git submodule update \
-	# && test `git rev-parse HEAD` = ${MONERO_HASH} || exit 1 \
-	&& make -j7 release-static-linux-armv8
+	&& test `git rev-parse HEAD` = ${MONERO_HASH} || exit 1 \
+	&& make -j16 release-static-linux-armv8
 
 # Runtime stage
-FROM arm64v8/alpine:3.13
+FROM arm64v8/alpine:3.15
 
 RUN set -ex && apk add --update --no-cache \
 		ca-certificates \

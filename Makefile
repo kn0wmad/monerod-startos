@@ -10,12 +10,12 @@ clean:
 		rm monerod.s9pk
 		rm image.tar
 
+verify: monerod.s9pk
+		embassy-sdk verify s9pk monerod.s9pk
+
 monerod.s9pk: manifest.yaml assets/compat/config_spec.yaml assets/compat/config_rules.yaml image.tar docs/instructions.md
 		embassy-sdk pack
 # 		embassy-sdk pack errors come from here, check your manifest, config, instructions, and icon
-
-verify: monerod.s9pk
-		embassy-sdk verify monerod.s9pk
 
 install: monerod.s9pk
 		embassy-cli package install monerod.s9pk

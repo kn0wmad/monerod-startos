@@ -49,59 +49,59 @@ rpc:
       pattern-description: "Must not contain newline or quote characters."
       copyable: true
       masked: true
-    advanced:
-      type: object
-      nullable: false
-      name: "Advanced"
-      description: "Advanced RPC Settings"
-      spec:
-        auth:
-          name: Authorization
-          description: >-
-            Username and hashed password for JSON-RPC connections.
-            RPC clients connect using the usual http basic authentication.
-          type: list
-          subtype: string
-          default: []
-          spec:
-            pattern: "^[a-zA-Z0-9_-]+:([0-9a-fA-F]{2})+\\$([0-9a-fA-F]{2})+$"
-            pattern-description: 'Each item must be of the form "<USERNAME>:<SALT>$<HASH>".'
-          range: "[0,*)"
-        serialversion:
-          name: Serialization Version
-          description: Return raw transaction or block hex with Segwit or non-SegWit serialization.
-          type: enum
-          values:
-            - non-segwit
-            - segwit
-          default: segwit
-        servertimeout:
-          name: Rpc Server Timeout
-          description: Number of seconds after which an uncompleted RPC call will time out.
-          type: number
-          nullable: false
-          range: "[5,300]"
-          integral: true
-          units: seconds
-          default: 30
-        threads:
-          name: Threads
-          description: Set the number of threads for handling RPC calls. Only needed if you plan to abuse your node.
-          type: number
-          nullable: false
-          default: 1
-          range: "[1,4]"
-          integral: true
-          units: ~
-        workqueue:
-          name: Work Queue
-          description: Set the depth of the work queue to service RPC calls. Determines how long the backlog of RPC requests can get before it just rejects new ones.
-          type: number
-          nullable: false
-          default: 16
-          range: "[8,32]"
-          integral: true
-          units: requests
+    # advanced:
+    #   type: object
+    #   nullable: false
+    #   name: "Advanced"
+    #   description: "Advanced RPC Settings"
+    #   spec:
+    #     auth:
+    #       name: Authorization
+    #       description: >-
+    #         Username and hashed password for JSON-RPC connections.
+    #         RPC clients connect using the usual http basic authentication.
+    #       type: list
+    #       subtype: string
+    #       default: []
+    #       spec:
+    #         pattern: "^[a-zA-Z0-9_-]+:([0-9a-fA-F]{2})+\\$([0-9a-fA-F]{2})+$"
+    #         pattern-description: 'Each item must be of the form "<USERNAME>:<SALT>$<HASH>".'
+    #       range: "[0,*)"
+    #     serialversion:
+    #       name: Serialization Version
+    #       description: Return raw transaction or block hex with Segwit or non-SegWit serialization.
+    #       type: enum
+    #       values:
+    #         - non-segwit
+    #         - segwit
+    #       default: segwit
+    #     servertimeout:
+    #       name: Rpc Server Timeout
+    #       description: Number of seconds after which an uncompleted RPC call will time out.
+    #       type: number
+    #       nullable: false
+    #       range: "[5,300]"
+    #       integral: true
+    #       units: seconds
+    #       default: 30
+    #     threads:
+    #       name: Threads
+    #       description: Set the number of threads for handling RPC calls. Only needed if you plan to abuse your node.
+    #       type: number
+    #       nullable: false
+    #       default: 1
+    #       range: "[1,4]"
+    #       integral: true
+    #       units: ~
+    #     workqueue:
+    #       name: Work Queue
+    #       description: Set the depth of the work queue to service RPC calls. Determines how long the backlog of RPC requests can get before it just rejects new ones.
+    #       type: number
+    #       nullable: false
+    #       default: 16
+    #       range: "[8,32]"
+    #       integral: true
+    #       units: requests
 # zmq-enabled:
 #   type: boolean
 #   name: ZeroMQ Enabled
