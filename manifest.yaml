@@ -1,6 +1,6 @@
 id: monerod
 title: "Monero"
-version: 0.17.3
+version: 0.17.3.2
 release-notes: Initial release of Monero for EmbassyOS!!
 license: modified-bipcot
 wrapper-repo: https://github.com/kn0wmad/monerod-wrapper
@@ -26,18 +26,18 @@ main:
     main: /root/.bitmonero
     compat: /mnt/assets
   io-format: yaml
-health-checks: {}
-  # rpc:
-  #   type: docker
-  #   image: main
-  #   system: false
-  #   entrypoint: monero-wallet-cli
-  #   args:
-  #     - "-status"
-  #   mounts:
-  #     main: /root/.bitmonero
-  #   io-format: yaml
-  #   critical: false
+health-checks:
+  rpc:
+    name: RPC
+    type: docker
+    image: main
+    system: false
+    entrypoint: monero-wallet-cli
+    args:
+      - "-status"
+    mounts:
+      main: /root/.bitmonero
+    io-format: yaml
 config:
   get:
     type: docker

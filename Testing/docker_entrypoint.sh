@@ -7,5 +7,3 @@ export PEER_TOR_ADDRESS=$(yq e '.peer-tor-address' /root/.monero/start9/config.y
 export RPC_TOR_ADDRESS=$(yq e '.rpc-tor-address' /root/.monero/start9/config.yaml)
 
 exec /usr/local/bin/monerod-manager
-
-# --non-interactive --rpc-restricted-bind-ip=0.0.0.0 --rpc-restricted-bind-port=18089 --no-igd --no-zmq --enable-dns-blocklist
