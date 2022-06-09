@@ -111,6 +111,7 @@ RUN set -ex && apk add --update --no-cache \
 		ncurses-libs \
 		pcsc-lite-libs \
 		readline \
+		yq \
 		zeromq
 
 COPY --from=builder /usr/local/monero/build/release/bin/* /usr/local/bin/
@@ -119,8 +120,8 @@ COPY --from=builder /usr/local/monero/build/release/bin/* /usr/local/bin/
 VOLUME /root/.bitmonero
 WORKDIR /root/.bitmonero
 
-ADD ./manager/target/aarch64-unknown-linux-musl/release/monerod-manager /usr/local/bin/monerod-manager
-RUN chmod a+x /usr/local/bin/monerod-manager
+# ADD ./manager/target/aarch64-unknown-linux-musl/release/monerod-manager /usr/local/bin/monerod-manager
+# RUN chmod a+x /usr/local/bin/monerod-manager
 ADD ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker_entrypoint.sh
 

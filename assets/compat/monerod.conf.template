@@ -10,3 +10,5 @@ confirm-external-bind
 rpc-login={{rpc.username}}:{{rpc.password}}
 
 non-interactive
+
+data-dir=/home/monero/.bitmonero

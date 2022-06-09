@@ -137,7 +137,7 @@ dependencies = [
 
 [[package]]
 name = "monerod-manager"
-version = "0.1.1"
+version = "0.1.0"
 dependencies = [
  "chrono",
  "ctrlc",

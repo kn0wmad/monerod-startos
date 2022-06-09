@@ -32,7 +32,7 @@ health-checks:
     type: docker
     image: main
     system: false
-    entrypoint: monero-wallet-cli
+    entrypoint: monerod
     args:
       - "-status"
     mounts:

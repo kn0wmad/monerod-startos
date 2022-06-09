@@ -1,5 +1,5 @@
-# Initial base from https://github.com/leonardochaia/docker-monerod/blob/master/src/Dockerfile
-# Alpine specifics from https://github.com/cornfeedhobo/docker-monero/blob/f96711415f97af1fc9364977d1f5f5ecd313aad0/Dockerfile
+# Based on https://github.com/sethforprivacy/simple-monerod-docker
+# with customization for use on EmbassyOS - https://Start9.com
 
 # Set Monero branch or tag to build
 ARG MONERO_BRANCH=v0.17.3.2
@@ -9,8 +9,8 @@ ARG MONERO_COMMIT_HASH=424e4de16b98506170db7b0d7d87a79ccf541744
 
 # Select Alpine 3.15 for the build image base
 FROM alpine:3.15 as build
-LABEL author="seth@sethforprivacy.com" \
-      maintainer="seth@sethforprivacy.com"
+LABEL author="kn0wmad@protonmail.com" \
+      maintainer="kn0wmad@protonmail.com"
 
 # Upgrade base image
 RUN set -ex && apk --update --no-cache upgrade
@@ -119,6 +119,7 @@ RUN set -ex && apk --update --no-cache upgrade
 
 # Install all dependencies for static binaries + curl for healthcheck
 RUN set -ex && apk add --update --no-cache \
+    bash \
     curl \
     ca-certificates \
     libexecinfo \
@@ -126,7 +127,12 @@ RUN set -ex && apk add --update --no-cache \
     ncurses-libs \
     pcsc-lite-libs \
     readline \
+    yq \
     zeromq
+
+# Add entrypoint
+ADD ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
+RUN chmod a+x /usr/local/bin/docker_entrypoint.sh
 
 # Add user and setup directories for monerod
 RUN set -ex && adduser -Ds /bin/bash monero \
@@ -138,6 +144,9 @@ USER monero
 WORKDIR /home/monero
 COPY --chown=monero:monero --from=build /monero/build/release/bin/monerod /usr/local/bin/monerod
 
+# Add config file for monerod
+COPY --chown=monero:monero monero.conf /etc/monero/monero.conf
+
 # Expose p2p port
 EXPOSE 18080
 
@@ -147,5 +156,5 @@ EXPOSE 18089
 # Add HEALTHCHECK against get_info endpoint
 HEALTHCHECK --interval=30s --timeout=5s CMD curl --fail http://localhost:18089/get_info || exit 1
 
-# Start monerod with required --non-interactive flag and sane defaults that are overridden by user input (if applicable)
+# Start monerod
 ENTRYPOINT ["/usr/local/bin/docker_entrypoint.sh"]
