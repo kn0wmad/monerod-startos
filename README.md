@@ -1,34 +1,36 @@
-# Wrapper for Monero
+# EmbassyOS Wrapper for Monero
 
-This project wraps Monero for EmbassyOS.  Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.
+This project wraps the Monero daemon for EmbassyOS.  Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.  Learn more at https://www.getmonero.org/
 
 ## Dependencies
 
 - [docker](https://docs.docker.com/get-docker)
 - [docker-buildx](https://docs.docker.com/buildx/working-with-buildx/)
 - [make](https://www.gnu.org/software/make/)
+- [embassy-sdk](https://github.com/Start9Labs/embassy-os/tree/master/backend)
 
-## Build enviroment
-Prepare your EmbassyOS build enviroment. In this example we are using a Debian machine.
-
-
-Now you are ready to build your first EmbassyOS service
-
-## Cloning
-
-Clone the project locally. Note the submodule link to the original project(s).
+## Clone and Build
 
 ```
 git clone https://github.com/kn0wmad/monerod-wrapper.git
 cd monerod-wrapper
-```
-
-## Building
-
-To build the project, run the following commands:
-
-```
 make
 ```
 
-## Installing (on Embassy)
+## Sideload onto Embassy
+
+Move the `.s9pk` to your device, replacing `xxxxxxxx` with your Embassy's unique id:
+
+`scp monerod.s9pk start9@embassy-xxxxxxxx.local:~`
+
+[SSH in](https://start9.com/latest/user-manual/ssh) and login to `embassy-cli` using your Embassy's master password:
+
+`embassy-cli auth login`
+
+Install monero
+
+`embassy-cli package install monerod.s9pk`
+
+## Donations
+
+885A1RytMgJFYG8PniGivyDrnS5eT9ew8dZk1TvWHFZeMPNSHurGVUM1vEkj4DQtznbRuEfZRuUMNgQWr2dxAe12VfBpeKP

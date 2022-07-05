@@ -7,7 +7,7 @@ ARG MONERO_BRANCH=v0.17.3.2
 # Set the proper HEAD commit hash for the given branch/tag in MONERO_BRANCH
 ARG MONERO_COMMIT_HASH=424e4de16b98506170db7b0d7d87a79ccf541744
 
-# Select Alpine 3.15 for the build image base
+# Select Alpine Linux for the build image base
 FROM alpine:3.15 as build
 LABEL author="kn0wmad@protonmail.com" \
       maintainer="kn0wmad@protonmail.com"
@@ -80,6 +80,7 @@ RUN set -ex && apk add --update --no-cache \
     protobuf-dev \
     rapidjson-dev \
     readline-dev \
+    sudo \
     unbound-dev \
     zeromq-dev
 
@@ -108,10 +109,10 @@ RUN set -ex && git clone --recursive --branch ${MONERO_BRANCH} \
     esac \
     && mkdir -p build/release && cd build/release \
     && cmake -D ARCH=${CMAKE_ARCH} -D STATIC=ON -D BUILD_64=ON -D CMAKE_BUILD_TYPE=Release -D BUILD_TAG=${CMAKE_BUILD_TAG} ../.. \
-    && cd /monero && nice -n 19 ionice -c2 -n7 make -j${NPROC:-$(nproc)} -C build/release daemon
+    && cd /monero && nice -n 19 ionice -c2 -n7 make -j6 -C build/release daemon
 
 # Begin final image build
-# Select Alpine 3.15 for the base image
+# Select Alpine Linux for the base image
 FROM alpine:3.15
 
 # Upgrade base image
@@ -127,6 +128,7 @@ RUN set -ex && apk add --update --no-cache \
     ncurses-libs \
     pcsc-lite-libs \
     readline \
+    sudo \
     yq \
     zeromq
 
@@ -136,8 +138,7 @@ RUN chmod a+x /usr/local/bin/docker_entrypoint.sh
 
 # Add user and setup directories for monerod
 RUN set -ex && adduser -Ds /bin/bash monero \
-    && mkdir -p /home/monero/.bitmonero \
-    && chown -R monero:monero /home/monero/.bitmonero
+    && mkdir -p /home/monero/.bitmonero
 USER monero
 
 # Switch to home directory and install newly built monerod binary
