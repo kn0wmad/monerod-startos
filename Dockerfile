@@ -2,13 +2,13 @@
 # with customization for use on EmbassyOS - https://Start9.com
 
 # Set Monero branch or tag to build
-ARG MONERO_BRANCH=v0.17.3.2
+ARG MONERO_BRANCH=v0.18.0.0
 
 # Set the proper HEAD commit hash for the given branch/tag in MONERO_BRANCH
-ARG MONERO_COMMIT_HASH=424e4de16b98506170db7b0d7d87a79ccf541744
+ARG MONERO_COMMIT_HASH=b6a029f222abada36c7bc6c65899a4ac969d7dee
 
-# Select Alpine Linux for the build image base
-FROM alpine:3.15 as build
+# Select Alpine Linux 3.x as build image base
+FROM alpine:3 as build
 LABEL author="kn0wmad@protonmail.com" \
       maintainer="kn0wmad@protonmail.com"
 
@@ -129,6 +129,7 @@ RUN set -ex && apk add --update --no-cache \
     pcsc-lite-libs \
     readline \
     sudo \
+    unbound-dev \
     yq \
     zeromq
 
@@ -137,16 +138,22 @@ ADD ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
 RUN chmod a+x /usr/local/bin/docker_entrypoint.sh
 
 # Add user and setup directories for monerod
-RUN set -ex && adduser -Ds /bin/bash monero \
-    && mkdir -p /home/monero/.bitmonero
-USER monero
+# RUN set -ex && adduser -Ds /bin/bash monero \
+#     && mkdir -p /home/monero/.bitmonero
+# USER monero
 
 # Switch to home directory and install newly built monerod binary
-WORKDIR /home/monero
-COPY --chown=monero:monero --from=build /monero/build/release/bin/monerod /usr/local/bin/monerod
+
+# WORKDIR /home/monero
+# COPY --chown=monero:monero --from=build /monero/build/release/bin/monerod /usr/local/bin/monerod
+
+WORKDIR /root
+COPY --from=build /monero/build/release/bin/monerod /usr/local/bin/monerod
 
 # Add config file for monerod
-COPY --chown=monero:monero monero.conf /etc/monero/monero.conf
+
+# COPY --chown=monero:monero monero.conf /etc/monero/monero.conf
+COPY monero.conf /etc/monero/monero.conf
 
 # Expose p2p port
 EXPOSE 18080
