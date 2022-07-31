@@ -1,4 +1,4 @@
-# Wrapper for Monerod
+# All work is currently in the `0.3.0` branch.  Nothing here will work until that is merged.  Pardon my dust
 
 `hello-world` is a simple, minimal project to serve as a template for creating an app for the Embassy.
 
