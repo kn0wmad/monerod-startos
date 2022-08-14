@@ -2,10 +2,10 @@
 # with customization for use on EmbassyOS - https://Start9.com
 
 # Set Monero branch or tag to build
-ARG MONERO_BRANCH=v0.18.0.0
+ARG MONERO_BRANCH=v0.18.1.0
 
 # Set the proper HEAD commit hash for the given branch/tag in MONERO_BRANCH
-ARG MONERO_COMMIT_HASH=b6a029f222abada36c7bc6c65899a4ac969d7dee
+ARG MONERO_COMMIT_HASH=727bc5b6878170332bf2d838f2c60d1c8dc685c8
 
 # Select Alpine Linux 3.x as build image base
 FROM alpine:3 as build
@@ -147,7 +147,7 @@ RUN chmod a+x /usr/local/bin/docker_entrypoint.sh
 # WORKDIR /home/monero
 # COPY --chown=monero:monero --from=build /monero/build/release/bin/monerod /usr/local/bin/monerod
 
-WORKDIR /root
+WORKDIR /monero
 COPY --from=build /monero/build/release/bin/monerod /usr/local/bin/monerod
 
 # Add config file for monerod
