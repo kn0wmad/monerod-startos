@@ -2,7 +2,7 @@ id: monerod
 title: "Monero"
 version: 0.18.1
 eos-version: 0.3.1.1
-release-notes: Initial release of Monero for EmbassyOS!!
+release-notes: Initial release of Monero for EmbassyOS
 license: modified-bipcot
 wrapper-repo: https://github.com/kn0wmad/monerod-wrapper
 upstream-repo: https://github.com/monero-project/monero
@@ -13,7 +13,7 @@ description:
   short: A Monero Full Node
   long: Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.  This is a headless (no GUI) server, used via an external Monero wallet of your choice over Tor.
 assets:
-  license: LICENSE.md
+  license: LICENSE
   icon: icon.png
   instructions: docs/instructions.md
   docker-images: image.tar

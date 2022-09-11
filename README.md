@@ -6,30 +6,90 @@ This project wraps the Monero daemon for EmbassyOS.  Monero is a private, secure
 
 - [docker](https://docs.docker.com/get-docker)
 - [docker-buildx](https://docs.docker.com/buildx/working-with-buildx/)
+- [yq](https://mikefarah.gitbook.io/yq)
+- [deno](https://deno.land/)
 - [make](https://www.gnu.org/software/make/)
 - [embassy-sdk](https://github.com/Start9Labs/embassy-os/tree/master/backend)
 
-## Clone and Build
+## Build enviroment
+Prepare your EmbassyOS build enviroment. In this example we are using Ubuntu 20.04.
+
+1. Install docker
+```
+curl -fsSL https://get.docker.com -o- | bash
+sudo usermod -aG docker "$USER"
+exec sudo su -l $USER
+```
+2. Set buildx as the default builder
+```
+docker buildx install
+docker buildx create --use
+```
+3. Enable cross-arch emulated builds in docker
+```
+docker run --privileged --rm linuxkit/binfmt:v0.8
+```
+4. Install yq
+```
+sudo snap install yq
+```
+5. Install deno
+```
+sudo snap install deno
+```
+6. Install essentials build packages
+```
+sudo apt-get install -y build-essential openssl libssl-dev libc6-dev clang libclang-dev ca-certificates
+```
+7. Install Rust
+```
+curl https://sh.rustup.rs -sSf | sh
+# Choose nr 1 (default install)
+source $HOME/.cargo/env
+```
+8. Build and install embassy-sdk
+```
+cd ~/ && git clone --recursive https://github.com/Start9Labs/embassy-os.git
+cd embassy-os/backend/
+./install-sdk.sh
+embassy-sdk init
+```
+Now you are ready to build your **Monero** service
+
+## Cloning
+
+Clone the project locally. 
 
 ```
-git clone https://github.com/kn0wmad/monerod-wrapper.git
+git clone https://github.com/Start9Labs/monerod-wrapper.git
 cd monerod-wrapper
+```
+
+## Building
+
+To build the **Monero** service, run the following command:
+
+```
 make
 ```
 
-## Sideload onto Embassy
+## Installing (on Embassy)
 
-Move the `.s9pk` to your device, replacing `xxxxxxxx` with your Embassy's unique id:
+Run the following commands to determine successful install:
+> :information_source: Change embassy-q1w2e3r4.local to your Embassy address
 
-`scp monerod.s9pk start9@embassy-xxxxxxxx.local:~`
+```
+embassy-cli auth login
+#Enter your embassy password
+embassy-cli --host https://embassy-q1w2e3r4.local package install monerod.s9pk
+```
+**Tip:** You can also install the monerod.s9pk using **Sideload Service** under the **Embassy > SETTINGS** section.
+## Verify Install
 
-[SSH in](https://start9.com/latest/user-manual/ssh) and login to `embassy-cli` using your Embassy's master password:
+Go to your Embassy Services page, select **Monero**, configure and start the service.
 
-`embassy-cli auth login`
+**Done!** 
 
-Install monero
-
-`embassy-cli package install monerod.s9pk`
 
 ## Donations
 
