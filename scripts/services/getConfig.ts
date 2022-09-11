@@ -1,4 +1,4 @@
-import { compat, types as T } from "../dependencies.ts";
+import { compat, types as T } from "../deps.ts";
 
 export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     "peer-tor-address": {
@@ -36,7 +36,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           "name": "Username",
           "description": "The username for connecting to Monero over RPC.",
           "default": "monero",
-          "masked": true,
+          "masked": false,
           "pattern": "^[a-zA-Z0-9_]+$",
           "pattern-description": "Must be alphanumeric (can contain underscore)."
         },

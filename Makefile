@@ -17,9 +17,8 @@ clean:
 verify: monerod.s9pk $(S9PK_PATH)
 		embassy-sdk verify s9pk $(S9PK_PATH)
 
-monerod.s9pk: manifest.yaml image.tar docs/instructions.md icon.png $(ASSET_PATHS) scripts/embassy.js
+monerod.s9pk: manifest.yaml image.tar docs/instructions.md icon.png $(ASSET_PATHS) scripts/embassy.js scripts/*.sh
 		embassy-sdk pack
-# 		embassy-sdk pack errors come from here, check your manifest, config, instructions, and icon
 
 install: all
 		embassy-cli package install monerod.s9pk
@@ -27,7 +26,7 @@ install: all
 instructions.md: docs/instructions.md
 	cp docs/instructions.md instructions.md
 
-image.tar: Dockerfile docker_entrypoint.sh manager/target/aarch64-unknown-linux-musl/release/monerod-manager manifest.yaml
+image.tar: Dockerfile docker_entrypoint.sh manager/target/aarch64-unknown-linux-musl/release/monerod-manager manifest.yaml scripts/*.sh
 		DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --tag start9/monerod/main:$(VERSION) --build-arg MONERO_VERSION=$(VERSION_STRIPPED) --build-arg N_PROC=8 --platform=linux/arm64 -o type=docker,dest=image.tar .
 
 scripts/embassy.js: $(TS_FILES)

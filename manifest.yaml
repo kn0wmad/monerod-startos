@@ -1,7 +1,6 @@
 id: monerod
 title: "Monero"
 version: 0.18.1
-eos-version: 0.3.1.1
 release-notes: Initial release of Monero for EmbassyOS
 license: modified-bipcot
 wrapper-repo: https://github.com/kn0wmad/monerod-wrapper
@@ -26,17 +25,24 @@ main:
     main: /root/.bitmonero
   io-format: yaml
 health-checks:
-  rpc:
-    name: RPC
+  rpc-api:
+    name: RPC Interface
+    success-message: Monero RPC is ready and accepting requests
     type: docker
     image: main
-    system: false
-    entrypoint: monerod
-    args:
-      - "-status"
-    mounts:
-      main: /root/.bitmonero
-    io-format: yaml
+    entrypoint: check-rpc.sh
+    args: []
+    io-format: json
+    inject: true
+  sync:
+    name: Sync Status
+    success-message: Blockchain is synced
+    type: docker
+    image: main
+    entrypoint: check-sync.sh
+    args: []
+    io-format: json
+    inject: true
 config:
   get:
     type: script
@@ -54,37 +60,32 @@ interfaces:
     description: Listens for JSON-RPC commands
     tor-config:
       port-mapping:
-        18081: "18081"
+        18089: "18089"
     lan-config:
-      18081:
+      18089:
         ssl: true
-        internal: 18081
+        internal: 18089
     ui: false
     protocols:
       - tcp
       - http
       - json-rpc
+      - monero
   peer:
     name: Peer Interface
     description: Listens for incoming connections from peers on the monero network
     tor-config:
       port-mapping:
         18080: "18080"
+    lan-config:
+      18080:
+        ssl: true
+        internal: 18080
     ui: false
     protocols:
+      - http
       - tcp
       - monero
-  # zmq:
-  #   name: ZeroMQ Interface
-  #   description: Listens for subscriptions to the ZeroMQ raw block and raw transaction event streams
-  #   tor-config:
-  #     port-mapping:
-  #       28332: "28332"
-  #       28333: "28333"
-  #   ui: false
-  #   protocols:
-  #     - tcp
-  #     - zmq
 alerts:
   uninstall: Uninstalling Monero will result in permanent loss of data. Without a backup, any funds stored on your node's default hot wallet will be lost forever. If you are unsure, we recommend making a backup, just to be safe.
   restore: Restoring Monero will overwrite its current data. You will lose any transactions recorded in watch-only wallets, and any funds you have received to the hot wallet, since the last backup.
@@ -120,28 +121,13 @@ backup:
       main: /root/.bitmonero
 actions: {}
 properties:
-  type: docker
-  image: compat
-  system: true
-  entrypoint: compat
-  args:
-    - properties
-    - /root/.bitmonero
-  mounts:
-    main: /root/.bitmonero
-  io-format: yaml
-#   reindex:
-#     name: "Reindex Blockchain"
-#     description: "Rebuilds the block and chainstate databases starting from genesis."
-#     warning: Blocks not stored on disk will be redownloaded in order to rebuild the database.
-#     allowed-statuses:
-#       - running
-#       - stopped
-#     implementation:
-#       type: docker
-#       image: main
-#       system: false
-#       entrypoint: reindex.sh
-#       args: []
-#       mounts:
-#         main: /root/.bitmonero
+  type: script
+migrations:
+  from:
+    "*":
+      type: script
+      args: ["from"]
+  to:
+    "*":
+      type: script
+      args: ["to"]

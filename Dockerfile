@@ -131,21 +131,14 @@ RUN set -ex && apk add --update --no-cache \
     sudo \
     unbound-dev \
     yq \
-    zeromq
+    zeromq \
+    tini
 
 # Add entrypoint
 ADD ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
-RUN chmod a+x /usr/local/bin/docker_entrypoint.sh
-
-# Add user and setup directories for monerod
-# RUN set -ex && adduser -Ds /bin/bash monero \
-#     && mkdir -p /home/monero/.bitmonero
-# USER monero
-
-# Switch to home directory and install newly built monerod binary
-
-# WORKDIR /home/monero
-# COPY --chown=monero:monero --from=build /monero/build/release/bin/monerod /usr/local/bin/monerod
+ADD ./scripts/check-rpc.sh /usr/local/bin/check-rpc.sh
+ADD ./scripts/check-sync.sh /usr/local/bin/check-sync.sh
+RUN chmod a+x /usr/local/bin/*.sh
 
 WORKDIR /monero
 COPY --from=build /monero/build/release/bin/monerod /usr/local/bin/monerod
