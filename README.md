@@ -1,15 +1,15 @@
-# All work is currently in the `0.3.0` branch.  Nothing here will work until that is merged.  Pardon my dust
+# EmbassyOS Wrapper for Monero
 
-`hello-world` is a simple, minimal project to serve as a template for creating an app for the Embassy.
+This project wraps the Monero daemon for EmbassyOS.  Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.  Learn more at https://www.getmonero.org/
 
 ## Dependencies
 
 - [docker](https://docs.docker.com/get-docker)
 - [docker-buildx](https://docs.docker.com/buildx/working-with-buildx/)
 - [yq](https://mikefarah.gitbook.io/yq)
-- [toml](https://crates.io/crates/toml-cli)
-- [appmgr](https://github.com/Start9Labs/embassy-os/tree/master/appmgr)
+- [deno](https://deno.land/)
 - [make](https://www.gnu.org/software/make/)
+- [embassy-sdk](https://github.com/Start9Labs/embassy-os/tree/master/backend)
 
 ## Build enviroment
 Prepare your EmbassyOS build enviroment. In this example we are using Ubuntu 20.04.
@@ -33,40 +33,41 @@ docker run --privileged --rm linuxkit/binfmt:v0.8
 ```
 sudo snap install yq
 ```
-5. Install essentials build packages
+5. Install deno
+```
+sudo snap install deno
+```
+6. Install essentials build packages
 ```
 sudo apt-get install -y build-essential openssl libssl-dev libc6-dev clang libclang-dev ca-certificates
 ```
-6. Install Rust
+7. Install Rust
 ```
 curl https://sh.rustup.rs -sSf | sh
 # Choose nr 1 (default install)
 source $HOME/.cargo/env
 ```
-7. Install toml
-```
-cargo install toml-cli
-```
 8. Build and install embassy-sdk
 ```
-cd ~/ && git clone https://github.com/Start9Labs/embassy-os.git
-cd embassy-os/appmgr/
-cargo install --path=. --features=portable --no-default-features && cd ~/
+cd ~/ && git clone --recursive https://github.com/Start9Labs/embassy-os.git
+cd embassy-os/backend/
+./install-sdk.sh
+embassy-sdk init
 ```
-Now you are ready to build your first EmbassyOS service
+Now you are ready to build your **Monero** service
 
 ## Cloning
 
-Clone the project locally. Note the submodule link to the original project(s). 
+Clone the project locally. 
 
 ```
-git clone https://github.com/Start9Labs/hello-world-wrapper.git
-cd hello-world-wrapper
+git clone https://github.com/Start9Labs/monerod-wrapper.git
+cd monerod-wrapper
 ```
 
 ## Building
 
-To build the project, run the following commands:
+To build the **Monero** service, run the following command:
 
 ```
 make
@@ -74,10 +75,22 @@ make
 
 ## Installing (on Embassy)
 
-SSH into an Embassy device.
-`scp` the `.s9pk` to any directory from your local machine.
-Run the following command to determine successful install:
+Run the following commands to determine successful install:
+> :information_source: Change embassy-q1w2e3r4.local to your Embassy address
 
 ```
-sudo appmgr install hello-world.s9pk
+embassy-cli auth login
+#Enter your embassy password
+embassy-cli --host https://embassy-q1w2e3r4.local package install monerod.s9pk
 ```
+**Tip:** You can also install the monerod.s9pk using **Sideload Service** under the **Embassy > SETTINGS** section.
+## Verify Install
+
+Go to your Embassy Services page, select **Monero**, configure and start the service.
+
+**Done!** 
+
+
+## Donations
+
+885A1RytMgJFYG8PniGivyDrnS5eT9ew8dZk1TvWHFZeMPNSHurGVUM1vEkj4DQtznbRuEfZRuUMNgQWr2dxAe12VfBpeKP

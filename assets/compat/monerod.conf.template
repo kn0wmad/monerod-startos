@@ -1,0 +1,14 @@
+##
+## monero.conf configuration file. Lines beginning with # are comments.
+##
+
+## RPC
+{{#IF rpc.enable
+rpc-bind-ip=0.0.0.0
+confirm-external-bind
+}}
+rpc-login={{rpc.username}}:{{rpc.password}}
+
+non-interactive
+
+data-dir=/home/monero/.bitmonero

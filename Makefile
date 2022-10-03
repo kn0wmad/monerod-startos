@@ -1,29 +1,32 @@
-ASSETS := $(shell yq e '.assets.[].src' manifest.yaml)
-ASSET_PATHS := $(addprefix assets/,$(ASSETS))
-VERSION := $(shell toml get hello-world/Cargo.toml package.version)
-HELLO_WORLD_SRC := $(shell find ./hello-world/src) hello-world/Cargo.toml hello-world/Cargo.lock
-S9PK_PATH=$(shell find . -name hello-world.s9pk -print)
+VERSION := $(shell yq e ".version" manifest.yaml)
+VERSION_STRIPPED := $(shell echo $(VERSION) | sed -E 's/([0-9]+\.[0-9]+\.[0-9]+).*/\1/g')
+ASSET_PATHS := $(shell find ./assets/*)
+S9PK_PATH=$(shell find . -name monerod.s9pk -print)
+TS_FILES := $(shell find . -name \*.ts )
 
 .DELETE_ON_ERROR:
 
 all: verify
 
-verify: hello-world.s9pk $(S9PK_PATH)
-		embassy-sdk verify $(S9PK_PATH)
+clean:
+		rm -f monerod.s9pk
+		rm -f image.tar
+		rm -f scripts/*.js
 
-# install: hello-world.s9pk
-# 		embassy-cli package install hello-world
+verify: monerod.s9pk $(S9PK_PATH)
+		embassy-sdk verify s9pk $(S9PK_PATH)
 
-# embassy-sdk pack errors come from here, check your manifest, config, instructions, and icon
-hello-world.s9pk: manifest.yaml assets/compat/config_spec.yaml config_rules.yaml image.tar docs/instructions.md $(ASSET_PATHS)
+monerod.s9pk: manifest.yaml image.tar docs/instructions.md icon.png $(ASSET_PATHS) scripts/embassy.js scripts/*.sh
 		embassy-sdk pack
 
-image.tar: Dockerfile docker_entrypoint.sh hello-world/target/aarch64-unknown-linux-musl/release/hello-world
-		DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --tag start9/hello-world --platform=linux/arm64 -o type=docker,dest=image.tar .
+install: all
+		embassy-cli package install monerod.s9pk
 
-hello-world/target/aarch64-unknown-linux-musl/release/hello-world: $(HELLO_WORLD_SRC)
-		docker run --rm -it -v ~/.cargo/registry:/root/.cargo/registry -v "$(shell pwd)"/hello-world:/home/rust/src start9/rust-musl-cross:aarch64-musl cargo +beta build --release
-		docker run --rm -it -v ~/.cargo/registry:/root/.cargo/registry -v "$(shell pwd)"/hello-world:/home/rust/src start9/rust-musl-cross:aarch64-musl musl-strip target/aarch64-unknown-linux-musl/release/hello-world
+instructions.md: docs/instructions.md
+	cp docs/instructions.md instructions.md
 
-manifest.yaml: hello-world/Cargo.toml
-		yq e -i '.version = $(VERSION)' manifest.yaml
+image.tar: Dockerfile docker_entrypoint.sh manifest.yaml scripts/*.sh
+		DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --tag start9/monerod/main:$(VERSION) --build-arg MONERO_VERSION=$(VERSION_STRIPPED) --build-arg N_PROC=8 --platform=linux/arm64 -o type=docker,dest=image.tar .
+
+scripts/embassy.js: $(TS_FILES)
+	deno bundle scripts/embassy.ts scripts/embassy.js
