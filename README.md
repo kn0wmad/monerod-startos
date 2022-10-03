@@ -55,7 +55,6 @@ embassy-sdk init
 
 ## Cloning
 Clone the project locally. 
-
 ```
 git clone https://github.com/Start9Labs/monerod-wrapper.git
 cd monerod-wrapper
@@ -63,14 +62,13 @@ cd monerod-wrapper
 
 ## Building
 To build the **Monero** service, run the following command:
-
 ```
 make
 ```
 
 ## Installing (on Embassy)
 Run the following commands to determine successful install:
-> :information_source: Change embassy-xxxxxxxx.local to your Embassy address
+> :information_source: Change `embassy-xxxxxxxx.local` to your Embassy address
 
 ```
 embassy-cli auth login
@@ -79,7 +77,7 @@ embassy-cli --host https://embassy-xxxxxxxx.local package install monerod.s9pk
 ```
 **Tip:** You can also install the monerod.s9pk by sideloading: **Embassy -> Settings -> Sideload Service**
 ## Verify Install
-Go to your Embassy Services page, select **Monero**, configure and start the service.
+Go to your Embassy Services page, select **Monero**, then configure and start the service.
 
 ## Donations
 885A1RytMgJFYG8PniGivyDrnS5eT9ew8dZk1TvWHFZeMPNSHurGVUM1vEkj4DQtznbRuEfZRuUMNgQWr2dxAe12VfBpeKP

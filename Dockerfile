@@ -2,10 +2,10 @@
 # with customization for use on EmbassyOS - https://Start9.com
 
 # Set Monero branch or tag to build
-ARG MONERO_BRANCH=v0.18.1.0
+ARG MONERO_BRANCH=v0.18.1.1
 
 # Set the proper HEAD commit hash for the given branch/tag in MONERO_BRANCH
-ARG MONERO_COMMIT_HASH=727bc5b6878170332bf2d838f2c60d1c8dc685c8
+ARG MONERO_COMMIT_HASH=7cbae6ca988dedbe358ee5edbf9bdd610673a8ee
 
 # Select Alpine Linux 3.x as build image base
 FROM alpine:3 as build
@@ -152,7 +152,7 @@ EXPOSE 18081
 EXPOSE 18083
 
 # Add HEALTHCHECK against get_info endpoint
-HEALTHCHECK --interval=30s --timeout=5s CMD curl --fail http://localhost:18089/get_info || exit 1
+HEALTHCHECK --interval=30s --timeout=10s CMD curl --fail http://localhost:18081/get_info || exit 1
 
 # Start monerod
 ENTRYPOINT ["/usr/local/bin/docker_entrypoint.sh"]
