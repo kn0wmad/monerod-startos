@@ -3,7 +3,6 @@ VERSION_STRIPPED := $(shell echo $(VERSION) | sed -E 's/([0-9]+\.[0-9]+\.[0-9]+)
 ASSET_PATHS := $(shell find ./assets/*)
 S9PK_PATH=$(shell find . -name monerod.s9pk -print)
 TS_FILES := $(shell find . -name \*.ts )
-# MANAGER_SRC := $(shell find ./manager -name '*.rs') manager/Cargo.toml manager/Cargo.lock
 
 .DELETE_ON_ERROR:
 
@@ -26,12 +25,8 @@ install: all
 instructions.md: docs/instructions.md
 	cp docs/instructions.md instructions.md
 
-image.tar: Dockerfile docker_entrypoint.sh manager/target/aarch64-unknown-linux-musl/release/monerod-manager manifest.yaml scripts/*.sh
+image.tar: Dockerfile docker_entrypoint.sh manifest.yaml scripts/*.sh
 		DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --tag start9/monerod/main:$(VERSION) --build-arg MONERO_VERSION=$(VERSION_STRIPPED) --build-arg N_PROC=8 --platform=linux/arm64 -o type=docker,dest=image.tar .
 
 scripts/embassy.js: $(TS_FILES)
 	deno bundle scripts/embassy.ts scripts/embassy.js
-
-manager/target/aarch64-unknown-linux-musl/release/monerod-manager: $(MANAGER_SRC)
-		docker run --rm -it -v ~/.cargo/registry:/root/.cargo/registry -v "$(shell pwd)"/manager:/home/rust/src start9/rust-musl-cross:aarch64-musl cargo build --release
-		docker run --rm -it -v ~/.cargo/registry:/root/.cargo/registry -v "$(shell pwd)"/manager:/home/rust/src start9/rust-musl-cross:aarch64-musl musl-strip target/aarch64-unknown-linux-musl/release/monerod-manager
