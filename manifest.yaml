@@ -60,11 +60,11 @@ interfaces:
     description: Listens for JSON-RPC commands
     tor-config:
       port-mapping:
-        18089: "18089"
+        18081: "18081"
     lan-config:
-      18089:
+      18081:
         ssl: true
-        internal: 18089
+        internal: 18081
     ui: false
     protocols:
       - tcp

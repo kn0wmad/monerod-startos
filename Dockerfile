@@ -144,15 +144,12 @@ WORKDIR /monero
 COPY --from=build /monero/build/release/bin/monerod /usr/local/bin/monerod
 
 # Add config file for monerod
-
-# COPY --chown=monero:monero monero.conf /etc/monero/monero.conf
 COPY monero.conf /etc/monero/monero.conf
 
-# Expose p2p port
+# Expose p2p, restricted RPC, and Hidden Service ports
 EXPOSE 18080
-
-# Expose restricted RPC port
-EXPOSE 18089
+EXPOSE 18081
+EXPOSE 18083
 
 # Add HEALTHCHECK against get_info endpoint
 HEALTHCHECK --interval=30s --timeout=5s CMD curl --fail http://localhost:18089/get_info || exit 1

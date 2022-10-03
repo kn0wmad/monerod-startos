@@ -1,9 +1,7 @@
 # EmbassyOS Wrapper for Monero
-
 This project wraps the Monero daemon for EmbassyOS.  Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.  Learn more at https://www.getmonero.org/
 
 ## Dependencies
-
 - [docker](https://docs.docker.com/get-docker)
 - [docker-buildx](https://docs.docker.com/buildx/working-with-buildx/)
 - [yq](https://mikefarah.gitbook.io/yq)
@@ -54,10 +52,8 @@ cd embassy-os/backend/
 ./install-sdk.sh
 embassy-sdk init
 ```
-Now you are ready to build your **Monero** service
 
 ## Cloning
-
 Clone the project locally. 
 
 ```
@@ -66,7 +62,6 @@ cd monerod-wrapper
 ```
 
 ## Building
-
 To build the **Monero** service, run the following command:
 
 ```
@@ -74,23 +69,17 @@ make
 ```
 
 ## Installing (on Embassy)
-
 Run the following commands to determine successful install:
-> :information_source: Change embassy-q1w2e3r4.local to your Embassy address
+> :information_source: Change embassy-xxxxxxxx.local to your Embassy address
 
 ```
 embassy-cli auth login
 #Enter your embassy password
-embassy-cli --host https://embassy-q1w2e3r4.local package install monerod.s9pk
+embassy-cli --host https://embassy-xxxxxxxx.local package install monerod.s9pk
 ```
-**Tip:** You can also install the monerod.s9pk using **Sideload Service** under the **Embassy > SETTINGS** section.
+**Tip:** You can also install the monerod.s9pk by sideloading: **Embassy -> Settings -> Sideload Service**
 ## Verify Install
-
 Go to your Embassy Services page, select **Monero**, configure and start the service.
 
-**Done!** 
-
-
 ## Donations
-
 885A1RytMgJFYG8PniGivyDrnS5eT9ew8dZk1TvWHFZeMPNSHurGVUM1vEkj4DQtznbRuEfZRuUMNgQWr2dxAe12VfBpeKP
