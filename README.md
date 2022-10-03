@@ -62,6 +62,7 @@ cd monerod-wrapper
 
 ## Building
 To build the **Monero** service, run the following command:
+
 ```
 make
 ```
@@ -69,6 +70,7 @@ make
 ## Installing (on Embassy)
 Run the following commands to determine successful install:
 > :information_source: Change `embassy-xxxxxxxx.local` to your Embassy address
+
 
 ```
 embassy-cli auth login
