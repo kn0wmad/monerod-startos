@@ -52,19 +52,17 @@ dependencies: {}
 volumes:
   main:
     type: data
-  compat:
-    type: assets
 interfaces:
   rpc:
     name: RPC Interface
     description: Listens for JSON-RPC commands
     tor-config:
       port-mapping:
-        18081: "18081"
+        18089: "18089"
     lan-config:
-      18081:
+      18089:
         ssl: true
-        internal: 18081
+        internal: 18089
     ui: false
     protocols:
       - tcp
