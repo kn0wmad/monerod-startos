@@ -1,4 +1,4 @@
-import { compat, types as T } from "../deps.ts";
+import { compat, types as T } from "../dependencies.ts";
 
 export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     "peer-tor-address": {

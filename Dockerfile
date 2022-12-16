@@ -5,7 +5,7 @@ USER root
 RUN apk update
 RUN apk add curl wget sudo bash tini yq
 
-# Add entrypoint
+# Add entrypoint and healthchecks
 ADD ./docker_entrypoint.sh /usr/local/bin/docker_entrypoint.sh
 ADD ./scripts/check-rpc.sh /usr/local/bin/check-rpc.sh
 ADD ./scripts/check-sync.sh /usr/local/bin/check-sync.sh

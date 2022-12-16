@@ -10,7 +10,7 @@ else
         echo "Monero RPC is unreachable" >&2
         exit 1
     else
-        echo $STATUS >&2
+        echo "Syncing to Monero blockchain.  Initial sync may take several days.  $STATUS" >&2
         exit 61
     fi
 fi
