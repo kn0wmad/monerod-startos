@@ -20,7 +20,7 @@ RUN chmod a+x /usr/local/bin/*.sh
 EXPOSE 18080
 EXPOSE 18081
 EXPOSE 18083
-EXPOSE 18089
+#EXPOSE 18089
 
 # Add HEALTHCHECK against get_info endpoint
 HEALTHCHECK --interval=30s --timeout=10s CMD curl --fail http://localhost:18081/get_info || exit 1
