@@ -36,7 +36,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         "default": 648,
       },
     }
-  }
+  },
   "ratelimit": {
     "type": "object",
     "name": "Rate Limits",
@@ -65,7 +65,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         "default": 2048,
       }
     }
-  }
+  },
   "advanced": {
     "type": "object",
     "name": "Advanced",

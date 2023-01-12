@@ -14,7 +14,7 @@ RUN chmod a+x /usr/local/bin/*.sh
 # WORKDIR /monero
 
 # # Add config file for monerod
-# COPY monero.conf /etc/monero/monero.conf
+COPY ./assets/monero.conf.template /etc/.bitmonero/monero.conf
 
 # # Expose p2p, restricted RPC, and Hidden Service ports
 EXPOSE 18080

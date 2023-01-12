@@ -96,11 +96,8 @@ backup:
     args:
       - duplicity
       - create
-      - monerod
       - /mnt/backup
       - /root/.bitmonero
-      - "--exclude /root/.bitmonero/chainstate"
-      - "--exclude /root/.bitmonero/blocks"
     mounts:
       BACKUP: /mnt/backup
       main: /root/.bitmonero
