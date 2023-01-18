@@ -4,10 +4,9 @@
 # See https://monerodocs.org/interacting/monerod-reference/
 
 # Do not require tty as in foreground mode: "Helpful when running in a container." (Keeps it from crashing because no tty is assigned)
-non-interactive=1
+# non-interactive=1
 
 no-zmq=1                        # We don't use the zmq server. Disabling to "limit attack surface"
-
 
 # Data directory (blockchain db and indices)
 data-dir=/root/.bitmonero  # Remember to create the monero user first
