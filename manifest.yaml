@@ -21,7 +21,7 @@ main:
   entrypoint: "docker_entrypoint.sh"
   args: []
   mounts:
-    main: /root/.bitmonero
+    main: /data/.bitmonero
   io-format: yaml
 health-checks:
   rpc-api:
@@ -52,36 +52,36 @@ volumes:
   main:
     type: data
 interfaces:
-  rpc:
-    name: RPC Interface
-    description: Listens for JSON-RPC commands
-    tor-config:
-      port-mapping:
-        18089: "18089"
-    lan-config:
-      18089:
-        ssl: true
-        internal: 18089
-    ui: false
-    protocols:
-      - tcp
-      - http
-      - json-rpc
-      - monero
   peer:
     name: Peer Interface
     description: Listens for incoming connections from peers on the monero network
     tor-config:
       port-mapping:
         18080: "18080"
-    lan-config:
-      18080:
-        ssl: true
-        internal: 18080
+#    lan-config:
+#      18080:
+#        ssl: false
+#        internal: 18080
     ui: false
     protocols:
-      - http
       - tcp
+      - monero
+  rpc:
+    name: RPC Interface
+    description: Listens for JSON-RPC commands
+    tor-config:
+      port-mapping:
+        18081: "18081"
+        18083: "18083"
+    lan-config:
+      18081:
+        ssl: true
+        internal: 18081
+    ui: false
+    protocols:
+      - tcp
+      - http
+      - json-rpc
       - monero
 alerts:
   uninstall: Uninstalling Monero will result in permanent loss of data. Without a backup, any funds stored on your node's default hot wallet will be lost forever. If you are unsure, we recommend making a backup, just to be safe.

@@ -29,7 +29,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         "nullable": false,
         "name": "Maximum TX pool size",
         "description":
-          "Keep the unconfirmed transaction memory pool at or below <n> megabytes.",
+          "Keep the unconfirmed transaction memory pool at or below this many megabytes.",
         "range": "[1,*)",
         "integral": true,
         "units": "MiB",
@@ -47,7 +47,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         "nullable": false,
         "name": "Download Speed Limit",
         "description":
-          "Keep the monero p2p node's incoming bandwidth rate limited at or under <n> kilobytes per second.",
+          "Keep the monero p2p node's incoming bandwidth rate limited at or under this many kilobytes per second.",
         "range": "[1,*)",
         "integral": true,
         "units": "kB/s",
@@ -58,7 +58,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         "nullable": false,
         "name": "Upload Speed Limit",
         "description":
-          "Keep the monero p2p node's outgoing bandwidth rate limited at or under <n> kilobytes per second",
+          "Keep the monero p2p node's outgoing bandwidth rate limited at or under this many kilobytes per second",
         "range": "[1,*)",
         "integral": true,
         "units": "kB/s",
@@ -74,7 +74,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
       "tor": {
         "type": "object",
         "name": "Tor",
-        "description": "Tor Network Settings",
+        "description": "Tor anonymity network settings",
         "spec": {
           "toronly": {
             "name": "Tor only",
@@ -95,7 +95,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             "nullable": false,
             "name": "Max Tor RPC conns",
             "description":
-              "Maximum number of simultaneous connections to our .onion rpc",
+              "Maximum number of simultaneous connections to Monero's .onion RPC",
             "range": "[1,256]",
             "integral": true,
             "units": "Connections",
@@ -116,7 +116,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             "type": "boolean",
             "name": "Disable Dandelion++",
             "description":
-              "Disables white noise and Dandelion++ sender node obfuscation scheme.\nEnabled: It is harder to tell which node originated a transaction, but your peers could potentially silently censor your transactions by not propagating them.\nDisabled: Saves \"white noise\" bandwidth; may make sending transactions more reliable.\nFor more information, see https://www.getmonero.org/2020/04/18/dandelion-implemented.html",
+              "Disables white noise and Dandelion++ sender node obfuscation scheme.\nEnabled: It is harder to tell which node originated a transaction, but your peers could potentially silently censor your transactions by not propagating them.\nDisabled: Saves \"white noise\" bandwidth; may make broadcasting transactions more reliable.\nFor more information, see https://www.getmonero.org/2020/04/18/dandelion-implemented.html",
             "default": false,
           },
         },
@@ -131,7 +131,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             "nullable": true,
             "name": "Max Peers Incoming",
             "description":
-              "Maximum number of simultaneous peers connecting inbound to our Monero daemon",
+              "Maximum number of simultaneous peers connecting inbound to the Monero daemon",
             "range": "[0,999]",
             "integral": true,
             "default": 16,
@@ -156,7 +156,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             "type": "boolean",
             "name": "Advertise RPC Node",
             "description":
-              "Advertise to end-user wallets crawling the p2p network, and to other p2p network peers that anyone can use this node's RPC interface (using a restricted, \"safe\" set of RPC calls) as a \"Remote Node\" for connecting their wallets.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon.",
+              "Advertise to end-user wallets crawling the p2p network, and to other p2p network peers, that anyone can use this node's RPC interface (using a restricted, \"safe\" set of RPC calls) as a \"Remote Node\" for connecting their wallets.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon.",
             "default": false,
           },
           "upnp": {
@@ -220,7 +220,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         "description":
           "Reduce the size of the blockchain stored on disk",
         "warning":
-          "Pruning discards proof data from transactions after verification but before storage.  Enabling blockchain pruning saves 2/3 of disk space without degrading functionality. For maximum effect this should be used already on the first sync because pruning only applies to blocks after you turn it on, not retroactively.\n\nIf you already have an unpruned blockchain and want to reduce the size, see the monero-blockchain-prune tool.\n\nThe drawback of pruning is that you will contribute less to Monero P2P network in terms of helping new nodes to sync up (up to 1/8 of normal contribution). Your node will still relay new transactions and blocks.",
+          "Pruning discards proof data from transactions after verification but before storage.  Enabling blockchain pruning saves 2/3 of disk space without degrading functionality. If you want to prune your blockchain, for maximum effect this should be enabled when you first sync because pruning only applies to blocks after you turn it on, not retroactively.<br/><br/>The drawback of pruning is that you will contribute less to Monero P2P network in terms of helping new nodes to sync up (down to 1/8 of normal contribution). Your node will still relay new transactions and blocks.",
         "tag": {
           "id": "mode",
           "name": "Prune Blocks",
@@ -238,7 +238,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
               "type": "boolean",
               "name": "Accept Pruned Blocks",
               "description":
-                "Accept pre-pruned blocks from peers during intial sync, rather than getting full blocks and our node pruning them.",
+                "Accept pre-pruned blocks from peers during intial sync, rather than receiving full blocks, verifying and then pruning them.  This is not recommended unless you are only pulling from your own trusted, fully-validating node using the \"Specific Nodes Only\" configuration section.",
               "warning":
                 "Turning this on accepts pre-pruned blocks from peers during intial sync, rather than getting full blocks and our node pruning them.\n\nThis setting substantially reduces sync time and computational overhead, it also substantially changes the security assumptions by skipping full verification and trusting block hash checkpoints attested to and periodically manually inserted into the Monero code before release of new versions by the Monero core development team.  At best this has SPV-like security and at worst you are trusting a third party.",
               "default": false,

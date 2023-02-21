@@ -13,7 +13,7 @@ else
     elif [[ $STATUS_EXIT_CODE -ne 0 ]]; then
         echo "Monero RPC is unreachable"
         exit 1
-    elif [[ $SYNC_PROGRESS -lt 100 ]] && [[ $SYNC_PROGRESS -ge 0 ]]
+    elif [[ $SYNC_PROGRESS -lt 100 ]] && [[ $SYNC_PROGRESS -ge 0 ]] ; then
         echo "Syncing to Monero blockchain.  Initial sync may take several days. STATUS: $STATUS"
         exit $SYNC_PROGRESS
     else
