@@ -2,12 +2,9 @@
 
 set -e
 
+cp /root/monero.conf.template /data/.bitmonero/
 new_conf_template="/data/.bitmonero/monero.conf.template"
 new_conf="/data/.bitmonero/monero.conf"
-
-
-# echo '/data/.bitmonero/chainstate/' > /data/.backupignore
-# echo '/data/.bitmonero/blocks/' >> /data/.backupignore
 
 #export HOST_IP=$(ip -4 route list match 0/0 | awk '{print $3}')
 export TOR_HOSTNAME="embassy"
@@ -136,4 +133,4 @@ done
 mv $new_conf_template $new_conf
 
 #exec tini /usr/bin/sudo -iu monero monerod --non-interactive --config-file $new_conf
-exec tini monerod --non-interactive --config-file $new_conf
+exec tini monerod --non-interactive --config-file=$new_conf

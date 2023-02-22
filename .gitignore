@@ -1,4 +1,5 @@
 monerod.s9pk
 image.tar
+docker-images/
 scripts/embassy.js
 .vscode
