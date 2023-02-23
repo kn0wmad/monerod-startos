@@ -72,7 +72,7 @@ interfaces:
     tor-config:
       port-mapping:
         18081: "18081"
-        18083: "18083"
+        #18083: "18083"
     lan-config:
       18081:
         ssl: true

@@ -6,8 +6,8 @@ cp /root/monero.conf.template /data/.bitmonero
 new_conf_template="/data/.bitmonero/monero.conf.template"
 new_conf="/data/.bitmonero/monero.conf"
 
-#export HOST_IP=$(ip -4 route list match 0/0 | awk '{print $3}')
-export TOR_HOSTNAME="embassy"
+export TOR_HOSTNAME=$(ip -4 route list match 0/0 | awk '{print $3}')
+#export TOR_HOSTNAME="embassy"
 export TOR_PORT=9050
 export MONERO_P2P_PORT=18080
 export MONERO_RPC_PORT=18081
@@ -79,7 +79,7 @@ elif [ "$ADV_P2P_PUBLICRPC" = "true" ] ; then
  echo "public-node=1" >> $new_conf_template
  if [ "$ADV_TOR_TORONLY" = "true" ] ; then
   echo "# Advertise onion as public remote node (Communicated to wallet clients that crawl to our p2p network port, when public-node=1)" >> $new_conf_template
-  echo "anonymous-inbound=RPC_TOR_ADDRESS:MONERO_RPC_PORT_HS,MONERO_ANON_INBOUND_HOST:MONERO_RPC_PORT,ADV_TOR_MAXONIONCONNS" >> $new_conf_template
+  echo "anonymous-inbound=RPC_TOR_ADDRESS:MONERO_RPC_PORT,MONERO_ANON_INBOUND_HOST:MONERO_RPC_PORT_HS,ADV_TOR_MAXONIONCONNS" >> $new_conf_template
   echo "# Disable UPnP port mapping" >> $new_conf_template
   echo "igd=disabled" >> $new_conf_template
  elif [ "ADV_P2P_UPNP" = "true"] ; then
