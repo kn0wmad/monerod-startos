@@ -2,9 +2,10 @@
 
 set -e
 
-cp /root/monero.conf.template /data/.bitmonero
-new_conf_template="/data/.bitmonero/monero.conf.template"
-new_conf="/data/.bitmonero/monero.conf"
+BITMONERO_DIR="/data/.bitmonero"
+cp /root/monero.conf.template $BITMONERO_DIR/
+new_conf_template="$BITMONERO_DIR/monero.conf.template"
+new_conf="$BITMONERO_DIR/monero.conf"
 
 export TOR_HOSTNAME=$(ip -4 route list match 0/0 | awk '{print $3}')
 #export TOR_HOSTNAME="embassy"
@@ -47,12 +48,12 @@ sed -i "s/TXPOOL_MAXBYTES/$TXPOOL_MAXBYTES/" $new_conf_template
 #RPC BAN config:
 if [ "$ADV_TOR_DISABLERPCBAN" = "true" ] ; then
  disable_rpc_ban="disable-rpc-ban=1              # Do not ban hosts on RPC errors. May help to prevent monerod from banning traffic originating from the Tor daemon."
- echo -e "\n#RPC BAN\n$disable_rpc_ban" >> $new_conf_template
+ echo -e "\n# RPC BAN\n$disable_rpc_ban" >> $new_conf_template
 fi
 
 #TOR config:
 if [ "$ADV_TOR_TORONLY" = "true" ] ; then
- echo -e "\n#TOR" >> $new_conf_template
+ echo -e "\n# TOR" >> $new_conf_template
  echo    "# Proxy for broadcasting/relaying transaction (does not fetch blocks)" >> $new_conf_template
  echo -n "tx-proxy=tor,TOR_HOSTNAME:TOR_PORT,ADV_TOR_MAXSOCKSCONNS" >> $new_conf_template
  if [ "$ADV_TOR_DISABLEDANDELION" = "true" ] ; then
@@ -66,14 +67,14 @@ fi
 
 #Gossip config:
 if [ "$ADV_P2P_DISABLEGOSSIP" = "true" ] ; then
- echo -e "\n#GOSSIP" >> $new_conf_template
+ echo -e "\n# GOSSIP" >> $new_conf_template
  echo "#Tell our peers not to gossip our node" >> $new_conf_template
  echo "hide-my-port=1" >> $new_conf_template
  echo "# Disable UPnP port mapping" >> $new_conf_template
  echo "igd=disabled" >> $new_conf_template
 elif [ "$ADV_P2P_PUBLICRPC" = "true" ] ; then
  #RPC config:
- echo -e "\n#PUBLIC RPC" >> $new_conf_template
+ echo -e "\n# PUBLIC RPC" >> $new_conf_template
  echo "# Node advertisement: Requires --restricted-rpc, --rpc-bind-ip and --confirm-external-bind" >> $new_conf_template
  echo "# Advertise to users crawling the p2p network that they can use this node as a \"remote node\" for connecting their wallets." >> $new_conf_template
  echo "public-node=1" >> $new_conf_template
@@ -101,14 +102,14 @@ sed -i "s/ADV_TOR_MAXONIONCONNS/$ADV_TOR_MAXONIONCONNS/g" $new_conf_template
 
 #PRUNING config:
 if [ "$ADV_PRUNING_MODE" = "prune" ] ; then
- echo -e "\n#PRUNING\nprune-blockchain=1" >> $new_conf_template
+ echo -e "\n# PRUNING\nprune-blockchain=1" >> $new_conf_template
  if [ "$ADV_PRUNING_SYNCPRUNEDBLOCKS" = "true" ] ; then
   echo "sync-pruned-blocks=1" >> $new_conf_template
  fi
 fi
  
 #CUSTOM NODES config:
-echo -e "\n#CUSTOM NODES" >> $new_conf_template
+echo -e "\n# CUSTOM NODES" >> $new_conf_template
 i=1
 num_custom_peers=$(yq e '.advanced.p2p.peer[]|length' /data/.bitmonero/start9/config.yaml | wc -l)
 while [[ $i -le $num_custom_peers ]] ; do
@@ -130,7 +131,7 @@ done
 
 #sed -i "s///g" $new_conf_template
 
-mv $new_conf_template $new_conf
+cp $new_conf_template $new_conf
 
 #exec tini /usr/bin/sudo -iu monero monerod --non-interactive --config-file $new_conf
 exec tini monerod --non-interactive --config-file=$new_conf

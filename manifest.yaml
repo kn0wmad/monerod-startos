@@ -1,6 +1,6 @@
 id: monerod
 title: "Monero"
-version: 0.18.1.2
+version: 0.18.2.0
 release-notes: Initial release of Monero for EmbassyOS
 license: modified-bipcot
 wrapper-repo: https://github.com/kn0wmad/monerod-wrapper

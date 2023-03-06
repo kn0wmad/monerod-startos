@@ -1,4 +1,4 @@
-FROM sethsimmons/simple-monerod:v0.18.1.2
+FROM sethsimmons/simple-monerod:v0.18.2.0
 
 USER root
 
@@ -12,8 +12,8 @@ ADD ./scripts/check-sync.sh /usr/local/bin/check-sync.sh
 RUN chmod a+x /usr/local/bin/*.sh
 
 # # Add config file for monerod
-WORKDIR /root/
 COPY ./assets/monero.conf.template /root/
+
 #Create the monero user if it doesn't exist:
 #RUN if [[ $(users|grep ^monero$|wc -l) -eq 0 ] ; then usersadduser --home /data/.bitmonero --shell /sbin/nologin monero ; fi
 # RUN chown -R monero:monero /data
