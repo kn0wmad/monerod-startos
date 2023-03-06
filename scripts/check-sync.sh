@@ -14,11 +14,12 @@ else
     BLOCKS_SYNCED=$(echo $STATUS | yq e '.height')
     BLOCKS_TOTAL=$(echo $STATUS | yq e '.target_height')
     if [ "$SYNCED" = "false" ] ; then
-     echo -n "Syncing Monero blockchain.  Initial sync may take several days.  STATUS: Processing block #$BLOCKS_SYNCED"
+     echo -n "Syncing Monero blockchain.  Initial sync may take several days.  STATUS: Processed block #$BLOCKS_SYNCED"
      if [[ $BLOCKS_TOTAL -gt 0 ]] ; then
       SYNC_PROGRESS=$(expr ${BLOCKS_SYNCED}00/$BLOCKS_TOTAL)
-      echo "/${BLOCKS_TOTAL} ($SYNC_PROGRESS%)"
-     fi     
+      echo -n "/${BLOCKS_TOTAL} ($SYNC_PROGRESS%)"
+     fi
+     echo ""
      exit 61
     elif [[ $STATUS_EXIT_CODE -ne 0 ]]; then
         echo "Monero RPC is unreachable"

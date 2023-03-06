@@ -4,7 +4,7 @@
 # See https://monerodocs.org/interacting/monerod-reference/
 
 # Do not require tty as in foreground mode: "Helpful when running in a container."
-# This ieeps monero from crashing because no tty is assigned.
+# This keeps monero from crashing because no tty is assigned.
 # We are commenting it here because it must be invoked from the command line via `monerod --non-interactive`
 #non-interactive=1
 
@@ -24,7 +24,7 @@ p2p-bind-ip=0.0.0.0            # Bind to all interfaces (the default)
 p2p-bind-port=18080            # Bind to default port
 
 out-peers=ADV_P2P_MAXNUMOUTPEERS    # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays [defacto default: 64]
-in-peers=ADV_P2P_MAXNUMINPEERS    # The default is unlimited; we prefer to put a cap on this ["suggested": 128]
+in-peers=ADV_P2P_MAXNUMINPEERS      # The default is unlimited; we prefer to put a cap on this ["suggested": 128]
  
 limit-rate-up=RATELIMIT_KBPSUP       # Default 2048 kB/s; contribute more to p2p network
 limit-rate-down=RATELIMIT_KBPSDOWN   # Default 8192 kB/s; allow for faster initial sync

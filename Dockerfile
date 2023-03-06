@@ -16,8 +16,9 @@ COPY ./assets/monero.conf.template /root/
 
 #Create the monero user if it doesn't exist:
 #RUN if [[ $(users|grep ^monero$|wc -l) -eq 0 ] ; then usersadduser --home /data/.bitmonero --shell /sbin/nologin monero ; fi
-# RUN chown -R monero:monero /data
-# RUN chmod 700 /data /data/.bitmonero
+#RUN mkdir -p /data/.bitmonero
+#RUN chown -R monero:monero /data
+#RUN chmod 700 /data /data/.bitmonero
 
 # # Expose p2p, restricted RPC, and Hidden Service ports
 EXPOSE 18080
