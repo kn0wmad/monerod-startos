@@ -13,10 +13,13 @@ else
     #BLOCKS_TOTAL=$(echo $SYNC_STATUS | cut -d: -f2)
     BLOCKS_SYNCED=$(echo $STATUS | yq e '.height')
     BLOCKS_TOTAL=$(echo $STATUS | yq e '.target_height')
-    if [ "$SYNCED" = "false" ] ; then
+    if [ "$SYNCED" = "true" ] ; then
+     #Blockchain is synced, yay
+     exit 0
+    elif [ "$SYNCED" = "false" ] ; then
      echo -n "Syncing Monero blockchain.  Initial sync may take several days.  STATUS: Processed block #$BLOCKS_SYNCED"
      if [[ $BLOCKS_TOTAL -gt 0 ]] ; then
-      SYNC_PROGRESS=$(expr ${BLOCKS_SYNCED}00/$BLOCKS_TOTAL)
+      SYNC_PROGRESS=$(expr ${BLOCKS_SYNCED}00 / $BLOCKS_TOTAL)
       echo -n "/${BLOCKS_TOTAL} ($SYNC_PROGRESS%)"
      fi
      echo ""
