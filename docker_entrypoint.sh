@@ -135,5 +135,5 @@ mv $new_conf_template $new_conf
 
 chown monero /data/.bitmonero
 
-exec tini /usr/bin/sudo -iu monero monerod --non-interactive --config-file=$new_conf
-#exec tini monerod --non-interactive --config-file=$new_conf
+#exec tini /usr/bin/sudo -u monero monerod --non-interactive --config-file=$new_conf
+exec tini monerod --non-interactive --config-file=$new_conf
