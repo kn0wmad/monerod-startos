@@ -19,6 +19,15 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     "target": "tor-address",
     "interface": "rpc",
   },
+  "rpc-lan-address": {
+    "name": "RPC LAN Address",
+    "description": "The LAN address of the RPC interface",
+    "type": "pointer",
+    "subtype": "package",
+    "package-id": "monerod",
+    "target": "lan-address",
+    "interface": "rpc",
+  },
   "txpool": {
     "type": "object",
     "name": "TX Pool",

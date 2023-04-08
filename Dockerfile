@@ -18,7 +18,5 @@ COPY ./assets/monero.conf.template /root/
 EXPOSE 18080
 EXPOSE 18081
 
-USER monero
-
 # Start monerod
 ENTRYPOINT ["/usr/local/bin/docker_entrypoint.sh"]

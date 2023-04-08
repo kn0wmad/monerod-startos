@@ -14,6 +14,7 @@ export MONERO_RPC_PORT=18081
 export MONERO_RPC_PORT_HS=18083
 export MONERO_ANON_INBOUND_HOST="127.0.0.1" # monerod.embassy
 export PEER_TOR_ADDRESS=$(yq e '.peer-tor-address' /data/.bitmonero/start9/config.yaml)
+export RPC_LAN_ADDRESS=$(yq e '.rpc-lan-address' /data/.bitmonero/start9/config.yaml)
 export RPC_TOR_ADDRESS=$(yq e '.rpc-tor-address' /data/.bitmonero/start9/config.yaml)
 
 export ADV_P2P_MAXNUMOUTPEERS=$(yq e '.advanced.p2p.maxnumoutpeers' /data/.bitmonero/start9/config.yaml)
@@ -32,6 +33,24 @@ export ADV_P2P_UPNP=$(yq e '.advanced.p2p.upnp' /data/.bitmonero/start9/config.y
 export ADV_P2P_STRICTNODES=$(yq e '.advanced.p2p.strictnodes' /data/.bitmonero/start9/config.yaml)
 export ADV_PRUNING_MODE=$(yq e '.advanced.pruning.mode' /data/.bitmonero/start9/config.yaml)
 export ADV_PRUNING_SYNCPRUNEDBLOCKS=$(yq e '.advanced.pruning.syncprunedblocks' /data/.bitmonero/start9/config.yaml)
+
+# Properties Page
+echo 'version: 2' > /root/start9/stats.yaml
+echo 'data:' >> /root/start9/stats.yaml
+echo '  Monero RPC Connection String (LAN):' >> /root/start9/stats.yaml
+echo '    type: string' >> /root/start9/stats.yaml
+echo '    value: "'"$RPC_LAN_ADDRESS:18081"'"' >> /root/start9/stats.yaml
+echo '    description: Address for connecting to the Monero RPC over LAN' >> /root/start9/stats.yaml
+echo '    copyable: true' >> /root/start9/stats.yaml
+echo '    masked: false' >> /root/start9/stats.yaml
+echo '    qr: true' >> /root/start9/stats.yaml
+echo '  Monero RPC Connection String (Tor):' >> /root/start9/stats.yaml
+echo '    type: string' >> /root/start9/stats.yaml
+echo '    value: "'"$RPC_TOR_ADDRESS:18081"'"' >> /root/start9/stats.yaml
+echo '    description: Address for connecting to the Monero RPC over Tor' >> /root/start9/stats.yaml
+echo '    copyable: true' >> /root/start9/stats.yaml
+echo '    masked: false' >> /root/start9/stats.yaml
+echo '    qr: true' >> /root/start9/stats.yaml
 
 #Replace the easily replacable variables in the config template
 sed -i "s/ADV_P2P_MAXNUMOUTPEERS/$ADV_P2P_MAXNUMOUTPEERS/" $new_conf_template
