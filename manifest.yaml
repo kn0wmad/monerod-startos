@@ -33,6 +33,7 @@ health-checks:
     args: []
     io-format: json
     inject: true
+    system: false
   sync:
     name: Sync Status
     success-message: Blockchain is synced
@@ -42,6 +43,7 @@ health-checks:
     args: []
     io-format: json
     inject: true
+    system: false
 config:
   get:
     type: script
@@ -58,10 +60,6 @@ interfaces:
     tor-config:
       port-mapping:
         18080: "18080"
-#    lan-config:
-#      18080:
-#        ssl: false
-#        internal: 18080
     ui: false
     protocols:
       - tcp

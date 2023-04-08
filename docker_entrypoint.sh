@@ -8,12 +8,11 @@ new_conf_template="$BITMONERO_DIR/monero.conf.template"
 new_conf="$BITMONERO_DIR/monero.conf"
 
 export TOR_HOSTNAME=$(ip -4 route list match 0/0 | awk '{print $3}')
-#export TOR_HOSTNAME="embassy"
 export TOR_PORT=9050
 export MONERO_P2P_PORT=18080
 export MONERO_RPC_PORT=18081
 export MONERO_RPC_PORT_HS=18083
-export MONERO_ANON_INBOUND_HOST="127.0.0.1" #monerod.embassy
+export MONERO_ANON_INBOUND_HOST="127.0.0.1" # monerod.embassy
 export PEER_TOR_ADDRESS=$(yq e '.peer-tor-address' /data/.bitmonero/start9/config.yaml)
 export RPC_TOR_ADDRESS=$(yq e '.rpc-tor-address' /data/.bitmonero/start9/config.yaml)
 
@@ -97,8 +96,6 @@ sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/g" $new_conf_template
 sed -i "s/MONERO_RPC_PORT_HS/$MONERO_RPC_PORT_HS/g" $new_conf_template
 sed -i "s/MONERO_ANON_INBOUND_HOST/$MONERO_ANON_INBOUND_HOST/g" $new_conf_template
 sed -i "s/ADV_TOR_MAXONIONCONNS/$ADV_TOR_MAXONIONCONNS/g" $new_conf_template
-#sed -i "s///g" $new_conf_template
-
 
 #PRUNING config:
 if [ "$ADV_PRUNING_MODE" = "prune" ] ; then
@@ -129,12 +126,9 @@ while [[ $i -le $num_custom_peers ]] ; do
  i=$(expr $i + 1)
 done
 
-#sed -i "s///g" $new_conf_template
-
 mv $new_conf_template $new_conf
 
 sed -i "s/:1000:1000:/:302340:302340:/" /etc/passwd
 chown -R monero /data/.bitmonero
 
 exec tini /usr/bin/sudo -u monero monerod --non-interactive --config-file=$new_conf
-#exec tini monerod --non-interactive --config-file=$new_conf
