@@ -35,22 +35,22 @@ export ADV_PRUNING_MODE=$(yq e '.advanced.pruning.mode' /data/.bitmonero/start9/
 export ADV_PRUNING_SYNCPRUNEDBLOCKS=$(yq e '.advanced.pruning.syncprunedblocks' /data/.bitmonero/start9/config.yaml)
 
 # Properties Page
-echo 'version: 2' > /root/start9/stats.yaml
-echo 'data:' >> /root/start9/stats.yaml
-echo '  Monero RPC Connection String (LAN):' >> /root/start9/stats.yaml
-echo '    type: string' >> /root/start9/stats.yaml
-echo '    value: "'"$RPC_LAN_ADDRESS:18081"'"' >> /root/start9/stats.yaml
-echo '    description: Address for connecting to the Monero RPC over LAN' >> /root/start9/stats.yaml
-echo '    copyable: true' >> /root/start9/stats.yaml
-echo '    masked: false' >> /root/start9/stats.yaml
-echo '    qr: true' >> /root/start9/stats.yaml
-echo '  Monero RPC Connection String (Tor):' >> /root/start9/stats.yaml
-echo '    type: string' >> /root/start9/stats.yaml
-echo '    value: "'"$RPC_TOR_ADDRESS:18081"'"' >> /root/start9/stats.yaml
-echo '    description: Address for connecting to the Monero RPC over Tor' >> /root/start9/stats.yaml
-echo '    copyable: true' >> /root/start9/stats.yaml
-echo '    masked: false' >> /root/start9/stats.yaml
-echo '    qr: true' >> /root/start9/stats.yaml
+echo 'version: 2' > /data/.bitmonero/start9/stats.yaml
+echo 'data:' >> /data/.bitmonero/start9/stats.yaml
+echo '  Monero RPC Connection String (LAN):' >> /data/.bitmonero/start9/stats.yaml
+echo '    type: string' >> /data/.bitmonero/start9/stats.yaml
+echo '    value: "'"$RPC_LAN_ADDRESS:18081"'"' >> /data/.bitmonero/start9/stats.yaml
+echo '    description: Address for connecting to the Monero RPC over LAN' >> /data/.bitmonero/start9/stats.yaml
+echo '    copyable: true' >> /data/.bitmonero/start9/stats.yaml
+echo '    masked: false' >> /data/.bitmonero/start9/stats.yaml
+echo '    qr: true' >> /data/.bitmonero/start9/stats.yaml
+echo '  Monero RPC Connection String (Tor):' >> /data/.bitmonero/start9/stats.yaml
+echo '    type: string' >> /data/.bitmonero/start9/stats.yaml
+echo '    value: "'"$RPC_TOR_ADDRESS:18081"'"' >> /data/.bitmonero/start9/stats.yaml
+echo '    description: Address for connecting to the Monero RPC over Tor' >> /data/.bitmonero/start9/stats.yaml
+echo '    copyable: true' >> /data/.bitmonero/start9/stats.yaml
+echo '    masked: false' >> /data/.bitmonero/start9/stats.yaml
+echo '    qr: true' >> /data/.bitmonero/start9/stats.yaml
 
 #Replace the easily replacable variables in the config template
 sed -i "s/ADV_P2P_MAXNUMOUTPEERS/$ADV_P2P_MAXNUMOUTPEERS/" $new_conf_template
