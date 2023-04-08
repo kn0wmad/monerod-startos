@@ -1,6 +1,6 @@
 FROM sethsimmons/simple-monerod:v0.18.2.0
 
-USER root
+USER monero
 
 RUN apk update
 RUN apk add curl wget sudo bash tini yq

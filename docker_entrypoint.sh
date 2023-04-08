@@ -133,7 +133,8 @@ done
 
 mv $new_conf_template $new_conf
 
-chown -R monero /data/.bitmonero/
+sed -i "s/:1000:1000:/:302340:302340:/" /etc/passwd
+chown -R monero /data/.bitmonero
 
 exec tini /usr/bin/sudo -u monero monerod --non-interactive --config-file=$new_conf
 #exec tini monerod --non-interactive --config-file=$new_conf
