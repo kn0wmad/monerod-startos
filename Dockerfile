@@ -11,6 +11,10 @@ ADD ./scripts/check-rpc.sh /usr/local/bin/check-rpc.sh
 ADD ./scripts/check-sync.sh /usr/local/bin/check-sync.sh
 RUN chmod a+x /usr/local/bin/*.sh
 
+#Change default monero UID and GID, disable user's home and shell
+RUN sed -i "s|monero:x:1000:1000:Linux User,,,:/home/monero:/bin/bash|monero:x:302340:302340:Monero:/dev/null:/sbin/nologin|" /etc/passwd
+RUN sed -i "s/^\(monero:x\):1000:$/\1:302340:/" /etc/group
+
 # # Add config file for monerod
 COPY ./assets/monero.conf.template /root/
 

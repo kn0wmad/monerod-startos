@@ -31,8 +31,9 @@ export ADV_P2P_DISABLEGOSSIP=$(yq e '.advanced.p2p.disablegossip' /data/.bitmone
 export ADV_P2P_PUBLICRPC=$(yq e '.advanced.p2p.publicrpc' /data/.bitmonero/start9/config.yaml)
 export ADV_P2P_UPNP=$(yq e '.advanced.p2p.upnp' /data/.bitmonero/start9/config.yaml)
 export ADV_P2P_STRICTNODES=$(yq e '.advanced.p2p.strictnodes' /data/.bitmonero/start9/config.yaml)
-export ADV_PRUNING_MODE=$(yq e '.advanced.pruning.mode' /data/.bitmonero/start9/config.yaml)
-export ADV_PRUNING_SYNCPRUNEDBLOCKS=$(yq e '.advanced.pruning.syncprunedblocks' /data/.bitmonero/start9/config.yaml)
+export ADV_PRUNING_MODE=$(yq e '.advanced.pruning' /data/.bitmonero/start9/config.yaml)
+#export ADV_PRUNING_MODE=$(yq e '.advanced.pruning.mode' /data/.bitmonero/start9/config.yaml)
+#export ADV_PRUNING_SYNCPRUNEDBLOCKS=$(yq e '.advanced.pruning.syncprunedblocks' /data/.bitmonero/start9/config.yaml)
 
 # Properties Page
 echo 'version: 2' > /data/.bitmonero/start9/stats.yaml
@@ -101,9 +102,9 @@ elif [ "$ADV_P2P_PUBLICRPC" = "true" ] ; then
   echo "anonymous-inbound=RPC_TOR_ADDRESS:MONERO_RPC_PORT,MONERO_ANON_INBOUND_HOST:MONERO_RPC_PORT_HS,ADV_TOR_MAXONIONCONNS" >> $new_conf_template
   echo "# Disable UPnP port mapping" >> $new_conf_template
   echo "igd=disabled" >> $new_conf_template
- elif [ "ADV_P2P_UPNP" = "true"] ; then
-  echo "#Enable UPnP port mapping" >> $new_conf_template
-  echo "igd=enabled" >> $new_conf_template
+ #elif [ "ADV_P2P_UPNP" = "true" ] ; then
+ # echo "#Enable UPnP port mapping" >> $new_conf_template
+ # echo "igd=enabled" >> $new_conf_template
  fi
 fi
 
@@ -117,11 +118,11 @@ sed -i "s/MONERO_ANON_INBOUND_HOST/$MONERO_ANON_INBOUND_HOST/g" $new_conf_templa
 sed -i "s/ADV_TOR_MAXONIONCONNS/$ADV_TOR_MAXONIONCONNS/g" $new_conf_template
 
 #PRUNING config:
-if [ "$ADV_PRUNING_MODE" = "prune" ] ; then
+if [ "$ADV_PRUNING_MODE" = "true" ] ; then
  echo -e "\n# PRUNING\nprune-blockchain=1" >> $new_conf_template
- if [ "$ADV_PRUNING_SYNCPRUNEDBLOCKS" = "true" ] ; then
-  echo "sync-pruned-blocks=1" >> $new_conf_template
- fi
+ #if [ "$ADV_PRUNING_SYNCPRUNEDBLOCKS" = "true" ] ; then
+ # echo "sync-pruned-blocks=1" >> $new_conf_template
+ #fi
 fi
  
 #CUSTOM NODES config:
@@ -147,7 +148,6 @@ done
 
 mv $new_conf_template $new_conf
 
-sed -i "s/:1000:1000:/:302340:302340:/" /etc/passwd
-chown -R monero /data/.bitmonero
+chown -R monero:monero /data/.bitmonero
 
 exec tini /usr/bin/sudo -u monero monerod --non-interactive --config-file=$new_conf

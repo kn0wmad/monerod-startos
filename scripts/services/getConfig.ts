@@ -30,7 +30,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
   },
   "txpool": {
     "type": "object",
-    "name": "TX Pool",
+    "name": "Transaction Pool",
     "description": "Unconfirmed Transaction Pool Settings",
     "spec": {
       "maxbytes": {
@@ -168,6 +168,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
               "Advertise to end-user wallets crawling the p2p network, and to other p2p network peers, that anyone can use this node's RPC interface (using a restricted, \"safe\" set of RPC calls) as a \"Remote Node\" for connecting their wallets.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon.",
             "default": false,
           },
+/*
           "upnp": {
             "type": "boolean",
             "name": "Enable UPnP Port Mapping",
@@ -175,6 +176,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
               "Make automated requests to the local router to forward external ports from the router's public IP address to the Monero daemon's LAN address, facilitating inbound p2p connections from the clearnet internet to your Monero daemon behind a NAT.  This only works if your router supports UPnP and has it enabled.  This setting has no effect if you enable \"Tor Only\" mode.",
             "default": false,
           },
+*/
           "strictnodes": {
             "type": "boolean",
             "name": "Specific Nodes Only",
@@ -224,37 +226,11 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         },
       },
       "pruning": {
-        "type": "union",
-        "name": "Pruning Settings",
+        "type": "boolean",
+        "name": "Pruning",
         "description":
-          "Reduce the size of the blockchain stored on disk",
-        "warning":
-          "Pruning discards proof data from transactions after verification but before storage.  Enabling blockchain pruning saves 2/3 of disk space without degrading functionality. If you want to prune your blockchain, for maximum effect this should be enabled when you first sync because pruning only applies to blocks after you turn it on, not retroactively.<br/><br/>The drawback of pruning is that you will contribute less to Monero P2P network in terms of helping new nodes to sync up (down to 1/8 of normal contribution). Your node will still relay new transactions and blocks.",
-        "tag": {
-          "id": "mode",
-          "name": "Prune Blocks",
-          "description":
-            "Blockchain pruning in Monero prunes proof data from transactions after verification but before storage.  This saves roughly 2/3s of disk space.",
-          "variant-names": {
-            "disabled": "Disabled",
-            "prune": "Enable",
-          },
-        },
-        "variants": {
-          "disabled": {},
-          "prune": {
-            "syncprunedblocks": {
-              "type": "boolean",
-              "name": "Accept Pruned Blocks",
-              "description":
-                "Accept pre-pruned blocks from peers during intial sync, rather than receiving full blocks, verifying and then pruning them.  This is not recommended unless you are only pulling from your own trusted, fully-validating node using the \"Specific Nodes Only\" configuration section.",
-              "warning":
-                "Turning this on accepts pre-pruned blocks from peers during intial sync, rather than getting full blocks and our node pruning them.\n\nThis setting substantially reduces sync time and computational overhead, it also substantially changes the security assumptions by skipping full verification and trusting block hash checkpoints attested to and periodically manually inserted into the Monero code before release of new versions by the Monero core development team.  At best this has SPV-like security and at worst you are trusting a third party.",
-              "default": false,
-            },
-          },
-        },
-        "default": "disabled",
+          "Blockchain pruning in Monero prunes proof data from transactions after verification but before storage.  This saves roughly 2/3s of disk space.  The drawback of pruning is that you will contribute less to Monero P2P network in terms of helping new nodes doing IBD. If enabled, your node will still relay new transactions and blocks.",
+        "default": false,
       },
       
     },
