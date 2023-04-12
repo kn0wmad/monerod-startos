@@ -24,7 +24,7 @@ export RATELIMIT_KBPSDOWN=$(yq e '.ratelimit.kbpsdown' /data/.bitmonero/start9/c
 export ADV_TOR_DISABLERPCBAN=$(yq e '.advanced.tor.disablerpcban' /data/.bitmonero/start9/config.yaml)
 export TXPOOL_MAXBYTES=$(yq e '.txpool.maxbytes' /data/.bitmonero/start9/config.yaml)
 export ADV_TOR_TORONLY=$(yq e '.advanced.tor.toronly' /data/.bitmonero/start9/config.yaml)
-export ADV_TOR_DISABLEDANDELION=$(yq e '.advanced.tor.disabledandelion' /data/.bitmonero/start9/config.yaml)
+export ADV_TOR_DANDELION=$(yq e '.advanced.tor.dandelion' /data/.bitmonero/start9/config.yaml)
 export ADV_TOR_MAXSOCKSCONNS=$(yq e '.advanced.tor.maxsocksconns' /data/.bitmonero/start9/config.yaml)
 export ADV_TOR_MAXONIONCONNS=$(yq e '.advanced.tor.maxonionconns' /data/.bitmonero/start9/config.yaml)
 export ADV_P2P_DISABLEGOSSIP=$(yq e '.advanced.p2p.disablegossip' /data/.bitmonero/start9/config.yaml)
@@ -75,7 +75,7 @@ if [ "$ADV_TOR_TORONLY" = "true" ] ; then
  echo -e "\n# TOR" >> $new_conf_template
  echo    "# Proxy for broadcasting/relaying transaction (does not fetch blocks)" >> $new_conf_template
  echo -n "tx-proxy=tor,TOR_HOSTNAME:TOR_PORT,ADV_TOR_MAXSOCKSCONNS" >> $new_conf_template
- if [ "$ADV_TOR_DISABLEDANDELION" = "true" ] ; then
+ if [ "$ADV_TOR_DANDELION" = "false" ] ; then
   echo ",disable_noise" >> $new_conf_template
  fi
  echo -e "\n# Use Tor's socks proxy for p2p traffic (note: --proxy cannot reach .onion nodes)" >> $new_conf_template
@@ -85,7 +85,7 @@ if [ "$ADV_TOR_TORONLY" = "true" ] ; then
 fi
 
 #Gossip config:
-if [ "$ADV_P2P_DISABLEGOSSIP" = "true" ] ; then
+if [ "$ADV_P2P_DISABLEGOSSIP" = "false" ] ; then
  echo -e "\n# GOSSIP" >> $new_conf_template
  echo "#Tell our peers not to gossip our node" >> $new_conf_template
  echo "hide-my-port=1" >> $new_conf_template

@@ -38,7 +38,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         "nullable": false,
         "name": "Maximum TX pool size",
         "description":
-          "Keep the unconfirmed transaction memory pool at or below this many megabytes.",
+          "Keep the unconfirmed transaction memory pool at or below this many megabytes. You may wish to decrease this if you are low on RAM, or increase if you are mining. Default is 648MB.",
         "range": "[1,*)",
         "integral": true,
         "units": "MiB",
@@ -49,7 +49,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
   "ratelimit": {
     "type": "object",
     "name": "Rate Limits",
-    "description": "Speed limits in kilobytes per second (kB/s)",
+    "description": "Speed limits in kilobytes per second (kB/s).  You may wish to adjust if you have limited bandwidth or data from your Internet provider.",
     "spec": {
       "kbpsdown": {
         "type": "number",
@@ -88,7 +88,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           "toronly": {
             "name": "Tor only",
             "description":
-              "Only communicate with Monero nodes via Tor",
+              "Only communicate with Monero nodes via Tor.  This is more private, but can be slower, especially during initial sync.",
             "type": "boolean",
             "default": true,
           },
@@ -121,12 +121,12 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             "units": "Connections",
             "default": 16,
           },
-          "disabledandelion": {
+          "dandelion": {
             "type": "boolean",
-            "name": "Disable Dandelion++",
+            "name": "Dandelion++",
             "description":
-              "Disables white noise and Dandelion++ sender node obfuscation scheme.\nEnabled: It is harder to tell which node originated a transaction, but your peers could potentially silently censor your transactions by not propagating them.\nDisabled: Saves \"white noise\" bandwidth; may make broadcasting transactions more reliable.\nFor more information, see https://www.getmonero.org/2020/04/18/dandelion-implemented.html",
-            "default": false,
+              "Enables white noise and Dandelion++ sender node obfuscation scheme.\nEnabled: It is harder to tell which node originated a transaction, but your peers could potentially silently censor your transactions by not propagating them.\nDisabled: Saves \"white noise\" bandwidth and may make broadcasting transactions more reliable.\nFor more information, see https://www.getmonero.org/2020/04/18/dandelion-implemented.html",
+            "default": true,
           },
         },
       },
@@ -157,9 +157,9 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           },
           "disablegossip": {
             "type": "boolean",
-            "name": "Disable Peer Gossip",
-            "description": "Tell connected peers not to gossip our node info to their peers",
-            "default": false,
+            "name": "Peer Gossip",
+            "description": "Disabling will tell connected peers not to gossip our node info to their peers. This will make this node more private by stopping other nodes from learning how to make an inbound connection to your node. Leaving enabled will result in more connections for your node.",
+            "default": true,
           },
           "publicrpc": {
             "type": "boolean",
@@ -186,7 +186,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           },
           "peer": {
             "name": "Add Peers",
-            "description": "Add addresses of p2p nodes that Monero should connect to.",
+            "description": "Add addresses of specific p2p nodes that your Monero node should connect to.",
             "type": "list",
             "subtype": "object",
             "range": "[0,*)",
@@ -197,7 +197,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
                   "type": "string",
                   "nullable": false,
                   "name": "Hostname",
-                  "description": "Domain name, onion or IP address of Monero peer",
+                  "description": "Domain name, onion or IP address of Monero peer.",
                   "pattern":
                     "(^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$)|((^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$)|(^[a-z2-7]{16}\\.onion$)|(^([a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$))",
                   "pattern-description":
@@ -208,7 +208,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
                   "nullable": true,
                   "name": "Port",
                   "description":
-                    "TCP Port that peer is listening on for inbound p2p connections",
+                    "TCP Port that peer is listening on for inbound p2p connections.",
                   "range": "[0,65535]",
                   "integral": true,
                   "default": 18080,
