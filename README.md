@@ -81,5 +81,8 @@ embassy-cli --host https://embassy-xxxxxxxx.local package install monerod.s9pk
 ## Verify Install
 Go to your Embassy Services page, select **Monero**, then configure and start the service.
 
+## Support
+Support channels will be announced shortly, for now, please just file an Issue in this repo.
+
 ## Donations
 885A1RytMgJFYG8PniGivyDrnS5eT9ew8dZk1TvWHFZeMPNSHurGVUM1vEkj4DQtznbRuEfZRuUMNgQWr2dxAe12VfBpeKP
