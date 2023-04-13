@@ -1,32 +1,34 @@
-VERSION := $(shell yq e ".version" manifest.yaml)
-VERSION_STRIPPED := $(shell echo $(VERSION) | sed -E 's/([0-9]+\.[0-9]+\.[0-9]+).*/\1/g')
-ASSET_PATHS := $(shell find ./assets/*)
-S9PK_PATH=$(shell find . -name monerod.s9pk -print)
-TS_FILES := $(shell find . -name \*.ts )
+PKG_ID := $(shell yq e ".id" manifest.yaml)
+PKG_VERSION := $(shell yq e ".version" manifest.yaml)
+TS_FILES := $(shell find ./ -name \*.ts)
 
+# delete the target of a rule if it has changed and its recipe exits with a nonzero exit status
 .DELETE_ON_ERROR:
 
 all: verify
 
 clean:
-		rm -f monerod.s9pk
-		rm -f image.tar
-		rm -f scripts/*.js
+	rm -rf docker-images
+	rm -f $(PKG_ID).s9pk
+	rm -f image.tar
+	rm -f scripts/*.js
 
-verify: monerod.s9pk $(S9PK_PATH)
-		embassy-sdk verify s9pk $(S9PK_PATH)
+verify: $(PKG_ID).s9pk
+	embassy-sdk verify s9pk $(PKG_ID).s9pk
 
-monerod.s9pk: manifest.yaml image.tar docs/instructions.md icon.png $(ASSET_PATHS) scripts/embassy.js scripts/*.sh
-		embassy-sdk pack
+install: $(PKG_ID).s9pk
+	embassy-cli package install $(PKG_ID).s9pk
 
-install: all
-		embassy-cli package install monerod.s9pk
+$(PKG_ID).s9pk: manifest.yaml LICENSE docs/instructions.md icon.png scripts/embassy.js docker-images/aarch64.tar docker-images/x86_64.tar
+	embassy-sdk pack
 
-instructions.md: docs/instructions.md
-	cp docs/instructions.md instructions.md
+docker-images/aarch64.tar: Dockerfile docker_entrypoint.sh scripts/*.sh assets/*
+	mkdir -p docker-images
+	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) --platform=linux/arm64 --build-arg ARCH=aarch64 -o type=docker,dest=docker-images/aarch64.tar .
 
-image.tar: Dockerfile docker_entrypoint.sh manifest.yaml scripts/*.sh
-		DOCKER_CLI_EXPERIMENTAL=enabled docker buildx build --tag start9/monerod/main:$(VERSION) --build-arg MONERO_VERSION=$(VERSION_STRIPPED) --build-arg N_PROC=8 --platform=linux/arm64 -o type=docker,dest=image.tar .
+docker-images/x86_64.tar: Dockerfile docker_entrypoint.sh scripts/*.sh assets/*
+	mkdir -p docker-images
+	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) --platform=linux/amd64 --build-arg ARCH=x86_64 -o type=docker,dest=docker-images/x86_64.tar .
 
 scripts/embassy.js: $(TS_FILES)
 	deno bundle scripts/embassy.ts scripts/embassy.js

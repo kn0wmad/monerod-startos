@@ -1,0 +1,52 @@
+#
+# monero.conf configuration file.  Things beginning with # are comments.
+#
+# See https://monerodocs.org/interacting/monerod-reference/
+
+# Do not require tty as in foreground mode: "Helpful when running in a container."
+# This keeps monero from crashing because no tty is assigned.
+# We are commenting it here because it must be invoked from the command line via `monerod --non-interactive`
+#non-interactive=1
+
+no-zmq=1                        # We don't use the zmq server. Disabling to "limit attack surface"
+
+# Data directory (blockchain db and indices)
+data-dir=/data/.bitmonero  # Remember to create the monero user first
+ 
+# Log file
+log-level=0,blockchain:INFO
+log-file=/data/.bitmonero/monero.log
+max-log-file-size=10000000            # Currently 10MB. 0 = Prevent monerod from managing the log files, if we want logrotate to take care of that
+max-log-files=2
+ 
+# P2P full node
+p2p-bind-ip=0.0.0.0            # Bind to all interfaces (the default)
+p2p-bind-port=18080            # Bind to default port
+
+out-peers=ADV_P2P_MAXNUMOUTPEERS    # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays [defacto default: 64]
+in-peers=ADV_P2P_MAXNUMINPEERS      # The default is unlimited; we prefer to put a cap on this ["suggested": 128]
+ 
+limit-rate-up=RATELIMIT_KBPSUP       # Default 2048 kB/s; contribute more to p2p network
+limit-rate-down=RATELIMIT_KBPSDOWN   # Default 8192 kB/s; allow for faster initial sync
+
+# RPC open node
+rpc-bind-ip=0.0.0.0            # Bind to all interfaces [So we can connect a wallet on the LAN]
+rpc-bind-port=18081            # Bind on default port
+confirm-external-bind=1        # Open node (confirm) - required for node to be advertized in p2p handshake (public-node=1)
+restricted-rpc=1               # Prevent unsafe RPC calls
+
+# Slow but reliable db writes
+db-sync-mode=safe
+
+# Attempt to salvage block database if it seems corrupted:
+#db-salvage=1
+
+# Max Mempool Size (bytes), default=648000000 (~618MB)
+max-txpool-weight=TXPOOL_MAXBYTES
+
+# DNS checkpointing - Disabled with prejudice.
+enforce-dns-checkpointing=0
+disable-dns-checkpoints=1
+
+# Stop software update checks since we can't safely update in place, and updates should be handled by a human anyway
+check-updates=disabled
