@@ -86,4 +86,5 @@ Nostr: npub1yrtcvcqx0ev27ykxx4gh9s27wy3qa8zj6swal4g43k9wpwup4m9stheuas
 **More channels coming soon**
 
 ## Donations
-885A1RytMgJFYG8PniGivyDrnS5eT9ew8dZk1TvWHFZeMPNSHurGVUM1vEkj4DQtznbRuEfZRuUMNgQWr2dxAe12VfBpeKP
+Monero (kn0wmad):
+`885A1RytMgJFYG8PniGivyDrnS5eT9ew8dZk1TvWHFZeMPNSHurGVUM1vEkj4DQtznbRuEfZRuUMNgQWr2dxAe12VfBpeKP`
