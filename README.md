@@ -83,6 +83,7 @@ Go to your Embassy Services page, select **Monero**, then configure and start th
 
 ## Support
 Nostr: npub1yrtcvcqx0ev27ykxx4gh9s27wy3qa8zj6swal4g43k9wpwup4m9stheuas
+
 **More channels coming soon**
 
 ## Donations
