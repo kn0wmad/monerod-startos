@@ -58,16 +58,6 @@ volumes:
   main:
     type: data
 interfaces:
-  peer:
-    name: Peer Interface
-    description: Listens for incoming connections from peers on the monero network
-    tor-config:
-      port-mapping:
-        18080: "18080"
-    ui: false
-    protocols:
-      - tcp
-      - monero
   rpc:
     name: RPC Interface
     description: Listens for JSON-RPC commands

@@ -13,10 +13,10 @@ elif [ "$SYNCED" = "true" ] ; then
     echo "Blockchain is synced"
     exit 0
 elif [ "$SYNCED" = "false" ] ; then
-    echo -en "Syncing Monero blockchain.  Initial sync may take several days. STATUS: Syncing block #$BLOCKS_SYNCED" >&2
+    echo -n "Syncing Monero blockchain.  Initial sync may take several days. STATUS: Syncing block #$BLOCKS_SYNCED" >&2
     if [[ $BLOCKS_TOTAL -gt 0 ]] ; then
-    SYNC_PROGRESS=$(expr ${BLOCKS_SYNCED}00 / $BLOCKS_TOTAL)
-    echo -n " / ${BLOCKS_TOTAL} ($SYNC_PROGRESS%)" >&2
+        SYNC_PROGRESS=$(expr ${BLOCKS_SYNCED}00 / $BLOCKS_TOTAL)
+        echo -n " / $BLOCKS_TOTAL ($SYNC_PROGRESS%)" >&2
     fi
     exit 61
 else
