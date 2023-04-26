@@ -20,6 +20,6 @@ elif [ "$SYNCED" = "false" ] ; then
     fi
     exit 61
 else
-     echo "Error ascertaining blockchain status"
-     exit 61
+    echo "Error ascertaining blockchain status"
+    exit 61
 fi
