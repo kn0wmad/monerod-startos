@@ -112,8 +112,8 @@ sed -i "s/TOR_HOSTNAME/$TOR_HOSTNAME/g" $new_conf_template
 sed -i "s/TOR_PORT/$TOR_PORT/g" $new_conf_template
 sed -i "s/ADV_TOR_MAXSOCKSCONNS/$ADV_TOR_MAXSOCKSCONNS/g" $new_conf_template
 sed -i "s/RPC_TOR_ADDRESS/$RPC_TOR_ADDRESS/g" $new_conf_template
-sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/g" $new_conf_template
 sed -i "s/MONERO_RPC_PORT_HS/$MONERO_RPC_PORT_HS/g" $new_conf_template
+sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/g" $new_conf_template
 sed -i "s/MONERO_ANON_INBOUND_HOST/$MONERO_ANON_INBOUND_HOST/g" $new_conf_template
 sed -i "s/ADV_TOR_MAXONIONCONNS/$ADV_TOR_MAXONIONCONNS/g" $new_conf_template
 
