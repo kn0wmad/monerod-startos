@@ -29,11 +29,12 @@ docker run --privileged --rm linuxkit/binfmt:v0.8
 ```
 4. Install yq
 ```
-sudo snap install yq
+sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
+    sudo chmod +x /usr/bin/yq
 ```
 5. Install deno
 ```
-sudo snap install deno
+cargo install deno
 ```
 6. Install essentials build packages
 ```
@@ -83,6 +84,7 @@ Go to your Embassy Services page, select **Monero**, then configure and start th
 
 ## Support
 Nostr: npub1yrtcvcqx0ev27ykxx4gh9s27wy3qa8zj6swal4g43k9wpwup4m9stheuas
+Matrix (Tor-only): @kn0wmad:appbk73gzyuu6uieaw7beruw72muvzmmu6fgfrzs6q2rfrtf5iqsjryd.onion
 
 **More channels coming soon**
 
