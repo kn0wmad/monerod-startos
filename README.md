@@ -87,8 +87,9 @@ Nostr: npub1yrtcvcqx0ev27ykxx4gh9s27wy3qa8zj6swal4g43k9wpwup4m9stheuas
 
 Matrix (Tor-only): @kn0wmad:appbk73gzyuu6uieaw7beruw72muvzmmu6fgfrzs6q2rfrtf5iqsjryd.onion
 
-**More channels coming soon**
+**More channels coming in future**
 
 ## Donations
 Monero:
+
 `885A1RytMgJFYG8PniGivyDrnS5eT9ew8dZk1TvWHFZeMPNSHurGVUM1vEkj4DQtznbRuEfZRuUMNgQWr2dxAe12VfBpeKP`
