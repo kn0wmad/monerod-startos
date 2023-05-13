@@ -92,4 +92,4 @@ Matrix (Tor-only): @kn0wmad:appbk73gzyuu6uieaw7beruw72muvzmmu6fgfrzs6q2rfrtf5iqs
 ## Donations
 Monero:
 
-`885A1RytMgJFYG8PniGivyDrnS5eT9ew8dZk1TvWHFZeMPNSHurGVUM1vEkj4DQtznbRuEfZRuUMNgQWr2dxAe12VfBpeKP`
+`8ARx6ZDk43aNUEfw2inEinctoJNGwvZP1hssEpD1LgwY8ZKJVafxC4v6ZKcJE3LsdE29hWJ4UvFDUeYRoH4nf2K2RU24tRN`
