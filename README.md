@@ -1,4 +1,4 @@
-# EmbassyOS Wrapper for Monero
+# StartOS Wrapper for Monero
 This project wraps the Monero daemon for EmbassyOS.  Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.  Learn more at https://www.getmonero.org/
 
 ## Dependencies
@@ -10,7 +10,7 @@ This project wraps the Monero daemon for EmbassyOS.  Monero is a private, secure
 - [embassy-sdk](https://github.com/Start9Labs/embassy-os/tree/master/backend)
 
 ## Build enviroment
-Prepare your EmbassyOS build enviroment. In this example we are using Ubuntu 20.04.
+Prepare your StartOS build enviroment. In this example we are using Ubuntu 20.04.
 
 1. Install docker
 ```
@@ -68,19 +68,19 @@ To build the **Monero** service, run the following command:
 make
 ```
 
-## Installing (on Embassy)
+## Installing (Start9 Servers)
 Run the following commands to determine successful install:
-> :information_source: Change `embassy-xxxxxxxx.local` to your Embassy address
+> :information_source: Change `unique-id.local` to your Start9 server address
 
 
 ```
 embassy-cli auth login
-#Enter your embassy password
-embassy-cli --host https://embassy-xxxxxxxx.local package install monerod.s9pk
+#Enter your server password
+embassy-cli --host https://unique-id.local package install monerod.s9pk
 ```
-**Tip:** You can also install the monerod.s9pk by sideloading: **Embassy -> Settings -> Sideload Service**
+**Tip:** You can also install the monerod.s9pk by sideloading: **System -> Settings -> Sideload Service**
 ## Verify Install
-Go to your Embassy Services page, select **Monero**, then configure and start the service.
+Go to your Services page, select **Monero**, then configure and start the service.
 
 ## Support
 Nostr: npub1yrtcvcqx0ev27ykxx4gh9s27wy3qa8zj6swal4g43k9wpwup4m9stheuas
