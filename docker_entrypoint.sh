@@ -21,13 +21,13 @@ export ADV_P2P_MAXNUMOUTPEERS=$(yq e '.advanced.p2p.maxnumoutpeers' /data/.bitmo
 export ADV_P2P_MAXNUMINPEERS=$(yq e '.advanced.p2p.maxnuminpeers' /data/.bitmonero/start9/config.yaml)
 export RATELIMIT_KBPSUP=$(yq e '.ratelimit.kbpsup' /data/.bitmonero/start9/config.yaml)
 export RATELIMIT_KBPSDOWN=$(yq e '.ratelimit.kbpsdown' /data/.bitmonero/start9/config.yaml)
-export ADV_TOR_DISABLERPCBAN=$(yq e '.advanced.tor.disablerpcban' /data/.bitmonero/start9/config.yaml)
+export ADV_TOR_RPCBAN=$(yq e '.advanced.tor.rpcban' /data/.bitmonero/start9/config.yaml)
 export TXPOOL_MAXBYTES=$(yq e '.txpool.maxbytes' /data/.bitmonero/start9/config.yaml)
 export ADV_TOR_TORONLY=$(yq e '.advanced.tor.toronly' /data/.bitmonero/start9/config.yaml)
 export ADV_TOR_DANDELION=$(yq e '.advanced.tor.dandelion' /data/.bitmonero/start9/config.yaml)
 export ADV_TOR_MAXSOCKSCONNS=$(yq e '.advanced.tor.maxsocksconns' /data/.bitmonero/start9/config.yaml)
 export ADV_TOR_MAXONIONCONNS=$(yq e '.advanced.tor.maxonionconns' /data/.bitmonero/start9/config.yaml)
-export ADV_P2P_DISABLEGOSSIP=$(yq e '.advanced.p2p.disablegossip' /data/.bitmonero/start9/config.yaml)
+export ADV_P2P_GOSSIP=$(yq e '.advanced.p2p.letneighborsgossip' /data/.bitmonero/start9/config.yaml)
 export ADV_P2P_PUBLICRPC=$(yq e '.advanced.p2p.publicrpc' /data/.bitmonero/start9/config.yaml)
 export ADV_P2P_UPNP=$(yq e '.advanced.p2p.upnp' /data/.bitmonero/start9/config.yaml)
 export ADV_P2P_STRICTNODES=$(yq e '.advanced.p2p.strictnodes' /data/.bitmonero/start9/config.yaml)
@@ -65,7 +65,7 @@ sed -i "s/TXPOOL_MAXBYTES/$TXPOOL_MAXBYTES/" $new_conf_template
 ###
 
 #RPC BAN config:
-if [ "$ADV_TOR_DISABLERPCBAN" = "true" ] ; then
+if [ "$ADV_TOR_RPCBAN" = "false" ] ; then
  disable_rpc_ban="disable-rpc-ban=1              # Do not ban hosts on RPC errors. May help to prevent monerod from banning traffic originating from the Tor daemon."
  echo -e "\n# RPC BAN\n$disable_rpc_ban" >> $new_conf_template
 fi
@@ -85,7 +85,7 @@ if [ "$ADV_TOR_TORONLY" = "true" ] ; then
 fi
 
 #Gossip config:
-if [ "$ADV_P2P_DISABLEGOSSIP" = "false" ] ; then
+if [ "$ADV_P2P_GOSSIP" = "false" ] ; then
  echo -e "\n# GOSSIP" >> $new_conf_template
  echo "#Tell our peers not to gossip our node" >> $new_conf_template
  echo "hide-my-port=1" >> $new_conf_template
@@ -148,6 +148,6 @@ done
 
 mv $new_conf_template $new_conf
 
-chown -R monero:monero /data/.bitmonero
+chown -R monero:monero $BITMONERO_DIR
 
-exec tini /usr/bin/sudo -u monero monerod --non-interactive --config-file=$new_conf
+exec tini /usr/bin/sudo -u monero monerod --non-interactive --config-file=$new_conf | tee $BITMONERO_DIR/monero.log

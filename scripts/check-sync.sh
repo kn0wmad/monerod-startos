@@ -14,7 +14,20 @@ elif [ "$SYNCED" = "true" ] ; then
     exit 0
 elif [ "$SYNCED" = "false" ] ; then
     echo -n "Syncing Monero blockchain.  Initial sync may take several days. STATUS: Syncing block #$BLOCKS_SYNCED" >&2
-    if [[ $BLOCKS_TOTAL -gt 0 ]] && [[ $BLOCKS_TOTAL -lt $BLOCKS_SYNCED ]] ; then
+    #Get Synced status from log:
+    SYNC_STATUS=$(tail -10000 /data/.bitmonero/monero.log | grep "I Synced " | grep " left" | tail -1 | sed "s/\t/ /g" | tr -s " " | sed "s/.*Synced \([0-9]*\)\/\([0-9]*\) \(.*\)/\1:\2:\3/g")
+    TOTAL_BLOCKS=$(echo $SYNC_STATUS | cut -d: -f2)
+    ETA_DETAILS=$(echo $SYNC_STATUS | cut -d: -f3)
+    ETA_DETAILS_CHARS=$(echo $ETA_DETAILS | wc -c)
+    if [[ $TOTAL_BLOCKS -gt 0 ]] && [[ $TOTAL_BLOCKS -gt $BLOCKS_SYNCED ]] ; then
+        echo -n " / $TOTAL_BLOCKS" >&2
+        if [[ $ETA_DETAILS_CHARS -gt 10 ]] ; then
+            echo -n " $ETA_DETAILS" >&2
+        else
+            SYNC_PROGRESS=$(expr ${BLOCKS_SYNCED}00 / $TOTAL_BLOCKS)
+            echo -n " / $BLOCKS_TOTAL ($SYNC_PROGRESS%)" >&2
+        fi
+    elif [[ $BLOCKS_TOTAL -gt 0 ]] && [[ $BLOCKS_TOTAL -gt $BLOCKS_SYNCED ]] ; then
         SYNC_PROGRESS=$(expr ${BLOCKS_SYNCED}00 / $BLOCKS_TOTAL)
         echo -n " / $BLOCKS_TOTAL ($SYNC_PROGRESS%)" >&2
     fi
