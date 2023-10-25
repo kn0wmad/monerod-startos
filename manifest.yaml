@@ -1,8 +1,8 @@
 id: monerod
 title: "Monero"
-version: 0.18.2.2
+version: 0.18.3.1
 release-notes: |
-  * Initial release of Monero for EmbassyOS
+  * Update to [latest upstream]()
   * Install the Monero daemon, sync the Monero blockchain (with optional pruning), and connect your wallets!
   * Several wallets have been tested already, with support for more in the future
   * Read the Instructions and check out [the guides](https://github.com/kn0wmad/monerod-wrapper/tree/master/docs/guides) for more details

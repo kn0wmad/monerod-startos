@@ -1,4 +1,4 @@
-FROM sethsimmons/simple-monerod:v0.18.2.2
+FROM sethsimmons/simple-monerod:v0.18.3.1
 
 USER root
 
