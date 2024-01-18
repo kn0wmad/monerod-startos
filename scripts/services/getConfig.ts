@@ -1,4 +1,4 @@
-import { compat, types as T } from "../dependencies.ts";
+import { compat, types as T } from "../deps.ts";
 
 export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
   "peer-tor-address": {
@@ -178,7 +178,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
               "Make automated requests to the local router to forward external ports from the router's public IP address to the Monero daemon's LAN address, facilitating inbound p2p connections from the clearnet internet to your Monero daemon behind a NAT.  This only works if your router supports UPnP and has it enabled.  This setting has no effect if you enable \"Tor Only\" mode.",
             "default": false,
           },
-*/
+          */
           strictnodes: {
             type: "boolean",
             name: "Specific Nodes Only",
