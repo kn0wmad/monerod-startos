@@ -1,57 +1,45 @@
-import { T, matches } from "../dependencies.ts";
+import { matches, T } from "../dependencies.ts";
 
-const { shape, string, any, boolean } = matches;
-
-const matchMoneroConfig = shape({
-  monero: shape({
-    "advanced.tor.rpcban": shape({
-      type: boolean,
-    }),
-    "advanced.p2p.letpeersgossip": shape({
-      type: boolean,
-    }),
-  }),
-});
-
-const matchMoneroConfigForDeletion = shape({
-  delete: shape({
-    "advanced.tor.rpcban": any,
-    "advanced.p2p.letpeersgossip": any,
-  }),
-});
-
-//The migration to run for going from 0.18.3.1 to 0.18.2.2
 export const migration_down_to_0_18_2_2 = (config: T.Config): T.Config => {
   if (Object.keys(config).length === 0) {
     // service was never configured
     return config;
   }
 
-  if (!matchMoneroConfig.test(config)) {
-    throw `Could not find monerod key in config: ${matchMoneroConfig.errorMessage(
-      config
-    )}`;
-  }
-
-  // rpcban is changing back to disablerpcban (and flipping any existing bool)
-  if (config.monero["advanced.tor.rpcban"].type === "true") {
-    config.monero["advanced.tor.disablerpcban"].type = "false";
+  if (
+    matches
+      .shape({
+        advanced: matches.shape({
+          tor: matches.shape({ rpcban: matches.boolean }
+          ),
+        }),
+      })
+      .test(config)
+  ) {
+    let config.advanced.tor.disablerpcban:boolean = !config.advanced.tor.rpcban;
+    delete config.advanced.tor.rpcban;
   } else {
-    config.monero["advanced.tor.disablerpcban"].type = "true";
+    //Set a new value with a default to true
+    let config.advanced.tor.disablerpcban:boolean = true;
   }
 
-  // letpeersgossip is changing back to disablegossip (and flipping any existing bool)
-  if (config.monero["advanced.p2p.letpeersgossip"].type === "true") {
-    config.monero["advanced.p2p.disablegossip"].type = "false";
+  if (
+    matches
+      .shape({
+        advanced: matches.shape({
+          p2p: matches.shape({ gossip: matches.boolean }
+          ),
+        }),
+      })
+      .test(config)
+  ) {
+    let config.advanced.p2p.disablegossip:boolean = !config.advanced.p2p.letpeersgossip;
+    delete config.advanced.tor.letpeersgossip;
   } else {
-    config.monero["advanced.p2p.disablegossip"].type = "true";
-  }
-
-  // If the premigration keys/values exist, delete them:
-  if (matchMoneroConfigForDeletion.test(config)) {
-    delete config.delete["advanced.tor.rpcban"];
-    delete config.delete["advanced.p2p.letpeersgossip"];
+    //Set a new value with a default to false
+    let config.advanced.p2p.disablegossip:boolean = false;
   }
 
   return config;
+
 };
