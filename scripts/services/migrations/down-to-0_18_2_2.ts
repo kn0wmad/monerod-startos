@@ -10,34 +10,34 @@ export const migration_down_to_0_18_2_2 = (config: T.Config): T.Config => {
     matches
       .shape({
         advanced: matches.shape({
-          tor: matches.shape({ rpcban: matches.boolean }
-          ),
+          p2p: matches.shape({ rpcban: matches.boolean }, ["rpcban"]),
         }),
       })
       .test(config)
   ) {
-    let config.advanced.tor.disablerpcban:boolean = !config.advanced.tor.rpcban;
-    delete config.advanced.tor.rpcban;
-  } else {
-    //Set a new value with a default to true
-    let config.advanced.tor.disablerpcban:boolean = true;
+    let disablerpcban = !config.advanced.p2p.rpcban;
+    delete config.advanced.p2p.rpcban;
+    config = {
+      ...config,
+      disablerpcban: disablerpcban,
+    }
   }
 
   if (
     matches
       .shape({
         advanced: matches.shape({
-          p2p: matches.shape({ gossip: matches.boolean }
-          ),
+          p2p: matches.shape({ letneighborsgossip: matches.boolean }, ["letneighborsgossip"]),
         }),
       })
       .test(config)
   ) {
-    let config.advanced.p2p.disablegossip:boolean = !config.advanced.p2p.letpeersgossip;
-    delete config.advanced.tor.letpeersgossip;
-  } else {
-    //Set a new value with a default to false
-    let config.advanced.p2p.disablegossip:boolean = false;
+    let disablegossip = !config.advanced.p2p.letneighborsgossip;
+    delete config.advanced.p2p.letneighborsgossip;
+    config = {
+      ...config,
+      disablegossip: disablegossip,
+    }
   }
 
   return config;
