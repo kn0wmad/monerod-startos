@@ -28,6 +28,44 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     target: "lan-address",
     interface: "rpc",
   },
+  "rpc-tor-address-restricted": {
+    name: "RPC Tor Address (Restricted Calls)",
+    description:
+      "The Tor address of the RPC interface that allows only a restricted set of API calls",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "tor-address",
+    interface: "rpc-restricted",
+  },
+  "rpc-lan-address-restricted": {
+    name: "RPC LAN Address (Restricted Calls)",
+    description:
+      "The LAN address of the RPC interface that allows only a restricted set of API calls",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "lan-address",
+    interface: "rpc-restricted",
+  },
+  "zmq-tor-address": {
+    name: "ZMQ Tor Address",
+    description: "The Tor address of the ZMQ interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "tor-address",
+    interface: "zmq",
+  },
+  "zmq-lan-address": {
+    name: "ZMQ LAN Address",
+    description: "The LAN address of the ZMQ interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "lan-address",
+    interface: "zmq",
+  },
   txpool: {
     type: "object",
     name: "Transaction Pool",
@@ -38,7 +76,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         nullable: false,
         name: "Maximum TX pool size",
         description:
-          "Keep the unconfirmed transaction memory pool at or below this many megabytes. You may wish to decrease this if you are low on RAM, or increase if you are mining. Default is 648MB.",
+          "Keep the unconfirmed transaction memory pool at or below this many megabytes. You may wish to decrease this if you are low on RAM, or increase if you are mining. Default is 648MiB.",
         range: "[1,*)",
         integral: true,
         units: "MiB",
@@ -73,6 +111,65 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         integral: true,
         units: "kB/s",
         default: 2048,
+      },
+    },
+  },
+  rpc: {
+    type: "object",
+    name: "RPC Settings",
+    description: "Remote Procedure Call configuration options",
+    spec: {
+      credentials: {
+        type: "union",
+        name: "RPC Credentials",
+        description: "Username and password for accessing the Monero RPC",
+        tag: {
+          id: "enabled",
+          name: "RPC Credentials Enabled",
+          description:
+            "Enable or disable a username and password to access the Monero RPC",
+          "variant-names": {
+            disabled: "Disabled",
+            enabled: "Enabled",
+          },
+        },
+        default: "disabled",
+        variants: {
+          disabled: {},
+          enabled: {
+            username: {
+              type: "string",
+              nullable: false,
+              name: "RPC Username",
+              description:
+                "The username for connecting to Monero's unrestricted RPC interface",
+              warning:
+                "Changing this value will necessitate a restart of all services that depend on Monero.",
+              default: "monero",
+              pattern: "^[a-zA-Z0-9_]+$",
+              "pattern-description":
+                "Must be alphanumeric (can contain underscore)",
+            },
+            password: {
+              type: "string",
+              nullable: false,
+              name: "RPC Password",
+              description:
+                "The password for connecting to Monero's unrestricted RPC interface",
+              warning:
+                "Changing this value will necessitate a restart of all services that depend on Monero.",
+              default: {
+                charset: "a-z,A-Z,0-9,_",
+                len: 22,
+              },
+              pattern: "^[a-zA-Z0-9_]+$",
+              "pattern-description":
+                "Must be alphanumeric (can contain underscore)",
+              copyable: true,
+              masked: true,
+            },
+          },
+        },
       },
     },
   },
@@ -142,7 +239,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             name: "Max Peers Incoming",
             description:
               "Maximum number of simultaneous peers connecting inbound to the Monero daemon",
-            range: "[0,999]",
+            range: "[0,9999]",
             integral: true,
             default: 16,
           },
@@ -152,9 +249,9 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             name: "Max Peers Outgoing",
             description:
               "Maximum number of simultaneous peers for the Monero daemon to connect outbound to",
-            range: "[0,8192]",
+            range: "[0,9999]",
             integral: true,
-            default: 64,
+            default: 12,
           },
           letneighborsgossip: {
             type: "boolean",
@@ -228,6 +325,13 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             },
           },
         },
+      },
+      zmq: {
+        type: "boolean",
+        name: "ZMQ Interface",
+        description:
+          "ZeroMQ is an asynchronous messaging library, aimed at use in distributed or concurrent applications. It provides a message queue without a dedicated message broker.",
+        default: false,
       },
       pruning: {
         type: "boolean",

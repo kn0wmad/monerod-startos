@@ -1,10 +1,13 @@
 #!/bin/bash
 
-STATUS=$(curl -s http://127.0.0.1:18081/get_info -H 'Content-Type: application/json')
+source creds-rpc.sh
+METHOD='get_info'
+PARAMS='""'
+STATUS=$(curl -X POST --digest $CURL_RPC_CREDS -s http://127.0.0.1:18081/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"'$METHOD'","params":'$PARAMS'}')
 STATUS_EXIT_CODE=$?
-SYNCED=$(echo $STATUS | yq e '.synchronized')
-BLOCKS_SYNCED=$(echo $STATUS | yq e '.height')
-BLOCKS_TOTAL=$(echo $STATUS | yq e '.target_height')
+SYNCED=$(echo $STATUS | yq e '.result.synchronized')
+BLOCKS_SYNCED=$(echo $STATUS | yq e '.result.height')
+BLOCKS_TOTAL=$(echo $STATUS | yq e '.result.target_height')
 
 if [[ $STATUS_EXIT_CODE -ne 0 ]]; then
     echo "Monero RPC is unreachable" >&2
@@ -15,7 +18,7 @@ elif [ "$SYNCED" = "true" ] ; then
 elif [ "$SYNCED" = "false" ] ; then
     echo -n "Syncing Monero blockchain.  Initial sync may take several days. STATUS: Syncing block #$BLOCKS_SYNCED" >&2
     #Get Synced status from log:
-    SYNC_STATUS=$(tail -10000 /data/.bitmonero/monero.log | grep "I Synced " | grep " left" | tail -1 | sed "s/\t/ /g" | tr -s " " | sed "s/.*Synced \([0-9]*\)\/\([0-9]*\) \(.*\)/\1:\2:\3/g")
+    SYNC_STATUS=$(ionice -c3 tail -10000 /data/.bitmonero/monero.log | grep "cryptonote_protocol_handler.inl:1686	Synced " | tail -1 | sed "s/\t/ /g" | tr -s " " | sed "s/.* Synced \([0-9]*\)\/\([0-9]*\) \(.*\)/\1:\2:\3/g")
     TOTAL_BLOCKS=$(echo $SYNC_STATUS | cut -d: -f2)
     ETA_DETAILS=$(echo $SYNC_STATUS | cut -d: -f3)
     ETA_DETAILS_CHARS=$(echo $ETA_DETAILS | wc -c)

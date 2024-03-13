@@ -1,6 +1,6 @@
 import { matches, T } from "../dependencies.ts";
 
-export const migration_up_to_0_18_3_1 = (config: T.Config): T.Config => {
+export const migration_up_to_0_18_3_2 = (config: T.Config): T.Config => {
   if (Object.keys(config).length === 0) {
     // service was never configured
     return config;
@@ -10,24 +10,28 @@ export const migration_up_to_0_18_3_1 = (config: T.Config): T.Config => {
     matches
       .shape({
         advanced: matches.shape({
-          tor: matches.shape({ disablerpcban: matches.boolean }, ["disablerpcban"]),
+          tor: matches.shape({ disablerpcban: matches.boolean }, [
+            "disablerpcban",
+          ]),
         }),
       })
-    .test(config)
+      .test(config)
   ) {
     let rpcban = !config.advanced.tor.disablerpcban;
     delete config.advanced.tor.disablerpcban;
     config = {
       ...config,
       rpcban: rpcban,
-    }
+    };
   }
 
   if (
     matches
       .shape({
         advanced: matches.shape({
-          p2p: matches.shape({ disablegossip: matches.boolean }, ["disablegossip"]),
+          p2p: matches.shape({ disablegossip: matches.boolean }, [
+            "disablegossip",
+          ]),
         }),
       })
       .test(config)
@@ -37,9 +41,8 @@ export const migration_up_to_0_18_3_1 = (config: T.Config): T.Config => {
     config = {
       ...config,
       letneighborsgossip: letneighborsgossip,
-    }
+    };
   }
 
   return config;
-
 };
