@@ -50,7 +50,7 @@ echo 'version: 2' > ${BITMONERO_DIR}/start9/stats.yaml
 echo 'data:' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Restricted RPC Connection String (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"$RPC_LAN_ADDRESS_RESTRICTED:$MONERO_RPC_PORT_RESTRICTED"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"$RPC_LAN_ADDRESS_RESTRICTED"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Address for connecting to the Monero RPC over LAN' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -83,7 +83,7 @@ else
 fi
 echo '  Unrestricted RPC Connection String (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"$RPC_USER_PASS$RPC_LAN_ADDRESS:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"$RPC_USER_PASS$RPC_LAN_ADDRESS"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Connection string for accessing the unrestricted Monero RPC over LAN' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml

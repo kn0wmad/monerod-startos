@@ -60,7 +60,8 @@ volumes:
 interfaces:
   peer:
     name: Peer Interface
-    description: Listens for incoming connections from peers on the Monero network
+    #description: Listens for incoming connections from peers on the Monero network
+    description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
     tor-config:
       port-mapping:
         18080: "18080"
@@ -70,7 +71,8 @@ interfaces:
       - monero
   rpc:
     name: RPC Interface
-    description: Listens for JSON-RPC commands
+    #description: Listens for JSON-RPC commands
+    description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
     tor-config:
       port-mapping:
         18081: "18081"
@@ -85,7 +87,8 @@ interfaces:
       - json-rpc
   rpc-restricted:
     name: RPC Interface (Restricted Calls)
-    description: Listens for JSON-RPC commands
+    #description: Listens for JSON-RPC commands
+    description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
     tor-config:
       port-mapping:
         18089: "18089"
@@ -100,7 +103,8 @@ interfaces:
       - json-rpc
   zmq:
     name: ZeroMQ Interface
-    description: Listens for subscriptions to the ZeroMQ raw block and raw transaction event streams
+    #description: Listens for subscriptions to the ZeroMQ raw block and raw transaction event streams
+    description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
     tor-config:
       port-mapping:
         18082: "18082"
