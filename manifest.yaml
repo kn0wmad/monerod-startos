@@ -1,11 +1,11 @@
 id: monerod
 title: "Monero"
-version: 0.18.2.2
+version: 0.18.3.2
 release-notes: |
-  * Initial release of Monero for EmbassyOS
-  * Install the Monero daemon, sync the Monero blockchain (with optional pruning), and connect your wallets!
-  * Several wallets have been tested already, with support for more in the future
-  * Read the Instructions and check out [the guides](https://github.com/kn0wmad/monerod-startos/tree/master/docs/guides) for more details
+  * Update to latest upstream [sethforprivacy Monero docker image](https://github.com/sethforprivacy/simple-monerod-docker)
+  * Includes Monero 0.18.3.2 ([Release Notes](https://github.com/monero-project/monero/releases/tag/v0.18.3.2))
+  * Add features to monero-startos: rpc credentials for unrestricted rpc interface, zmq interface
+  * If Monero gets stuck in a "Stopping..." state, please restart your server via System > Restart
 license: BSD-3
 wrapper-repo: https://github.com/kn0wmad/monerod-startos
 upstream-repo: https://github.com/monero-project/monero

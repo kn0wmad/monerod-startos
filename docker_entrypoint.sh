@@ -206,7 +206,7 @@ while [[ $i -le $num_custom_peers ]] ; do
   if [ "$peer_priority" = "true" ] ; then
    echo "add-priority-node=$peer_hostname:$peer_port" >> $new_conf_template
   else
-   echo "add-node=$peer_hostname:$peer_port" >> $new_conf_template
+   echo "add-peer=$peer_hostname:$peer_port" >> $new_conf_template
   fi
   echo "" >> $new_conf_template
  fi

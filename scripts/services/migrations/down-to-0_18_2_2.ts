@@ -10,24 +10,26 @@ export const migration_down_to_0_18_2_2 = (config: T.Config): T.Config => {
     matches
       .shape({
         advanced: matches.shape({
-          p2p: matches.shape({ rpcban: matches.boolean }, ["rpcban"]),
+          tor: matches.shape({ rpcban: matches.boolean }, ["rpcban"]),
         }),
       })
       .test(config)
   ) {
-    let disablerpcban = !config.advanced.p2p.rpcban;
-    delete config.advanced.p2p.rpcban;
+    let disablerpcban = !config.advanced.tor.rpcban;
+    delete config.advanced.tor.rpcban;
     config = {
       ...config,
       disablerpcban: disablerpcban,
-    }
+    };
   }
 
   if (
     matches
       .shape({
         advanced: matches.shape({
-          p2p: matches.shape({ letneighborsgossip: matches.boolean }, ["letneighborsgossip"]),
+          p2p: matches.shape({ letneighborsgossip: matches.boolean }, [
+            "letneighborsgossip",
+          ]),
         }),
       })
       .test(config)
@@ -37,9 +39,8 @@ export const migration_down_to_0_18_2_2 = (config: T.Config): T.Config => {
     config = {
       ...config,
       disablegossip: disablegossip,
-    }
+    };
   }
 
   return config;
-
 };
