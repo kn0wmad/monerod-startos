@@ -178,56 +178,6 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     name: "Advanced",
     description: "Advanced Settings",
     spec: {
-      tor: {
-        type: "object",
-        name: "Tor",
-        description: "Tor anonymity network settings",
-        spec: {
-          toronly: {
-            name: "Tor only",
-            description:
-              "Only communicate with Monero nodes via Tor.  This is more private, but can be slower, especially during initial sync.",
-            type: "boolean",
-            default: true,
-          },
-          rpcban: {
-            type: "boolean",
-            name: "Ban misbehaving RPC clients",
-            description:
-              "This switch determines whether or not to ban hosts that generate RPC errors.  Disabling this may help to prevent monerod from banning traffic originating from the Tor daemon.  This can be useful to disable when using Tor-only mode, where every connection inbound to the onion's RPC appears to be from same remote host.",
-            default: false,
-          },
-          maxonionconns: {
-            type: "number",
-            nullable: false,
-            name: "Max Tor RPC conns",
-            description:
-              "Maximum number of simultaneous connections to Monero's .onion RPC",
-            range: "[1,256]",
-            integral: true,
-            units: "Connections",
-            default: 16,
-          },
-          maxsocksconns: {
-            type: "number",
-            nullable: false,
-            name: "Max Tor broadcast conns",
-            description:
-              "Maximum number of simultaneous connections to Tor's SOCKS proxy when broadcasting transactions",
-            range: "[1,256]",
-            integral: true,
-            units: "Connections",
-            default: 16,
-          },
-          dandelion: {
-            type: "boolean",
-            name: "Dandelion++",
-            description:
-              'Enables white noise and Dandelion++ sender node obfuscation scheme.\nEnabled: It is harder to tell which node originated a transaction, but your peers could potentially silently censor your transactions by not propagating them.\nDisabled: Saves "white noise" bandwidth and may make broadcasting transactions more reliable.\nFor more information, see https://www.getmonero.org/2020/04/18/dandelion-implemented.html',
-            default: true,
-          },
-        },
-      },
       p2p: {
         type: "object",
         name: "P2P",
@@ -323,6 +273,56 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
                 },
               },
             },
+          },
+        },
+      },
+      tor: {
+        type: "object",
+        name: "Tor",
+        description: "Tor anonymity network settings",
+        spec: {
+          toronly: {
+            name: "Tor only",
+            description:
+              "Only communicate with Monero nodes via Tor.  This is more private, but can be slower, especially during initial sync.",
+            type: "boolean",
+            default: true,
+          },
+          rpcban: {
+            type: "boolean",
+            name: "Ban misbehaving RPC clients",
+            description:
+              "This switch determines whether or not to ban hosts that generate RPC errors.  Disabling this may help to prevent monerod from banning traffic originating from the Tor daemon.  This can be useful to disable when using Tor-only mode, where every connection inbound to the onion's RPC appears to be from same remote host.",
+            default: false,
+          },
+          maxonionconns: {
+            type: "number",
+            nullable: false,
+            name: "Max Tor RPC conns",
+            description:
+              "Maximum number of simultaneous connections to Monero's .onion RPC",
+            range: "[1,256]",
+            integral: true,
+            units: "Connections",
+            default: 16,
+          },
+          maxsocksconns: {
+            type: "number",
+            nullable: false,
+            name: "Max Tor broadcast conns",
+            description:
+              "Maximum number of simultaneous connections to Tor's SOCKS proxy when broadcasting transactions",
+            range: "[1,256]",
+            integral: true,
+            units: "Connections",
+            default: 16,
+          },
+          dandelion: {
+            type: "boolean",
+            name: "Dandelion++",
+            description:
+              'Enables white noise and Dandelion++ sender node obfuscation scheme.\nEnabled: It is harder to tell which node originated a transaction, but your peers could potentially silently censor your transactions by not propagating them.\nDisabled: Saves "white noise" bandwidth and may make broadcasting transactions more reliable.\nFor more information, see https://www.getmonero.org/2020/04/18/dandelion-implemented.html',
+            default: true,
           },
         },
       },

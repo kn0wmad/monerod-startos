@@ -1,6 +1,5 @@
 import { types as T, compat } from "../deps.ts";
 import { migration_up_to_0_18_3_2 } from "./migrations/up-to-0_18_3_2.ts";
-import { migration_down_to_0_18_2_2 } from "./migrations/down-to-0_18_2_2.ts";
 
 export const migration: T.ExpectedExports.migration = async (
   effects,
@@ -22,13 +21,9 @@ export const migration: T.ExpectedExports.migration = async (
           false,
           { version: "0.18.3.2", type: "up" }
         ),
-        down: compat.migrations.updateConfig(
-          (config) => {
-            return migration_down_to_0_18_2_2(config);
-          },
-          true,
-          { version: "0.18.3.2", type: "down" }
-        ),
+        down: () => {
+          throw new Error("Downgrade not possible");
+        },
       },
     },
     "0.18.3.2"

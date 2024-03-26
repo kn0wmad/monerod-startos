@@ -9,6 +9,7 @@ new_conf="$BITMONERO_DIR/monero.conf"
 
 TOR_HOSTNAME=$(ip -4 route list match 0/0 | awk '{print $3}')
 TOR_PORT=9050
+STARTOS_PROXY_PORT=443
 MONERO_P2P_PORT=18080
 MONERO_RPC_PORT=18081
 MONERO_ZMQ_PORT=18082
@@ -50,14 +51,14 @@ echo 'version: 2' > ${BITMONERO_DIR}/start9/stats.yaml
 echo 'data:' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Restricted RPC Connection String (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"$RPC_LAN_ADDRESS_RESTRICTED"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_LAN_ADDRESS_RESTRICTED:$STARTOS_PROXY_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Address for connecting to the Monero RPC over LAN' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Restricted RPC Connection String (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"$RPC_TOR_ADDRESS_RESTRICTED:$MONERO_RPC_PORT_HS"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_TOR_ADDRESS_RESTRICTED:$MONERO_RPC_PORT_RESTRICTED"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Address for connecting to the Monero RPC over Tor' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -83,14 +84,14 @@ else
 fi
 echo '  Unrestricted RPC Connection String (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"$RPC_USER_PASS$RPC_LAN_ADDRESS"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_USER_PASS$RPC_LAN_ADDRESS:$STARTOS_PROXY_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Connection string for accessing the unrestricted Monero RPC over LAN' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Unrestricted RPC Connection String (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"$RPC_USER_PASS$RPC_TOR_ADDRESS:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_USER_PASS$RPC_TOR_ADDRESS:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Connection string for accessing the unrestricted Monero RPC via Tor' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
