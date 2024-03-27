@@ -337,7 +337,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         type: "boolean",
         name: "Pruning",
         description:
-          "Blockchain pruning in Monero prunes proof data from transactions after verification but before storage.  This saves roughly 2/3s of disk space.  The drawback of pruning is that you will contribute less to Monero P2P network in terms of helping new nodes doing IBD. If enabled, your node will still relay new transactions and blocks.",
+          "Blockchain pruning in Monero prunes proof data from transactions after verification but before storage.  This saves roughly 2/3s of disk space.  The drawback of pruning is that you will contribute less to the Monero P2P network in terms of helping new nodes doing IBD. If enabled, your node will still relay new transactions and blocks.",
         default: false,
       },
     },

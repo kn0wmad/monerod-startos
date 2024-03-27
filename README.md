@@ -74,7 +74,7 @@ source $HOME/.cargo/env
 8. Build and install start-sdk
 
 ```
-cd ~/ && git clone --recursive https://github.com/Start9Labs/start-os.git
+cd ~ && git clone --recursive https://github.com/Start9Labs/start-os.git
 cd startos-os/backend/
 ./install-sdk.sh
 start-sdk init
@@ -139,13 +139,14 @@ Matrix (Tor-only): @kn0wmad:appbk73gzyuu6uieaw7beruw72muvzmmu6fgfrzs6q2rfrtf5iqs
 
 ## Donations
 
-Monero:
+### Monero
 
 `8ARx6ZDk43aNUEfw2inEinctoJNGwvZP1hssEpD1LgwY8ZKJVafxC4v6ZKcJE3LsdE29hWJ4UvFDUeYRoH4nf2K2RU24tRN`
 
 ### Bitcoin
-Paynym: 
+
+Paynym:
 `+quietwind179`
 
-BOLT12 Offer (Lightning Network): 
+BOLT12 Offer (Lightning Network):
 `lno1pg25getkypjx7mnpw35k7m3qgp4kuvrhd4skg93pq04aj923rc9pyr7z5tsf8hkp05lq7rcsdu2try95lh9umwhzde5qg`
