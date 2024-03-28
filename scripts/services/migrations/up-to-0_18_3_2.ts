@@ -1,4 +1,5 @@
-import { matches, T } from "../dependencies.ts";
+import { types as T, matches } from "../../deps.ts";
+const { dictionary, boolean, shape, string, any } = matches;
 
 export const migration_up_to_0_18_3_2 = (config: T.Config): T.Config => {
   if (Object.keys(config).length === 0) {

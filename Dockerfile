@@ -3,6 +3,7 @@ FROM sethsimmons/simple-monerod:v0.18.3.2
 USER root
 
 RUN apk update
+RUN apk upgrade
 RUN apk add curl wget sudo bash tini yq
 
 # Add entrypoint and healthchecks
