@@ -125,7 +125,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         description: "Username and password for accessing the Monero RPC",
         tag: {
           id: "enabled",
-          name: "RPC Credentials Enabled",
+          name: "RPC Credentials",
           description:
             "Enable or disable a username and password to access the Monero RPC",
           "variant-names": {
