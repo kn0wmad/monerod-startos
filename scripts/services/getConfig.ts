@@ -69,14 +69,14 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
   txpool: {
     type: "object",
     name: "Transaction Pool",
-    description: "Unconfirmed Transaction Pool Settings",
+    description: "Unconfirmed transaction pool settings",
     spec: {
       maxbytes: {
         type: "number",
         nullable: false,
-        name: "Maximum TX pool size",
+        name: "Maximum TX Pool Size",
         description:
-          "Keep the unconfirmed transaction memory pool at or below this many megabytes. You may wish to decrease this if you are low on RAM, or increase if you are mining. Default is 648MiB.",
+          "Keep the unconfirmed transaction memory pool at or below this many megabytes.  You may wish to decrease this if you are low on RAM, or increase if you are mining. <br/><b>Default:</b> 648MiB.",
         range: "[1,*)",
         integral: true,
         units: "MiB",
@@ -95,7 +95,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         nullable: false,
         name: "Download Speed Limit",
         description:
-          "Keep the monero p2p node's incoming bandwidth rate limited at or under this many kilobytes per second.",
+          "Keep the Monero p2p node's incoming bandwidth rate limited at or under this many kilobytes per second <br/><b>Default:</b> 8192 kB/s",
         range: "[1,*)",
         integral: true,
         units: "kB/s",
@@ -106,7 +106,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         nullable: false,
         name: "Upload Speed Limit",
         description:
-          "Keep the monero p2p node's outgoing bandwidth rate limited at or under this many kilobytes per second",
+          "Keep the Monero p2p node's outgoing bandwidth rate limited at or under this many kilobytes per second <br/><b>Default:</b> 2048 kB/s",
         range: "[1,*)",
         integral: true,
         units: "kB/s",
@@ -127,7 +127,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           id: "enabled",
           name: "RPC Credentials",
           description:
-            "Enable or disable a username and password to access the Monero RPC",
+            'Enable or disable a username and password to access the Monero RPC <br/><b>Default:</b> Disabled (all API access is restricted to a "safe" set of RPC calls)',
           "variant-names": {
             disabled: "Disabled",
             enabled: "Enabled",
@@ -148,7 +148,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
               default: "monero",
               pattern: "^[a-zA-Z0-9_]+$",
               "pattern-description":
-                "Must be alphanumeric (can contain underscore)",
+                "Must be alphanumeric and/or can contain an underscore",
             },
             password: {
               type: "string",
@@ -188,7 +188,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             nullable: true,
             name: "Max Peers Incoming",
             description:
-              "Maximum number of simultaneous peers connecting inbound to the Monero daemon",
+              "Maximum number of simultaneous peers connecting inbound to the Monero daemon <br/><b>Default:</b> 16 (Monero's default is unlimited but we prefer a ceiling to limit network surveillance from spy nodes and to discourage excessive bandwidth consumption)",
             range: "[0,9999]",
             integral: true,
             default: 16,
@@ -198,7 +198,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             nullable: true,
             name: "Max Peers Outgoing",
             description:
-              "Maximum number of simultaneous peers for the Monero daemon to connect outbound to",
+              "Maximum number of simultaneous peers for the Monero daemon to connect outbound to <br/><b>Default:</b> 12",
             range: "[0,9999]",
             integral: true,
             default: 12,
@@ -207,14 +207,14 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             type: "boolean",
             name: "Peer Gossip",
             description:
-              "Disabling peer gossip will tell connected peers not to gossip our node info to their peers. This will make your node more private by stopping other nodes from learning how to make an inbound connection to it. Leaving this enabled will result in more connections for your node.",
+              "Disabling peer gossip will tell connected peers not to gossip our node info to their peers. This will make your node more private by stopping other nodes from learning how to make an inbound connection to it. Leaving this enabled will result in more connections for your node. <br/><b>Default:</b> Enabled",
             default: true,
           },
           publicrpc: {
             type: "boolean",
             name: "Advertise RPC Node",
             description:
-              'Advertise to end-user wallets crawling the p2p network, and to other p2p network peers, that anyone can use this node\'s RPC interface (using a restricted, "safe" set of RPC calls) as a "Remote Node" for connecting their wallets.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon.',
+              'Advertise to end-user wallets crawling the p2p network, and to other p2p network peers, that anyone can use this node\'s RPC interface (using a restricted, "safe" set of RPC calls) as a "Remote Node" for connecting their wallets.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled',
             default: false,
           },
           /*
@@ -230,13 +230,13 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             type: "boolean",
             name: "Specific Nodes Only",
             description:
-              "Only connect to the peers specified below and no other peers.",
+              "Only connect to the peers specified below and no other peers. <br/><b>Default:</b> Disabled",
             default: false,
           },
           peer: {
             name: "Add Peers",
             description:
-              "Add addresses of specific p2p nodes that your Monero node should connect to.",
+              "Optionally add addresses of specific p2p nodes that your Monero node should connect to",
             type: "list",
             subtype: "object",
             range: "[0,*)",
@@ -259,7 +259,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
                   nullable: true,
                   name: "Port",
                   description:
-                    "TCP Port that peer is listening on for inbound p2p connections.",
+                    "TCP Port that peer is listening on for inbound p2p connections.  <br/><b>Default:</b> 18080",
                   range: "[0,65535]",
                   integral: true,
                   default: 18080,
@@ -268,7 +268,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
                   type: "boolean",
                   name: "Priority Node",
                   description:
-                    "Attempt to stay perpetually connected to this peer.",
+                    "Attempt to stay perpetually connected to this peer",
                   default: false,
                 },
               },
@@ -282,9 +282,9 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         description: "Tor anonymity network settings",
         spec: {
           toronly: {
-            name: "Tor only",
+            name: "Tor Only",
             description:
-              "Only communicate with Monero nodes via Tor.  This is more private, but can be slower, especially during initial sync.",
+              "Only communicate with Monero nodes via Tor.  This is more private, but can be slower, especially during initial sync.  <br/><b>Default:</b> Enabled",
             type: "boolean",
             default: true,
           },
@@ -292,15 +292,15 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             type: "boolean",
             name: "Ban Misbehaving RPC Clients",
             description:
-              "Ban hosts that generate RPC errors.  Leaving disabled may help to prevent monerod from banning traffic originating from the Tor daemon.  This is useful in Tor-only mode, where every connection inbound to the onion's RPC appears to be from same remote host.",
+              "Ban hosts that generate RPC errors.  Leaving disabled may help to prevent monerod from banning traffic originating from the Tor daemon.  This is useful in Tor-only mode, where every connection inbound to the onion's RPC appears to be from same remote host.  <br/><b>Default:</b> Disabled",
             default: false,
           },
           maxonionconns: {
             type: "number",
             nullable: false,
-            name: "Max Tor RPC conns",
+            name: "Max Tor RPC Connections",
             description:
-              "Maximum number of simultaneous connections to Monero's .onion RPC",
+              "Maximum number of simultaneous connections allowed to be made to Monero's .onion RPC <b>Default:</b> 16",
             range: "[1,256]",
             integral: true,
             units: "Connections",
@@ -309,9 +309,9 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           maxsocksconns: {
             type: "number",
             nullable: false,
-            name: "Max Tor broadcast conns",
+            name: "Max Tor Broadcast Connections",
             description:
-              "Maximum number of simultaneous connections to Tor's SOCKS proxy when broadcasting transactions",
+              "Maximum number of simultaneous connections to Tor's SOCKS proxy when broadcasting transactions <br/><b>Default:</b> 16",
             range: "[1,256]",
             integral: true,
             units: "Connections",
@@ -321,7 +321,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             type: "boolean",
             name: "Dandelion++",
             description:
-              'Enables white noise and Dandelion++ sender node obfuscation scheme.\nEnabled: It is harder to tell which node originated a transaction, but your peers could potentially silently censor your transactions by not propagating them.\nDisabled: Saves "white noise" bandwidth and may make broadcasting transactions more reliable.\nFor more information, see https://www.getmonero.org/2020/04/18/dandelion-implemented.html',
+              'Enables white noise and Dandelion++ sender node obfuscation scheme.<br/>Enabled: It is harder to tell which node originated a transaction, but your peers could potentially silently censor your transactions by not propagating them.<br/>Disabled: Saves "white noise" bandwidth and may make broadcasting transactions more reliable.<br/>For more information, see https://www.getmonero.org/2020/04/18/dandelion-implemented.html <br/><b>Default:</b> Enabled',
             default: true,
           },
         },
@@ -330,14 +330,14 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
         type: "boolean",
         name: "ZMQ Interface",
         description:
-          "ZeroMQ is an asynchronous messaging library, aimed at use in distributed or concurrent applications. It provides a message queue without a dedicated message broker.",
+          "ZeroMQ is an asynchronous messaging library, aimed at use in distributed or concurrent applications. It provides a message queue without a dedicated message broker. <br/><b>Default:</b> Disabled",
         default: false,
       },
       pruning: {
         type: "boolean",
         name: "Pruning",
         description:
-          "Blockchain pruning in Monero prunes proof data from transactions after verification but before storage.  This saves roughly 2/3s of disk space.  The drawback of pruning is that you will contribute less to the Monero P2P network in terms of helping new nodes doing IBD. If enabled, your node will still relay new transactions and blocks.",
+          "Blockchain pruning in Monero prunes proof data from transactions after verification but before storage.  This saves roughly 2/3s of disk space.  The drawback of pruning is that you will contribute less to the Monero P2P network in terms of helping new nodes doing IBD. If enabled, your node will still relay new transactions and blocks. <br/><b>Default:</b> Disabled",
         default: false,
       },
     },
