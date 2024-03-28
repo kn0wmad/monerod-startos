@@ -14,13 +14,13 @@ clean:
 	rm -f scripts/*.js
 
 verify: $(PKG_ID).s9pk
-	embassy-sdk verify s9pk $(PKG_ID).s9pk
+	start-sdk verify s9pk $(PKG_ID).s9pk
 
 install: $(PKG_ID).s9pk
-	embassy-cli package install $(PKG_ID).s9pk
+	start-cli package install $(PKG_ID).s9pk
 
 $(PKG_ID).s9pk: manifest.yaml LICENSE docs/instructions.md icon.png scripts/embassy.js docker-images/aarch64.tar docker-images/x86_64.tar
-	embassy-sdk pack
+	start-sdk pack
 
 docker-images/aarch64.tar: Dockerfile docker_entrypoint.sh scripts/*.sh assets/*
 	mkdir -p docker-images

@@ -1,4 +1,2 @@
-import {
-    compat,
-} from "../dependencies.ts";
+import { compat } from "../deps.ts";
 export const setConfig = compat.setConfig;

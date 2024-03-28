@@ -5,10 +5,8 @@
 
 # Do not require tty as in foreground mode: "Helpful when running in a container."
 # This keeps monero from crashing because no tty is assigned.
-# We are commenting it here because it must be invoked from the command line via `monerod --non-interactive`
+# We are commenting it here because it *must* be invoked from the command line via `monerod --non-interactive`
 #non-interactive=1
-
-no-zmq=1                        # We don't use the zmq server. Disabling to "limit attack surface"
 
 # Data directory (blockchain db and indices)
 data-dir=/data/.bitmonero  # Remember to create the monero user first
@@ -30,10 +28,14 @@ limit-rate-up=RATELIMIT_KBPSUP       # Default 2048 kB/s; contribute more to p2p
 limit-rate-down=RATELIMIT_KBPSDOWN   # Default 8192 kB/s; allow for faster initial sync
 
 # RPC open node
-rpc-bind-ip=0.0.0.0            # Bind to all interfaces [So we can connect a wallet on the LAN]
+rpc-bind-ip=0.0.0.0            # Unrestricted RPC IP and port. 0.0.0.0=Bind to all interfaces [So we can connect a wallet on the LAN]
 rpc-bind-port=18081            # Bind on default port
-confirm-external-bind=1        # Open node (confirm) - required for node to be advertized in p2p handshake (public-node=1)
-restricted-rpc=1               # Prevent unsafe RPC calls
+confirm-external-bind=1        # Confirm we want the unrestricted RPC (set by rpc-bind-ip) listening on all network interfaces
+                               # confirm-external-bind=1 and public-node=1 are required for node to be advertized in p2p handshake
+#restricted-rpc=1              # Prevent unsafe RPC calls (can be used to restrict the normally unrestricted RPC interface)
+rpc-access-control-origins=*
+rpc-restricted-bind-ip=0.0.0.0 # Bind restricted RPC to all interfaces
+rpc-restricted-bind-port=18089 # Bind restricted RPC on custom port to differentiate from default unrestricted RPC (18081)
 
 # Slow but reliable db writes
 db-sync-mode=safe
@@ -41,7 +43,7 @@ db-sync-mode=safe
 # Attempt to salvage block database if it seems corrupted:
 #db-salvage=1
 
-# Max Mempool Size (bytes), default=648000000 (~618MB)
+# Max Mempool Size (bytes), default=648000000 (648MiB or ~618MB)
 max-txpool-weight=TXPOOL_MAXBYTES
 
 # DNS checkpointing - Disabled with prejudice.

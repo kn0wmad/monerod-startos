@@ -1,2 +1,2 @@
-import { compat } from "../dependencies.ts";
-export const properties = compat.properties
+import { compat } from "../deps.ts";
+export const properties = compat.properties;
