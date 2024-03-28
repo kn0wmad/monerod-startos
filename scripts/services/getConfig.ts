@@ -290,7 +290,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           },
           rpcban: {
             type: "boolean",
-            name: "Ban misbehaving RPC clients",
+            name: "Ban Misbehaving RPC Clients",
             description:
               "Ban hosts that generate RPC errors.  Leaving disabled may help to prevent monerod from banning traffic originating from the Tor daemon.  This is useful in Tor-only mode, where every connection inbound to the onion's RPC appears to be from same remote host.",
             default: false,
