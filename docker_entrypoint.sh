@@ -45,6 +45,7 @@ ADV_P2P_STRICTNODES=$(yq e '.advanced.p2p.strictnodes' ${BITMONERO_DIR}/start9/c
 ADV_PRUNING_MODE=$(yq e '.advanced.pruning' ${BITMONERO_DIR}/start9/config.yaml)
 #ADV_PRUNING_MODE=$(yq e '.advanced.pruning.mode' ${BITMONERO_DIR}/start9/config.yaml)
 #ADV_PRUNING_SYNCPRUNEDBLOCKS=$(yq e '.advanced.pruning.syncprunedblocks' ${BITMONERO_DIR}/start9/config.yaml)
+INT_ANN_BLOCKS_TO_BTCPAY=$(yq e '.integrations.blocknotify.btcpayserver' ${BITMONERO_DIR}/start9/config.yaml)
 
 # Properties Page
 echo 'version: 2' > ${BITMONERO_DIR}/start9/stats.yaml
@@ -213,6 +214,13 @@ while [[ $i -le $num_custom_peers ]] ; do
  fi
  i=$(expr $i + 1)
 done
+
+#If the user has enabled BTCPayServer integration, send block notifications there
+if [ "$INT_ANN_BLOCKS_TO_BTCPAY" == "true" ] ; then
+ btcpay_integration='block-notify="/usr/bin/curl -X GET http://btcpayserver.embassy:23001/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s"'
+ echo -e "# BLOCK NOTIFICATIONS\n${btcpay_integration}" >> $new_conf_template
+fi
+
 
 mv $new_conf_template $new_conf
 
