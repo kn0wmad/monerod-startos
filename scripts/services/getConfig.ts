@@ -342,4 +342,25 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
       },
     },
   },
+  integrations: {
+    type: "object",
+    name: "Integrations",
+    description: "Settings for integrating Monero into other StartOS services",
+    spec: {
+      blocknotify: {
+        type: "object",
+        name: "Block Notify",
+        description: "Notify other services of new Monero blocks",
+        spec: {
+          btcpayserver: {
+            type: "boolean",
+            name: "BTCPayServer",
+            description:
+              "Send notifications of new Monero blocks to the BTCPayServer backend. <br/><b>Default:</b> Disabled",
+            default: false,
+          },
+        },
+      },
+    },
+  },
 });

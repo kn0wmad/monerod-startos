@@ -1,4 +1,4 @@
-FROM sethsimmons/simple-monerod:v0.18.3.2
+FROM ghcr.io/sethforprivacy/simple-monerod:v0.18.3.2
 
 USER root
 
