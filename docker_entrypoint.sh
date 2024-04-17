@@ -15,6 +15,7 @@ MONERO_RPC_PORT=18081
 MONERO_RPC_PORT_HS=18081
 MONERO_ZMQ_PORT=18082
 MONERO_ZMQ_PUBSUB_PORT=18083
+MONERO_RPC_PORT_REMOTE_NODE=18088
 MONERO_RPC_PORT_RESTRICTED=18089
 MONEROD_LAN_HOSTNAME="monerod.embassy"
 MONERO_ANON_INBOUND_HOST="127.0.0.1" # monerod.embassy
@@ -200,7 +201,7 @@ elif [ "$ADV_P2P_PUBLICRPC" = "true" ] ; then
  echo "public-node=1" >> $new_conf_template
  if [ "$ADV_TOR_TORONLY" = "true" ] ; then
   echo "# Advertise onion as public remote node (Communicated to wallet clients that crawl to our p2p network port, when public-node=1)" >> $new_conf_template
-  echo "anonymous-inbound=RPC_TOR_ADDRESS:MONERO_RPC_PORT_HS,MONERO_ANON_INBOUND_HOST:MONERO_RPC_PORT_RESTRICTED,ADV_TOR_MAXONIONCONNS" >> $new_conf_template
+  echo "anonymous-inbound=RPC_TOR_ADDRESS_RESTRICTED:MONERO_RPC_PORT_HS,MONERO_ANON_INBOUND_HOST:MONERO_RPC_PORT_REMOTE_NODE,ADV_TOR_MAXONIONCONNS" >> $new_conf_template
   echo "# Disable UPnP port mapping" >> $new_conf_template
   echo "igd=disabled" >> $new_conf_template
  #elif [ "ADV_P2P_UPNP" = "true" ] ; then
@@ -213,8 +214,10 @@ sed -i "s/TOR_HOSTNAME/$TOR_HOSTNAME/g" $new_conf_template
 sed -i "s/TOR_PORT/$TOR_PORT/g" $new_conf_template
 sed -i "s/ADV_TOR_MAXSOCKSCONNS/$ADV_TOR_MAXSOCKSCONNS/g" $new_conf_template
 sed -i "s/RPC_TOR_ADDRESS/$RPC_TOR_ADDRESS/g" $new_conf_template
+sed -i "s/RPC_TOR_ADDRESS_RESTRICTED/$RPC_TOR_ADDRESS_RESTRICTED/g" $new_conf_template
 sed -i "s/MONERO_RPC_PORT_HS/$MONERO_RPC_PORT_HS/g" $new_conf_template
 sed -i "s/MONERO_RPC_PORT_RESTRICTED/$MONERO_RPC_PORT_RESTRICTED/g" $new_conf_template
+sed -i "s/MONERO_RPC_PORT_REMOTE_NODE/$MONERO_RPC_PORT_REMOTE_NODE/g" $new_conf_template
 sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/g" $new_conf_template
 sed -i "s/MONERO_ANON_INBOUND_HOST/$MONERO_ANON_INBOUND_HOST/g" $new_conf_template
 sed -i "s/ADV_TOR_MAXONIONCONNS/$ADV_TOR_MAXONIONCONNS/g" $new_conf_template
