@@ -101,7 +101,7 @@ echo '    description: Connection string for accessing the unrestricted Monero R
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '  Unrestricted RPC URL (from another StartOS service):' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '  Unrestricted RPC URL (Internal):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_USER_PASS$MONEROD_LAN_HOSTNAME:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Connection string for accessing the unrestricted Monero RPC from another service's container.  This includes wallet calls." >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -116,7 +116,7 @@ if [ "$ZMQ" == "true" ] ; then
  echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
- echo '  ZMQ Interface (from another StartOS service):' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '  ZMQ Interface (Internal):' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    value: "'"$MONEROD_LAN_HOSTNAME:$MONERO_ZMQ_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo "    description: ZMQ interface address for receiving transaction and block notifications from another service's container" >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -130,7 +130,7 @@ if [ "$ZMQ" == "true" ] ; then
  echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
- echo '  ZMQ Pub-Sub Interface (from another StartOS service):' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '  ZMQ Pub-Sub Interface (Internal):' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    value: "'"$MONEROD_LAN_HOSTNAME:$MONERO_ZMQ_PUBSUB_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo "    description: ZMQ interface address for receiving transaction and block notifications  from another service's container" >> ${BITMONERO_DIR}/start9/stats.yaml
