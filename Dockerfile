@@ -21,9 +21,10 @@ RUN sed -i "s/^\(monero:x\):1000:$/\1:302340:/" /etc/group
 COPY ./assets/monero.conf.template /root/
 
 # # Expose p2p, unrestricted RPC, ZMQ, and restricted RPC ports
-#EXPOSE 18080
+EXPOSE 18080
 EXPOSE 18081
-#EXPOSE 18082
+EXPOSE 18082
+EXPOSE 18083
 EXPOSE 18089
 
 # Start monerod

@@ -12,9 +12,11 @@ TOR_PORT=9050
 STARTOS_PROXY_PORT=443
 MONERO_P2P_PORT=18080
 MONERO_RPC_PORT=18081
+MONERO_RPC_PORT_HS=18081
 MONERO_ZMQ_PORT=18082
-MONERO_RPC_PORT_HS=18083
+MONERO_ZMQ_PUBSUB_PORT=18083
 MONERO_RPC_PORT_RESTRICTED=18089
+MONEROD_LAN_HOSTNAME="monerod.embassy"
 MONERO_ANON_INBOUND_HOST="127.0.0.1" # monerod.embassy
 PEER_TOR_ADDRESS=$(yq e '.peer-tor-address' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_LAN_ADDRESS=$(yq e '.rpc-lan-address' ${BITMONERO_DIR}/start9/config.yaml)
@@ -28,6 +30,8 @@ if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
 fi
 ZMQ=$(yq e '.advanced.zmq' ${BITMONERO_DIR}/start9/config.yaml)
 ZMQ_TOR_ADDRESS=$(yq e '.zmq-tor-address' ${BITMONERO_DIR}/start9/config.yaml)
+ZMQ_PUBSUB_LAN_ADDRESS=$(yq e '.zmq-pubsub-lan-address' ${BITMONERO_DIR}/start9/config.yaml)
+ZMQ_PUBSUB_TOR_ADDRESS=$(yq e '.zmq-pubsub-tor-address' ${BITMONERO_DIR}/start9/config.yaml)
 ADV_P2P_MAXNUMOUTPEERS=$(yq e '.advanced.p2p.maxnumoutpeers' ${BITMONERO_DIR}/start9/config.yaml)
 ADV_P2P_MAXNUMINPEERS=$(yq e '.advanced.p2p.maxnuminpeers' ${BITMONERO_DIR}/start9/config.yaml)
 RATELIMIT_KBPSUP=$(yq e '.ratelimit.kbpsup' ${BITMONERO_DIR}/start9/config.yaml)
@@ -83,14 +87,14 @@ if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
 else
  RPC_USER_PASS=""
 fi
-echo '  Unrestricted RPC Connection String (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '  Unrestricted RPC URL (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_USER_PASS$RPC_LAN_ADDRESS:$STARTOS_PROXY_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Connection string for accessing the unrestricted Monero RPC over LAN' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '  Unrestricted RPC Connection String (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '  Unrestricted RPC URL (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_USER_PASS$RPC_TOR_ADDRESS:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Connection string for accessing the unrestricted Monero RPC via Tor' >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -98,10 +102,31 @@ echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 if [ "$ZMQ" == "true" ] ; then
- echo '  ZMQ Connection String (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '  ZMQ Interface (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    value: "'"$ZMQ_TOR_ADDRESS:$MONERO_ZMQ_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
- echo '    description: ZMQ anterface address for receiving transaction and block notifications via Tor' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    description: ZMQ interface address for receiving transaction and block notifications via Tor' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '  ZMQ Interface (from another StartOS service):' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    value: "'"$MONEROD_LAN_HOSTNAME:$MONERO_ZMQ_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo "    description: ZMQ interface address for receiving transaction and block notifications from another service's container" >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '  ZMQ Pub-Sub Interface (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    value: "'"$ZMQ_TOR_ADDRESS:$MONERO_ZMQ_PUBSUB_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    description: ZMQ interface address for receiving transaction and block notifications via Tor' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '  ZMQ Pub-Sub Interface (from another StartOS service):' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    value: "'"$MONEROD_LAN_HOSTNAME:$MONERO_ZMQ_PUBSUB_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo "    description: ZMQ interface address for receiving transaction and block notifications  from another service's container" >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -123,8 +148,9 @@ echo -e "\n# ZMQ Interface" >> $new_conf_template
 if [ "$ZMQ" = "false" ] ; then
  zmq_config="no-zmq=1                        # We don't use the zmq server. Disabling to \"limit attack surface\""
 else
- zmq_config="zmq-rpc-bind-ip=0.0.0.0    # ZMQ listens on all interfaces inside the container"
- zmq_config="$zmq_config\nzmq-rpc-bind-port=$MONERO_ZMQ_PORT # ZMQ Port"
+ zmq_config="zmq-rpc-bind-ip=0.0.0.0     # ZMQ listens on all interfaces inside the container"
+ zmq_config="$zmq_config\nzmq-rpc-bind-port=$MONERO_ZMQ_PORT     # ZMQ Port"
+ zmq_config="$zmq_config\nzmq-pub=tcp://0.0.0.0:$MONERO_ZMQ_PUBSUB_PORT #ZMQ Pub-Sub Port"
 fi
 echo -e "$zmq_config" >> $new_conf_template
 
@@ -217,7 +243,7 @@ done
 
 #If the user has enabled BTCPayServer integration, send block notifications there
 if [ "$INT_ANN_BLOCKS_TO_BTCPAY" == "true" ] ; then
- btcpay_integration="block-notify='/usr/bin/curl -X GET \"http://btcpayserver.embassy:23001/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s\"'"
+ btcpay_integration="block-notify='curl -X GET \"http://btcpayserver.embassy:23001/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s\"'"
  echo -e "\n# BLOCK NOTIFICATIONS\n${btcpay_integration}" >> $new_conf_template
 fi
 

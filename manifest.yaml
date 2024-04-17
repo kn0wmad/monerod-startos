@@ -4,7 +4,7 @@ version: 0.18.3.2
 release-notes: |
   * Update to latest upstream [sethforprivacy Monero docker image](https://github.com/sethforprivacy/simple-monerod-docker)
   * Includes Monero 0.18.3.2 ([Release Notes](https://github.com/monero-project/monero/releases/tag/v0.18.3.2))
-  * Add features to monero-startos: rpc credentials for unrestricted rpc interface, zmq interface
+  * Add features to monero-startos: rpc credentials for unrestricted rpc interface, zmq interfaces
   * If Monero gets stuck in a "Stopping..." state, please restart your server via System > Restart
 license: BSD-3
 wrapper-repo: https://github.com/kn0wmad/monerod-startos
@@ -108,6 +108,17 @@ interfaces:
     tor-config:
       port-mapping:
         18082: "18082"
+    ui: false
+    protocols:
+      - tcp
+      - zmq
+  zmq-pub:
+    name: ZeroMQ Pub-Sub Interface
+    #description: Listens for subscriptions to the ZeroMQ raw block and raw transaction event streams
+    description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
+    tor-config:
+      port-mapping:
+        18083: "18083"
     ui: false
     protocols:
       - tcp

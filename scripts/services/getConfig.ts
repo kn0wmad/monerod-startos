@@ -66,6 +66,15 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     target: "lan-address",
     interface: "zmq",
   },
+  "zmq-pubsub-tor-address": {
+    name: "ZMQ Pub-Sub Tor Address",
+    description: "The Tor address of the ZMQ publish-subscribe interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "tor-address",
+    interface: "zmq-pubsub",
+  },
   txpool: {
     type: "object",
     name: "Transaction Pool",
