@@ -101,6 +101,22 @@ interfaces:
       - tcp
       - http
       - json-rpc
+  rpc-wallet:
+    name: Wallet RPC Interface
+    #description: Listens for JSON-RPC commands
+    description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
+    tor-config:
+      port-mapping:
+        28088: "28088"
+    lan-config:
+      28088:
+        ssl: true
+        internal: 28088
+    ui: false
+    protocols:
+      - tcp
+      - http
+      - json-rpc
   zmq:
     name: ZeroMQ Interface
     #description: Listens for subscriptions to the ZeroMQ raw block and raw transaction event streams

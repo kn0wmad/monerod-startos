@@ -1,4 +1,6 @@
+FROM ghcr.io/sethforprivacy/simple-monero-wallet-rpc:v0.18.3.3 as monero-wallet-rpc
 FROM ghcr.io/sethforprivacy/simple-monerod:v0.18.3.2
+COPY --from=monero-wallet-rpc "/usr/local/bin/monero-wallet-rpc" /usr/local/bin/
 
 USER root
 
@@ -20,12 +22,15 @@ RUN sed -i "s/^\(monero:x\):1000:$/\1:302340:/" /etc/group
 # # Add config file for monerod
 COPY ./assets/monero.conf.template /root/
 
-# # Expose p2p, unrestricted RPC, ZMQ, and restricted RPC ports
-EXPOSE 18080
-EXPOSE 18081
-EXPOSE 18082
-EXPOSE 18083
-EXPOSE 18089
+# # Expose p2p, unrestricted RPC, ZMQ, ZMQ-PUB, and restricted RPC ports
+EXPOSE 18080/tcp
+EXPOSE 18081/tcp
+EXPOSE 18082/tcp
+EXPOSE 18083/tcp
+EXPOSE 18089/tcp
+EXPOSE 28088/tcp
+
+WORKDIR "/data/.bitmonero"
 
 # Start monerod
 ENTRYPOINT ["/usr/local/bin/docker_entrypoint.sh"]

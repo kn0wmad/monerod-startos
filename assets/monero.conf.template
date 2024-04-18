@@ -1,7 +1,7 @@
 #
 # monero.conf configuration file.  Things beginning with # are comments.
 #
-# See https://monerodocs.org/interacting/monerod-reference/
+# See https://getmonero.dev/docs/interacting/monerod-reference
 
 # Do not require tty as in foreground mode: "Helpful when running in a container."
 # This keeps monero from crashing because no tty is assigned.
@@ -13,13 +13,13 @@ data-dir=/data/.bitmonero  # Remember to create the monero user first
 
 # Log file
 log-level=0,blockchain:INFO
-log-file=/data/.bitmonero/monero.log
+log-file=/data/.bitmonero/logs/monero.log
 max-log-file-size=10000000            # Currently 10MB. 0 = Prevent monerod from managing the log files, if we want logrotate to take care of that
 max-log-files=2
 
 # P2P full node
-p2p-bind-ip=0.0.0.0            # Bind to all interfaces (the default)
-p2p-bind-port=18080            # Bind to default port
+p2p-bind-ip=MONEROD_BIND_IP            # Bind to all interfaces (the default)
+p2p-bind-port=MONERO_P2P_PORT            # Bind to default port
 
 out-peers=ADV_P2P_MAXNUMOUTPEERS    # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays [defacto default: 64]
 in-peers=ADV_P2P_MAXNUMINPEERS      # The default is unlimited; we prefer to put a cap on this ["suggested": 128]
@@ -28,14 +28,14 @@ limit-rate-up=RATELIMIT_KBPSUP       # Default 2048 kB/s; contribute more to p2p
 limit-rate-down=RATELIMIT_KBPSDOWN   # Default 8192 kB/s; allow for faster initial sync
 
 # RPC open node
-rpc-bind-ip=0.0.0.0            # Unrestricted RPC IP and port. 0.0.0.0=Bind to all interfaces [So we can connect a wallet on the LAN]
-rpc-bind-port=18081            # Bind on default port
+rpc-bind-ip=MONEROD_BIND_IP            # Unrestricted RPC IP and port. 0.0.0.0=Bind to all interfaces [So we can connect a wallet on the LAN]
+rpc-bind-port=MONERO_RPC_PORT            # Bind on default port
 confirm-external-bind=1        # Confirm we want the unrestricted RPC (set by rpc-bind-ip) listening on all network interfaces
                                # confirm-external-bind=1 and public-node=1 are required for node to be advertized in p2p handshake
 #restricted-rpc=1              # Prevent unsafe RPC calls (can be used to restrict the normally unrestricted RPC interface)
 rpc-access-control-origins=*
-rpc-restricted-bind-ip=0.0.0.0 # Bind restricted RPC to all interfaces
-rpc-restricted-bind-port=18089 # Bind restricted RPC on custom port to differentiate from default unrestricted RPC (18081)
+rpc-restricted-bind-ip=MONEROD_BIND_IP # Bind restricted RPC to all interfaces
+rpc-restricted-bind-port=MONERO_RPC_PORT_RESTRICTED # Bind restricted RPC on custom port to differentiate from default unrestricted RPC (18081)
 
 # Slow but reliable db writes
 db-sync-mode=safe

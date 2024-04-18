@@ -2,8 +2,9 @@ import { compat, types as T } from "../deps.ts";
 
 export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
   "peer-tor-address": {
-    name: "Peer Tor Address",
-    description: "The Tor address of the peer interface",
+    name: "Peer Address (Tor)",
+    description:
+      "The Tor address of the peer interface for incoming P2P connections",
     type: "pointer",
     subtype: "package",
     "package-id": "monerod",
@@ -11,8 +12,8 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     interface: "peer",
   },
   "rpc-tor-address": {
-    name: "RPC Tor Address",
-    description: "The Tor address of the RPC interface",
+    name: "RPC Interface Address (Tor)",
+    description: "The Tor address of the unrestricted RPC interface",
     type: "pointer",
     subtype: "package",
     "package-id": "monerod",
@@ -20,16 +21,34 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     interface: "rpc",
   },
   "rpc-lan-address": {
-    name: "RPC LAN Address",
-    description: "The LAN address of the RPC interface",
+    name: "RPC Interface Address (LAN)",
+    description: "The LAN address of the unrestricted RPC interface",
     type: "pointer",
     subtype: "package",
     "package-id": "monerod",
     target: "lan-address",
     interface: "rpc",
   },
+  "rpc-tor-address-wallet": {
+    name: "Wallet RPC Interface Address (Tor)",
+    description: "The Tor address of the wallet RPC interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "tor-address",
+    interface: "rpc-wallet",
+  },
+  "rpc-lan-address-wallet": {
+    name: "Wallet RPC Interface Address (LAN)",
+    description: "The LAN address of the wallet RPC interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "lan-address",
+    interface: "rpc-wallet",
+  },
   "rpc-tor-address-restricted": {
-    name: "RPC Tor Address (Restricted Calls)",
+    name: "RPC Interface Address (Restricted Calls) (Tor)",
     description:
       "The Tor address of the RPC interface that allows only a restricted set of API calls",
     type: "pointer",
@@ -39,7 +58,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     interface: "rpc-restricted",
   },
   "rpc-lan-address-restricted": {
-    name: "RPC LAN Address (Restricted Calls)",
+    name: "RPC Interface Address (Restricted Calls) (LAN)",
     description:
       "The LAN address of the RPC interface that allows only a restricted set of API calls",
     type: "pointer",
@@ -49,7 +68,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     interface: "rpc-restricted",
   },
   "zmq-tor-address": {
-    name: "ZMQ Tor Address",
+    name: "ZMQ Interface Address (Tor)",
     description: "The Tor address of the ZMQ interface",
     type: "pointer",
     subtype: "package",
@@ -58,7 +77,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     interface: "zmq",
   },
   "zmq-lan-address": {
-    name: "ZMQ LAN Address",
+    name: "ZMQ Interface Address (LAN)",
     description: "The LAN address of the ZMQ interface",
     type: "pointer",
     subtype: "package",
@@ -67,7 +86,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     interface: "zmq",
   },
   "zmq-pubsub-tor-address": {
-    name: "ZMQ Pub-Sub Tor Address",
+    name: "ZMQ Pub-Sub Interface Address (Tor)",
     description: "The Tor address of the ZMQ publish-subscribe interface",
     type: "pointer",
     subtype: "package",
