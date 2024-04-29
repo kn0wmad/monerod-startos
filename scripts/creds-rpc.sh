@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BITMONERO_DIR=$(cat /root/monero.conf.template |grep "^data-dir="|sed "s/^data-dir=\([^ #]*\).*/\1/")
+BITMONERO_DIR=$(cat /data/.bitmonero/monero.conf |grep "^data-dir="|sed "s/^data-dir=\([^ #]*\).*/\1/")
 RPC_CREDENTIALS=$(yq e '.rpc.credentials.enabled' ${BITMONERO_DIR}/start9/config.yaml)
 if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
  RPC_USERNAME=$(yq e '.rpc.credentials.username' ${BITMONERO_DIR}/start9/config.yaml)

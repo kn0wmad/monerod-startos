@@ -295,7 +295,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             type: "boolean",
             name: "Advertise RPC Node",
             description:
-              "Advertise our onion's P2P port to network peers.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled",
+              "Advertise our RPC port to P2P network peers.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled",
             default: false,
           },
           /*
