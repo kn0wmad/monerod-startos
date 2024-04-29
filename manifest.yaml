@@ -128,7 +128,7 @@ interfaces:
     protocols:
       - tcp
       - zmq
-  zmq-pub:
+  zmq-pubsub:
     name: ZeroMQ Pub-Sub Interface
     #description: Listens for subscriptions to the ZeroMQ raw block and raw transaction event streams
     description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.

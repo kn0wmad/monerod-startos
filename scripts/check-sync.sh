@@ -18,7 +18,7 @@ elif [ "$SYNCED" = "true" ] ; then
 elif [ "$SYNCED" = "false" ] ; then
     echo -n "Syncing Monero blockchain.  Initial sync may take several days. STATUS: Syncing block #$BLOCKS_SYNCED" >&2
     #Get Synced status from log:
-    SYNC_STATUS=$(ionice -c3 tail -10000 /data/.bitmonero/monero.log | grep "cryptonote_protocol_handler.inl:1686	Synced " | tail -1 | sed "s/\t/ /g" | tr -s " " | sed "s/.* Synced \([0-9]*\)\/\([0-9]*\) \(.*\)/\1:\2:\3/g")
+    SYNC_STATUS=$(ionice -c3 tail -10000 /data/.bitmonero/logs/monerod.log | grep "cryptonote_protocol_handler.inl:1686	Synced " | tail -1 | sed "s/\t/ /g" | tr -s " " | sed "s/.* Synced \([0-9]*\)\/\([0-9]*\) \(.*\)/\1:\2:\3/g")
     TOTAL_BLOCKS=$(echo $SYNC_STATUS | cut -d: -f2)
     ETA_DETAILS=$(echo $SYNC_STATUS | cut -d: -f3)
     ETA_DETAILS_CHARS=$(echo $ETA_DETAILS | wc -c)

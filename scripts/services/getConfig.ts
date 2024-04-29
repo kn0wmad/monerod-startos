@@ -29,24 +29,6 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     target: "lan-address",
     interface: "rpc",
   },
-  "rpc-tor-address-wallet": {
-    name: "Wallet RPC Interface Address (Tor)",
-    description: "The Tor address of the wallet RPC interface",
-    type: "pointer",
-    subtype: "package",
-    "package-id": "monerod",
-    target: "tor-address",
-    interface: "rpc-wallet",
-  },
-  "rpc-lan-address-wallet": {
-    name: "Wallet RPC Interface Address (LAN)",
-    description: "The LAN address of the wallet RPC interface",
-    type: "pointer",
-    subtype: "package",
-    "package-id": "monerod",
-    target: "lan-address",
-    interface: "rpc-wallet",
-  },
   "rpc-tor-address-restricted": {
     name: "RPC Interface Address (Restricted Calls) (Tor)",
     description:
@@ -66,6 +48,24 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     "package-id": "monerod",
     target: "lan-address",
     interface: "rpc-restricted",
+  },
+  "rpc-tor-address-wallet": {
+    name: "Wallet RPC Interface Address (Tor)",
+    description: "The Tor address of the wallet RPC interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "tor-address",
+    interface: "rpc-wallet",
+  },
+  "rpc-lan-address-wallet": {
+    name: "Wallet RPC Interface Address (LAN)",
+    description: "The LAN address of the wallet RPC interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "lan-address",
+    interface: "rpc-wallet",
   },
   "zmq-tor-address": {
     name: "ZMQ Interface Address (Tor)",
@@ -147,7 +147,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     name: "RPC Settings",
     description: "Remote Procedure Call configuration options",
     spec: {
-      credentials: {
+      "rpc-credentials": {
         type: "union",
         name: "RPC Credentials",
         description: "Username and password for accessing the Monero RPC",
@@ -155,7 +155,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           id: "enabled",
           name: "RPC Credentials",
           description:
-            'Enable or disable a username and password to access the Monero RPC <br/><b>Default:</b> Disabled (all API access is restricted to a "safe" set of RPC calls)',
+            "Enable or disable a username and password to access the Monero RPC <br/><b>Default:</b> Disabled",
           "variant-names": {
             disabled: "Disabled",
             enabled: "Enabled",
@@ -186,6 +186,59 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
                 "The password for connecting to Monero's unrestricted RPC interface",
               warning:
                 "Changing this value will necessitate a restart of all services that depend on Monero.",
+              default: {
+                charset: "a-z,A-Z,0-9,_",
+                len: 22,
+              },
+              pattern: "^[a-zA-Z0-9_]+$",
+              "pattern-description":
+                "Must be alphanumeric (can contain underscore)",
+              copyable: true,
+              masked: true,
+            },
+          },
+        },
+      },
+      "wallet-rpc-credentials": {
+        type: "union",
+        name: "Wallet RPC Credentials",
+        description:
+          "Username and password for accessing the Monero wallet RPC",
+        tag: {
+          id: "enabled",
+          name: "Wallet RPC Credentials",
+          description:
+            "Enable or disable a username and password to access the Monero wallet RPC <br/><b>Default:</b> Disabled",
+          "variant-names": {
+            disabled: "Disabled",
+            enabled: "Enabled",
+          },
+        },
+        default: "disabled",
+        variants: {
+          disabled: {},
+          enabled: {
+            username: {
+              type: "string",
+              nullable: false,
+              name: "Wallet RPC Username",
+              description:
+                "The username for connecting to Monero's wallet RPC interface",
+              warning:
+                "Changing this value will necessitate a restart of all services that depend on Monero's wallet RPC.",
+              default: "monero_wallet",
+              pattern: "^[a-zA-Z0-9_]+$",
+              "pattern-description":
+                "Must be alphanumeric and/or can contain an underscore",
+            },
+            password: {
+              type: "string",
+              nullable: false,
+              name: "Wallet RPC Password",
+              description:
+                "The password for connecting to Monero's wallet RPC interface",
+              warning:
+                "Changing this value will necessitate a restart of all services that depend on Monero's wallet RPC.",
               default: {
                 charset: "a-z,A-Z,0-9,_",
                 len: 22,
@@ -242,7 +295,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             type: "boolean",
             name: "Advertise RPC Node",
             description:
-              'Advertise to end-user wallets crawling the p2p network, and to other p2p network peers, that anyone can use this node\'s RPC interface (using a restricted, "safe" set of RPC calls) as a "Remote Node" for connecting their wallets.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled',
+              "Advertise our onion's P2P port to network peers.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled",
             default: false,
           },
           /*
