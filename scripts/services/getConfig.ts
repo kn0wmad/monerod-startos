@@ -145,7 +145,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
   rpc: {
     type: "object",
     name: "RPC Settings",
-    description: "Remote Procedure Call configuration options",
+    description: "Remote Procedure Call interface configuration options",
     spec: {
       "rpc-credentials": {
         type: "union",
@@ -208,7 +208,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           id: "enabled",
           name: "Wallet RPC Credentials",
           description:
-            "Enable or disable a username and password to access the Monero wallet RPC <br/><b>Default:</b> Disabled",
+            "Enable or disable a username and password to access the Monero wallet RPC, which is an RPC for issuing commands that reference wallets hosted on the server.  Wallets on client computers should use the standard RPC interface.<br/><b>Default:</b> Disabled",
           "variant-names": {
             disabled: "Disabled",
             enabled: "Enabled",
@@ -269,10 +269,10 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             nullable: true,
             name: "Max Peers Incoming",
             description:
-              "Maximum number of simultaneous peers connecting inbound to the Monero daemon <br/><b>Default:</b> 16 (Monero's default is unlimited but we prefer a ceiling to limit network surveillance from spy nodes and to discourage excessive bandwidth consumption)",
+              "Maximum number of simultaneous peers connecting inbound to the Monero daemon <br/><b>Default:</b> 18 (Monero's default is unlimited but we prefer a ceiling to limit network surveillance from spy nodes and to discourage excessive bandwidth consumption)",
             range: "[0,9999]",
             integral: true,
-            default: 16,
+            default: 18,
           },
           maxnumoutpeers: {
             type: "number",
@@ -293,9 +293,9 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           },
           publicrpc: {
             type: "boolean",
-            name: "Advertise RPC Node",
+            name: "Advertise RPC Remote Node",
             description:
-              'Advertise to P2P network peers that our restricted RPC port offers "Remote Node" services.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled',
+              'Advertise on the P2P network that our restricted RPC port offers "Remote Node" services.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled',
             default: false,
           },
           /*

@@ -12,6 +12,7 @@ conf_template="/root/monero.conf.template"
 new_conf_template="$BITMONERO_DIR/monero.conf.template"
 cp $conf_template $new_conf_template
 new_conf="$BITMONERO_DIR/monero.conf"
+wallet_rpc_conf="$BITMONERO_DIR/monero-wallet-rpc.conf"
 
 MONERO_LAN_HOSTNAME="monerod.embassy"
 MONEROD_LOCAL_HOST="127.0.0.1"
@@ -23,7 +24,6 @@ MONERO_P2P_PORT=18080
 MONERO_RPC_PORT=18081
 MONERO_ZMQ_PORT=18082
 MONERO_ZMQ_PUBSUB_PORT=18083
-MONERO_P2P_PORT_ANONIN=18080
 MONERO_P2P_PORT_LOCAL_BIND=18088
 MONERO_RPC_PORT_RESTRICTED=18089
 MONERO_RPC_PORT_WALLET_RPC=28088
@@ -67,11 +67,19 @@ ADV_PRUNING_MODE=$(yq e '.advanced.pruning' ${BITMONERO_DIR}/start9/config.yaml)
 #ADV_PRUNING_SYNCPRUNEDBLOCKS=$(yq e '.advanced.pruning.syncprunedblocks' ${BITMONERO_DIR}/start9/config.yaml)
 INT_ANN_BLOCKS_TO_BTCPAY=$(yq e '.integrations.blocknotify.btcpayserver' ${BITMONERO_DIR}/start9/config.yaml)
 
-# Properties Page
+# Generate stats.yaml which fills the Properties Page
 echo 'version: 2' > ${BITMONERO_DIR}/start9/stats.yaml
 echo 'data:' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '  P2P Host:' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"$PEER_TOR_ADDRESS:$MONERO_P2P_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo "    description: Hostname and port for connecting other nodes to yours to exchange blocks and transactions" >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    qr: false' >> ${BITMONERO_DIR}/start9/stats.yaml
 if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
  RPC_USER_PASS="${RPC_USERNAME}:${RPC_PASSWORD}@"
+ MASKED="true"
  echo '  RPC Username:' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    value: "'"$RPC_WALLET_USERNAME"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -88,84 +96,84 @@ if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
  echo '    qr: false' >> ${BITMONERO_DIR}/start9/stats.yaml
 else
  RPC_USER_PASS=""
+ MASKED="false"
 fi
 echo '  Restricted RPC URL (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_USER_PASS$RPC_LAN_ADDRESS_RESTRICTED:$STARTOS_REVPROXY_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Connection string for accessing the Monero daemon's RPC over LAN" >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Restricted RPC URL (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_USER_PASS$RPC_TOR_ADDRESS_RESTRICTED:$MONERO_RPC_PORT_RESTRICTED"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Connection string for accessing the Monero RPC over Tor' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Unrestricted RPC URL (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_USER_PASS$RPC_LAN_ADDRESS:$STARTOS_REVPROXY_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Connection string for accessing the unrestricted Monero RPC over LAN' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Unrestricted RPC URL (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_USER_PASS$RPC_TOR_ADDRESS:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    description: Connection string for accessing the unrestricted Monero RPC via Tor' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Unrestricted RPC URL (Internal):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_USER_PASS$MONERO_LAN_HOSTNAME:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Connection string for accessing the unrestricted Monero RPC from another service's container." >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 if [ "$RPC_WALLET_CREDENTIALS" == "enabled" ] ; then
  RPC_WALLET_USER_PASS="${RPC_WALLET_USERNAME}:${RPC_WALLET_PASSWORD}@"
+ MASKED="true"
  echo '  Wallet RPC Username:' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    value: "'"$RPC_WALLET_USERNAME"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
- echo '    description: Username for connecting to the unrestricted Monero RPC' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    description: Username for connecting to the Monero wallet RPC' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    qr: false' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '  Wallet RPC Password:' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    value: "'"$RPC_WALLET_PASSWORD"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
- echo '    description: Password for connecting to the unrestricted Monero RPC' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    description: Password for connecting to the Monero wallet RPC' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    qr: false' >> ${BITMONERO_DIR}/start9/stats.yaml
- #Create a token for use later when invoking monero-wallet-rpc:
- RPC_WALLET_USER_PASS_FLAG="--rpc-login $RPC_WALLET_USERNAME:$RPC_WALLET_PASSWORD"
 else
  RPC_WALLET_USER_PASS=""
- RPC_WALLET_USER_PASS_FLAG=""
+ MASKED="false"
 fi
 echo '  Wallet RPC URL (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_WALLET_USER_PASS$RPC_LAN_ADDRESS_WALLET:$STARTOS_REVPROXY_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Address for connecting to the Monero wallet RPC interface on the LAN" >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Wallet RPC URL (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    value: "'"https://$RPC_WALLET_USER_PASS$RPC_LAN_ADDRESS_WALLET:$MONERO_RPC_PORT_WALLET_RPC"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Address for connecting to the Monero wallet RPC interface via Tor" >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Wallet RPC URL (Internal):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"https://$RPC_WALLET_USER_PASS$RPC_LAN_ADDRESS_WALLET:$MONERO_RPC_PORT_WALLET_RPC"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_WALLET_USER_PASS$MONERO_LAN_HOSTNAME:$MONERO_RPC_PORT_WALLET_RPC"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Address for connecting to the Monero wallet RPC interface from another StartOS service" >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 if [ "$ZMQ" == "true" ] ; then
  echo '  ZMQ Interface (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -198,7 +206,8 @@ if [ "$ZMQ" == "true" ] ; then
  echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 fi
 
-#Replace the easily replacable variables in the config template
+
+#Replace the easily replaceable variables in the config template
 sed -i "s/BITMONERO_DIR/$BITMONERO_DIR_ESC/" $new_conf_template
 sed -i "s/MONERO_LOG/$MONERO_LOG_ESC/" $new_conf_template
 sed -i "s/ADV_P2P_MAXNUMOUTPEERS/$ADV_P2P_MAXNUMOUTPEERS/" $new_conf_template
@@ -249,25 +258,23 @@ fi
 #Gossip config:
 if [ "$ADV_P2P_GOSSIP" = "false" ] ; then
  echo -e "\n# GOSSIP" >> $new_conf_template
- echo "#Tell our peers not to gossip our node" >> $new_conf_template
+ echo "#Tell our peers not to gossip our node w/ P2P port" >> $new_conf_template
  echo "hide-my-port=1" >> $new_conf_template
  echo "# Disable UPnP port mapping" >> $new_conf_template
  echo "igd=disabled" >> $new_conf_template
-elif [ "$ADV_P2P_PUBLICRPC" = "true" ] ; then
+elif [ "$ADV_TOR_TORONLY" = "true" ] ; then
+  echo "# Advertise our onion as the reachable host for incoming P2P connections" >> $new_conf_template
+  echo "anonymous-inbound=PEER_TOR_ADDRESS:MONERO_P2P_PORT,MONEROD_LOCAL_HOST:MONERO_P2P_PORT_LOCAL_BIND,ADV_TOR_MAXONIONCONNS" >> $new_conf_template
+  echo "# Disable UPnP port mapping" >> $new_conf_template
+  echo "igd=disabled" >> $new_conf_template
+fi
+
+if [ "$ADV_P2P_PUBLICRPC" = "true" ] ; then
  #RPC config:
  echo -e "\n# EXTERNAL CONNECTIONS" >> $new_conf_template
  echo "# Node advertisement: Requires --restricted-rpc, --rpc-bind-ip and --confirm-external-bind" >> $new_conf_template
  echo "# Advertise to wallets crawling the p2p network that they can use this node as a \"remote node\" for connecting their wallets." >> $new_conf_template
  echo "public-node=1" >> $new_conf_template
- if [ "$ADV_TOR_TORONLY" = "true" ] ; then
-  echo "# Advertise our onion as the our reachable p2p port for incoming connections" >> $new_conf_template
-  echo "anonymous-inbound=PEER_TOR_ADDRESS:MONERO_P2P_PORT_ANONIN,MONEROD_LOCAL_HOST:MONERO_P2P_PORT_LOCAL_BIND,ADV_TOR_MAXONIONCONNS" >> $new_conf_template
-  echo "# Disable UPnP port mapping" >> $new_conf_template
-  echo "igd=disabled" >> $new_conf_template
- #elif [ "ADV_P2P_UPNP" = "true" ] ; then
- # echo "#Enable UPnP port mapping" >> $new_conf_template
- # echo "igd=enabled" >> $new_conf_template
- fi
 fi
 
 sed -i "s/MONEROD_BIND_IP/$MONEROD_BIND_IP/g" $new_conf_template
@@ -277,7 +284,6 @@ sed -i "s/ADV_TOR_MAXSOCKSCONNS/$ADV_TOR_MAXSOCKSCONNS/g" $new_conf_template
 sed -i "s/RPC_TOR_ADDRESS_RESTRICTED/$RPC_TOR_ADDRESS_RESTRICTED/g" $new_conf_template
 sed -i "s/RPC_TOR_ADDRESS/$RPC_TOR_ADDRESS/g" $new_conf_template
 sed -i "s/MONERO_P2P_PORT_LOCAL_BIND/$MONERO_P2P_PORT_LOCAL_BIND/g" $new_conf_template
-sed -i "s/MONERO_P2P_PORT_ANONIN/$MONERO_P2P_PORT_ANONIN/g" $new_conf_template
 sed -i "s/MONERO_P2P_PORT/$MONERO_P2P_PORT/g" $new_conf_template
 sed -i "s/MONERO_RPC_PORT_RESTRICTED/$MONERO_RPC_PORT_RESTRICTED/g" $new_conf_template
 sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/g" $new_conf_template
@@ -316,15 +322,37 @@ done
 
 #If the user has enabled BTCPayServer integration, send block notifications there
 if [ "$INT_ANN_BLOCKS_TO_BTCPAY" == "true" ] ; then
- btcpay_integration='block-notify="/usr/bin/curl -so /dev/null -X GET http://btcpayserver.embassy:23001/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s"'
+ btcpay_integration='block-notify=/usr/bin/curl -so /dev/null -X GET http://btcpayserver.embassy:23001/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s'
  echo -e "\n# BLOCK NOTIFICATIONS\n${btcpay_integration}" >> $new_conf_template
 fi
 
 chown -R monero:monero $BITMONERO_DIR
+
+
+#create the Monero wallet RPC config file:
+echo "#Monero wallet RPC config file. Docs: https://getmonero.dev/docs/interacting/monero-wallet-rpc-reference
+trusted-daemon=1
+daemon-login=${RPC_USERNAME}:${RPC_PASSWORD}
+daemon-port=$MONERO_RPC_PORT
+
+confirm-external-bind=1
+rpc-bind-ip=$MONEROD_BIND_IP
+rpc-bind-port=$MONERO_RPC_PORT_WALLET_RPC
+rpc-login=$RPC_WALLET_USERNAME:$RPC_WALLET_PASSWORD
+
+wallet-dir=$MONERO_WALLET_DIR
+
+log-file=$MONERO_LOGS_DIR/$MONERO_WALLET_RPC_LOG
+max-log-file-size=10000000 #10MiB
+max-log-files=2" > $wallet_rpc_conf
+
+
 mv $new_conf_template $new_conf
-chown root:monero $new_conf
-chmod 640 $new_conf
+chown root:monero $new_conf $wallet_rpc_conf
+chmod 640 $new_conf $wallet_rpc_conf
 
-exec echo /usr/bin/sudo -u monero monero-wallet-rpc --non-interactive --trusted-daemon --daemon-address http://$RPC_USER_PASS$MONEROD_LOCAL_HOST:$MONERO_RPC_PORT $RPC_WALLET_USER_PASS_FLAG --confirm-external-bind --rpc-bind-ip=$MONEROD_BIND_IP --rpc-bind-port=$MONERO_RPC_PORT_WALLET_RPC --wallet-dir=$MONERO_WALLET_DIR --max-log-files=2 --log-file=$MONERO_LOGS_DIR/$MONERO_WALLET_RPC_LOG &
+#Launch the Monero wallet RPC:
+exec /usr/bin/sudo -u monerowallet monero-wallet-rpc --non-interactive --config-file $wallet_rpc_conf &
 
-exec /usr/bin/sudo -u monero monerod --non-interactive --config-file=$new_conf | tee $MONERO_LOG
+#Launch Monero:
+exec /usr/bin/sudo -u monero monerod --non-interactive --config-file $new_conf | tee $MONERO_LOG
