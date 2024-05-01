@@ -350,6 +350,7 @@ max-log-files=2" > $wallet_rpc_conf
 mv $new_conf_template $new_conf
 chown root:monero $new_conf $wallet_rpc_conf
 chmod 640 $new_conf $wallet_rpc_conf
+chmod 770 $MONERO_LOGS_DIR/
 
 #Launch the Monero wallet RPC:
 exec /usr/bin/sudo -u monerowallet monero-wallet-rpc --non-interactive --config-file $wallet_rpc_conf &
