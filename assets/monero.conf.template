@@ -14,17 +14,17 @@ data-dir=BITMONERO_DIR          # Remember to create the monero user first
 # Log file
 log-level=0,blockchain:INFO
 log-file=MONERO_LOG
-max-log-file-size=10000000          # Our default: 10MB. 0 = Prevent monerod from managing the log files, if we want logrotate to take care of that
+max-log-file-size=10000000     # Our default: 10MB. 0 = Prevent monerod from managing the log files, if we want logrotate to take care of that
 max-log-files=2
 
 # P2P full node
 p2p-bind-ip=MONEROD_BIND_IP            # Bind to all interfaces (the default)
 p2p-bind-port=MONERO_P2P_PORT            # Bind to default port
 
-out-peers=ADV_P2P_MAXNUMOUTPEERS        # Larger values will enable much faster sync and tx awareness
+out-peers=ADV_P2P_MAXNUMOUTPEERS         # Larger values will enable much faster sync and tx awareness
 in-peers=ADV_P2P_MAXNUMINPEERS          # The default is unlimited; we prefer to put a cap on this ["suggested": 128]
 
-limit-rate-up=RATELIMIT_KBPSUP          # Default 2048 kB/s; contribute more to p2p network
+limit-rate-up=RATELIMIT_KBPSUP        # Default 2048 kB/s; contribute more to p2p network
 limit-rate-down=RATELIMIT_KBPSDOWN      # Default 8192 kB/s; allow for faster initial sync
 
 # RPC open node
