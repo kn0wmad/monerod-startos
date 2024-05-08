@@ -2,16 +2,23 @@
 
 BITMONERO_DIR="/data/.bitmonero"
 BITMONERO_DIR_ESC=$(echo "$BITMONERO_DIR" | sed "s/\//\\\\\\//g")
-MONERO_LOGS_DIR=$(echo "$BITMONERO_DIR/logs")
-MONERO_WALLET_DIR=$(echo "$BITMONERO_DIR/wallets")
+MONERO_LOGS_DIR="$BITMONERO_DIR/logs"
+MONERO_WALLET_DIR="$BITMONERO_DIR/wallets"
+MONERO_WALLET_DIR_ESC=$(echo "$MONERO_WALLET_DIR" | sed "s/\//\\\\\\//g")
 mkdir -p $MONERO_LOGS_DIR $MONERO_WALLET_DIR
 MONERO_LOG="$MONERO_LOGS_DIR/monerod.log"
 MONERO_LOG_ESC=$(echo "$MONERO_LOG" | sed "s/\//\\\\\\//g")
-MONERO_WALLET_RPC_LOG="monero-wallet-rpc.log"
+MONERO_WALLET_RPC_LOG="$MONERO_LOGS_DIR/monero-wallet-rpc.log"
+MONERO_WALLET_RPC_LOG_ESC=$(echo "$MONERO_WALLET_RPC_LOG" | sed "s/\//\\\\\\//g")
+#monero.conf
 conf_template="/root/monero.conf.template"
-new_conf_template="$BITMONERO_DIR/monero.conf.template"
-cp $conf_template $new_conf_template
-new_conf="$BITMONERO_DIR/monero.conf"
+conf_template_new="$BITMONERO_DIR/monero.conf.template"
+cp $conf_template $conf_template_new
+config_file="$BITMONERO_DIR/monero.conf"
+#moner-wallet-rpc.conf
+wallet_rpc_conf_template="/root/monero-wallet-rpc.conf.template"
+wallet_rpc_conf_new="$BITMONERO_DIR/monero-wallet-rpc.conf.template"
+cp $wallet_rpc_conf_template $wallet_rpc_conf_new
 wallet_rpc_conf="$BITMONERO_DIR/monero-wallet-rpc.conf"
 
 MONERO_LAN_HOSTNAME="monerod.embassy"
@@ -208,20 +215,20 @@ fi
 
 
 #Replace the easily replaceable variables in the config template
-sed -i "s/BITMONERO_DIR/$BITMONERO_DIR_ESC/" $new_conf_template
-sed -i "s/MONERO_LOG/$MONERO_LOG_ESC/" $new_conf_template
-sed -i "s/ADV_P2P_MAXNUMOUTPEERS/$ADV_P2P_MAXNUMOUTPEERS/" $new_conf_template
-sed -i "s/ADV_P2P_MAXNUMINPEERS/$ADV_P2P_MAXNUMINPEERS/" $new_conf_template
-sed -i "s/RATELIMIT_KBPSUP/$RATELIMIT_KBPSUP/" $new_conf_template
-sed -i "s/RATELIMIT_KBPSDOWN/$RATELIMIT_KBPSDOWN/" $new_conf_template
-sed -i "s/TXPOOL_MAXBYTES/$TXPOOL_MAXBYTES/" $new_conf_template
+sed -i "s/BITMONERO_DIR/$BITMONERO_DIR_ESC/" $conf_template_new
+sed -i "s/MONERO_LOG/$MONERO_LOG_ESC/" $conf_template_new
+sed -i "s/ADV_P2P_MAXNUMOUTPEERS/$ADV_P2P_MAXNUMOUTPEERS/" $conf_template_new
+sed -i "s/ADV_P2P_MAXNUMINPEERS/$ADV_P2P_MAXNUMINPEERS/" $conf_template_new
+sed -i "s/RATELIMIT_KBPSUP/$RATELIMIT_KBPSUP/" $conf_template_new
+sed -i "s/RATELIMIT_KBPSDOWN/$RATELIMIT_KBPSDOWN/" $conf_template_new
+sed -i "s/TXPOOL_MAXBYTES/$TXPOOL_MAXBYTES/" $conf_template_new
 
 ###
 #CONDITIONAL VARIABLES which we'll test for and then append to the end of the config file:
 ###
 
 #ZMQ config:
-echo -e "\n# ZMQ Interface" >> $new_conf_template
+echo -e "\n# ZMQ Interface" >> $conf_template_new
 if [ "$ZMQ" = "false" ] ; then
  zmq_config="no-zmq=1                        # We don't use the zmq server. Disabling to \"limit attack surface\""
 else
@@ -229,78 +236,78 @@ else
  zmq_config="$zmq_config\nzmq-rpc-bind-port=$MONERO_ZMQ_PORT     # ZMQ Port"
  zmq_config="$zmq_config\nzmq-pub=tcp://$MONEROD_BIND_IP:$MONERO_ZMQ_PUBSUB_PORT # ZMQ Pub-Sub Port"
 fi
-echo -e "$zmq_config" >> $new_conf_template
+echo -e "$zmq_config" >> $conf_template_new
 
 #RPC config:
 if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
- echo -e "\n# RPC Credentials" >> $new_conf_template
- echo "rpc-login=$RPC_USERNAME:$RPC_PASSWORD    # Require a username and password to access the unrestricted RPC interface" >> $new_conf_template
+ echo -e "\n# RPC Credentials" >> $conf_template_new
+ echo "rpc-login=$RPC_USERNAME:$RPC_PASSWORD    # Require a username and password to access the unrestricted RPC interface" >> $conf_template_new
 fi
 if [ "$ADV_TOR_RPCBAN" = "false" ] ; then
  disable_rpc_ban="disable-rpc-ban=1              # Do not ban hosts on RPC errors. May help prevent monerod from banning traffic originating from the Tor daemon."
- echo -e "\n# RPC Ban\n$disable_rpc_ban" >> $new_conf_template
+ echo -e "\n# RPC Ban\n$disable_rpc_ban" >> $conf_template_new
 fi
 
 #TOR config:
 if [ "$ADV_TOR_TORONLY" = "true" ] ; then
- echo -e "\n# TOR" >> $new_conf_template
- echo    "# Proxy for broadcasting/relaying transaction (does not fetch blocks)" >> $new_conf_template
- echo -n "tx-proxy=tor,TOR_SOCKS_PROXY_HOST:TOR_PORT,ADV_TOR_MAXSOCKSCONNS" >> $new_conf_template
+ echo -e "\n# TOR" >> $conf_template_new
+ echo    "# Proxy for broadcasting/relaying transaction (does not fetch blocks)" >> $conf_template_new
+ echo -n "tx-proxy=tor,TOR_SOCKS_PROXY_HOST:TOR_PORT,ADV_TOR_MAXSOCKSCONNS" >> $conf_template_new
  if [ "$ADV_TOR_DANDELION" = "false" ] ; then
-  echo ",disable_noise" >> $new_conf_template
+  echo ",disable_noise" >> $conf_template_new
  fi
- echo -e "\n# Use Tor's socks proxy for p2p traffic (note: --proxy cannot reach .onion nodes)" >> $new_conf_template
- echo    "proxy=TOR_SOCKS_PROXY_HOST:TOR_PORT" >> $new_conf_template
- echo    "# Pad relayed transactions to next 1024 bytes to help defend against traffic volume analysis. This only makes sense if you are behind Tor or I2P." >> $new_conf_template
- echo    "pad-transactions=1" >> $new_conf_template
+ echo -e "\n# Use Tor's socks proxy for p2p traffic (note: --proxy cannot reach .onion nodes)" >> $conf_template_new
+ echo    "proxy=TOR_SOCKS_PROXY_HOST:TOR_PORT" >> $conf_template_new
+ echo    "# Pad relayed transactions to next 1024 bytes to help defend against traffic volume analysis. This only makes sense if you are behind Tor or I2P." >> $conf_template_new
+ echo    "pad-transactions=1" >> $conf_template_new
 fi
 
 #Gossip config:
 if [ "$ADV_P2P_GOSSIP" = "false" ] ; then
- echo -e "\n# GOSSIP" >> $new_conf_template
- echo "#Tell our peers not to gossip our node w/ P2P port" >> $new_conf_template
- echo "hide-my-port=1" >> $new_conf_template
- echo "# Disable UPnP port mapping" >> $new_conf_template
- echo "igd=disabled" >> $new_conf_template
+ echo -e "\n# GOSSIP" >> $conf_template_new
+ echo "#Tell our peers not to gossip our node w/ P2P port" >> $conf_template_new
+ echo "hide-my-port=1" >> $conf_template_new
+ echo "# Disable UPnP port mapping" >> $conf_template_new
+ echo "igd=disabled" >> $conf_template_new
 elif [ "$ADV_TOR_TORONLY" = "true" ] ; then
-  echo "# Advertise our onion as the reachable host for incoming P2P connections" >> $new_conf_template
-  echo "anonymous-inbound=PEER_TOR_ADDRESS:MONERO_P2P_PORT,MONEROD_LOCAL_HOST:MONERO_P2P_PORT_LOCAL_BIND,ADV_TOR_MAXONIONCONNS" >> $new_conf_template
-  echo "# Disable UPnP port mapping" >> $new_conf_template
-  echo "igd=disabled" >> $new_conf_template
+  echo "# Advertise our onion as the reachable host for incoming P2P connections" >> $conf_template_new
+  echo "anonymous-inbound=PEER_TOR_ADDRESS:MONERO_P2P_PORT,MONEROD_LOCAL_HOST:MONERO_P2P_PORT_LOCAL_BIND,ADV_TOR_MAXONIONCONNS" >> $conf_template_new
+  echo "# Disable UPnP port mapping" >> $conf_template_new
+  echo "igd=disabled" >> $conf_template_new
 fi
 
 if [ "$ADV_P2P_PUBLICRPC" = "true" ] ; then
  #RPC config:
- echo -e "\n# EXTERNAL CONNECTIONS" >> $new_conf_template
- echo "# Node advertisement: Requires --restricted-rpc, --rpc-bind-ip and --confirm-external-bind" >> $new_conf_template
- echo "# Advertise to wallets crawling the p2p network that they can use this node as a \"remote node\" for connecting their wallets." >> $new_conf_template
- echo "public-node=1" >> $new_conf_template
+ echo -e "\n# EXTERNAL CONNECTIONS" >> $conf_template_new
+ echo "# Node advertisement: Requires --restricted-rpc, --rpc-bind-ip and --confirm-external-bind" >> $conf_template_new
+ echo "# Advertise to wallets crawling the p2p network that they can use this node as a \"remote node\" for connecting their wallets." >> $conf_template_new
+ echo "public-node=1" >> $conf_template_new
 fi
 
-sed -i "s/MONEROD_BIND_IP/$MONEROD_BIND_IP/g" $new_conf_template
-sed -i "s/PEER_TOR_ADDRESS/$PEER_TOR_ADDRESS/g" $new_conf_template
-sed -i "s/TOR_PORT/$TOR_PORT/g" $new_conf_template
-sed -i "s/ADV_TOR_MAXSOCKSCONNS/$ADV_TOR_MAXSOCKSCONNS/g" $new_conf_template
-sed -i "s/RPC_TOR_ADDRESS_RESTRICTED/$RPC_TOR_ADDRESS_RESTRICTED/g" $new_conf_template
-sed -i "s/RPC_TOR_ADDRESS/$RPC_TOR_ADDRESS/g" $new_conf_template
-sed -i "s/MONERO_P2P_PORT_LOCAL_BIND/$MONERO_P2P_PORT_LOCAL_BIND/g" $new_conf_template
-sed -i "s/MONERO_P2P_PORT/$MONERO_P2P_PORT/g" $new_conf_template
-sed -i "s/MONERO_RPC_PORT_RESTRICTED/$MONERO_RPC_PORT_RESTRICTED/g" $new_conf_template
-sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/g" $new_conf_template
-sed -i "s/MONEROD_LOCAL_HOST/$MONEROD_LOCAL_HOST/g" $new_conf_template
-sed -i "s/ADV_TOR_MAXONIONCONNS/$ADV_TOR_MAXONIONCONNS/g" $new_conf_template
-sed -i "s/TOR_SOCKS_PROXY_HOST/$TOR_SOCKS_PROXY_HOST/g" $new_conf_template
+sed -i "s/MONEROD_BIND_IP/$MONEROD_BIND_IP/g" $conf_template_new
+sed -i "s/PEER_TOR_ADDRESS/$PEER_TOR_ADDRESS/g" $conf_template_new
+sed -i "s/TOR_PORT/$TOR_PORT/g" $conf_template_new
+sed -i "s/ADV_TOR_MAXSOCKSCONNS/$ADV_TOR_MAXSOCKSCONNS/g" $conf_template_new
+sed -i "s/RPC_TOR_ADDRESS_RESTRICTED/$RPC_TOR_ADDRESS_RESTRICTED/g" $conf_template_new
+sed -i "s/RPC_TOR_ADDRESS/$RPC_TOR_ADDRESS/g" $conf_template_new
+sed -i "s/MONERO_P2P_PORT_LOCAL_BIND/$MONERO_P2P_PORT_LOCAL_BIND/g" $conf_template_new
+sed -i "s/MONERO_P2P_PORT/$MONERO_P2P_PORT/g" $conf_template_new
+sed -i "s/MONERO_RPC_PORT_RESTRICTED/$MONERO_RPC_PORT_RESTRICTED/g" $conf_template_new
+sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/g" $conf_template_new
+sed -i "s/MONEROD_LOCAL_HOST/$MONEROD_LOCAL_HOST/g" $conf_template_new
+sed -i "s/ADV_TOR_MAXONIONCONNS/$ADV_TOR_MAXONIONCONNS/g" $conf_template_new
+sed -i "s/TOR_SOCKS_PROXY_HOST/$TOR_SOCKS_PROXY_HOST/g" $conf_template_new
 
 #PRUNING config:
 if [ "$ADV_PRUNING_MODE" = "true" ] ; then
- echo -e "\n# PRUNING\nprune-blockchain=1" >> $new_conf_template
+ echo -e "\n# PRUNING\nprune-blockchain=1" >> $conf_template_new
  #if [ "$ADV_PRUNING_SYNCPRUNEDBLOCKS" = "true" ] ; then
- # echo "sync-pruned-blocks=1" >> $new_conf_template
+ # echo "sync-pruned-blocks=1" >> $conf_template_new
  #fi
 fi
  
 #CUSTOM NODES config:
-echo -e "\n# CUSTOM NODES" >> $new_conf_template
+echo -e "\n# CUSTOM NODES" >> $conf_template_new
 i=1
 num_custom_peers=$(yq e '.advanced.p2p.peer[]|length' ${BITMONERO_DIR}/start9/config.yaml | wc -l)
 while [[ $i -le $num_custom_peers ]] ; do
@@ -308,14 +315,14 @@ while [[ $i -le $num_custom_peers ]] ; do
  peer_port=$(yq e '.advanced.p2p.peer[$i].port' ${BITMONERO_DIR}/start9/config.yaml)
  peer_priority=$(yq e '.advanced.p2p.peer[$i].prioritynode' ${BITMONERO_DIR}/start9/config.yaml)
  if [ "$ADV_P2P_STRICTNODES" = "true" ] ; then
-  echo "add-exclusive-node=$peer_hostname:$peer_port" >> $new_conf_template
+  echo "add-exclusive-node=$peer_hostname:$peer_port" >> $conf_template_new
  else
   if [ "$peer_priority" = "true" ] ; then
-   echo "add-priority-node=$peer_hostname:$peer_port" >> $new_conf_template
+   echo "add-priority-node=$peer_hostname:$peer_port" >> $conf_template_new
   else
-   echo "add-peer=$peer_hostname:$peer_port" >> $new_conf_template
+   echo "add-peer=$peer_hostname:$peer_port" >> $conf_template_new
   fi
-  echo "" >> $new_conf_template
+  echo "" >> $conf_template_new
  fi
  i=$(expr $i + 1)
 done
@@ -323,37 +330,41 @@ done
 #If the user has enabled BTCPayServer integration, send block notifications there
 if [ "$INT_ANN_BLOCKS_TO_BTCPAY" == "true" ] ; then
  btcpay_integration='block-notify=/usr/bin/curl -so /dev/null -X GET http://btcpayserver.embassy:23001/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s'
- echo -e "\n# BLOCK NOTIFICATIONS\n${btcpay_integration}" >> $new_conf_template
+ echo -e "\n# BLOCK NOTIFICATIONS\n${btcpay_integration}" >> $conf_template_new
 fi
 
+
+# Done setting monero.conf options.  Now process monero-wallet-rpc.conf:
+
+#Replace placeholders in monero-wallet-rpc.conf template with their corresponding values
+sed -i "s/MONERO_RPC_PORT_WALLET_RPC/$MONERO_RPC_PORT_WALLET_RPC/" $wallet_rpc_conf_new
+sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/" $wallet_rpc_conf_new
+sed -i "s/MONEROD_BIND_IP/$MONEROD_BIND_IP/" $wallet_rpc_conf_new
+sed -i "s/MONERO_WALLET_DIR/$MONERO_WALLET_DIR_ESC/" $wallet_rpc_conf_new
+sed -i "s/MONERO_WALLET_RPC_LOG/$MONERO_WALLET_RPC_LOG_ESC/" $wallet_rpc_conf_new
+sed -i "s/RPC_WALLET_USERNAME/$RPC_WALLET_USERNAME/" $wallet_rpc_conf_new
+sed -i "s/RPC_WALLET_PASSWORD/$RPC_WALLET_PASSWORD/" $wallet_rpc_conf_new
+sed -i "s/RPC_USERNAME/$RPC_USERNAME/" $wallet_rpc_conf_new
+sed -i "s/RPC_PASSWORD/$RPC_PASSWORD/" $wallet_rpc_conf_new
+#Comment RPC logins options if credentials have been disabled
+if [ "$RPC_WALLET_CREDENTIALS" == "disabled" ] ; then
+ sed -i "s/^\(daemon-login=.*\)$/#\1/" $wallet_rpc_conf_new
+fi
+if [ "$RPC_CREDENTIALS" == "disabled" ] ; then
+ sed -i "s/^\(rpc-login=.*\)$/#\1/" $wallet_rpc_conf_new
+fi
+
+
+#Create the final Monero config files and set permissions & attributes
 chown -R monero:monero $BITMONERO_DIR
-
-
-#create the Monero wallet RPC config file:
-echo "#Monero wallet RPC config file. Docs: https://getmonero.dev/docs/interacting/monero-wallet-rpc-reference
-trusted-daemon=1
-daemon-login=${RPC_USERNAME}:${RPC_PASSWORD}
-daemon-port=$MONERO_RPC_PORT
-
-confirm-external-bind=1
-rpc-bind-ip=$MONEROD_BIND_IP
-rpc-bind-port=$MONERO_RPC_PORT_WALLET_RPC
-rpc-login=$RPC_WALLET_USERNAME:$RPC_WALLET_PASSWORD
-
-wallet-dir=$MONERO_WALLET_DIR
-
-log-file=$MONERO_LOGS_DIR/$MONERO_WALLET_RPC_LOG
-max-log-file-size=10000000 #10MiB
-max-log-files=2" > $wallet_rpc_conf
-
-
-mv $new_conf_template $new_conf
-chown root:monero $new_conf $wallet_rpc_conf
-chmod 640 $new_conf $wallet_rpc_conf
+mv $wallet_rpc_conf_new $wallet_rpc_conf
+mv $conf_template_new $config_file
+chown root:monero $config_file $wallet_rpc_conf
+chmod 640 $config_file $wallet_rpc_conf
 chmod 770 $MONERO_LOGS_DIR/
 
 #Launch the Monero wallet RPC:
 exec /usr/bin/sudo -u monerowallet monero-wallet-rpc --non-interactive --config-file $wallet_rpc_conf &
 
 #Launch Monero:
-exec /usr/bin/sudo -u monero monerod --non-interactive --config-file $new_conf | tee $MONERO_LOG
+exec /usr/bin/sudo -u monero monerod --non-interactive --config-file $config_file | tee $MONERO_LOG

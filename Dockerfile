@@ -22,7 +22,7 @@ RUN adduser -h /dev/null -s /sbin/nologin -D -H -u 30233 -G monero monerowallet
 RUN sed -i "s|^\(monerowallet:x:30233:302340:\)Linux User,,,\(:/dev/null:/sbin/nologin\)|\1Monero Wallet RPC User\2|" /etc/passwd
 
 # # Add config file for monerod
-COPY ./assets/monero.conf.template /root/
+COPY ./assets/*.conf.template /root/
 
 # # Expose p2p, unrestricted RPC, ZMQ, ZMQ-PUB, and restricted RPC ports
 EXPOSE 18080/tcp

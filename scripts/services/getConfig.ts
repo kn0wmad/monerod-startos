@@ -381,7 +381,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             nullable: false,
             name: "Max Tor RPC Connections",
             description:
-              "Maximum number of simultaneous connections allowed to be made to Monero's .onion RPC <b>Default:</b> 16",
+              "Maximum number of simultaneous connections allowed to be made to Monero's .onion RPC <br/><b>Default:</b> 16",
             range: "[1,256]",
             integral: true,
             units: "Connections",
@@ -437,7 +437,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             type: "boolean",
             name: "BTCPayServer",
             description:
-              "Send notifications of new Monero blocks to the BTCPayServer backend. <br/><b>Default:</b> Disabled",
+              "Send notifications of new Monero blocks to the BTCPayServer back-end. <br/><b>Default:</b> Disabled",
             default: false,
           },
         },
