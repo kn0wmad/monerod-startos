@@ -346,12 +346,12 @@ sed -i "s/RPC_WALLET_USERNAME/$RPC_WALLET_USERNAME/" $wallet_rpc_conf_new
 sed -i "s/RPC_WALLET_PASSWORD/$RPC_WALLET_PASSWORD/" $wallet_rpc_conf_new
 sed -i "s/RPC_USERNAME/$RPC_USERNAME/" $wallet_rpc_conf_new
 sed -i "s/RPC_PASSWORD/$RPC_PASSWORD/" $wallet_rpc_conf_new
-#Disable RPC logins options if credentials have been disabled
-if [ "$RPC_WALLET_CREDENTIALS" == "disabled" ] ; then
- sed -i "s/^daemon-login=.*$//" $wallet_rpc_conf_new
+#Remove RPC logins options if credentials have been disabled
+if [ "$RPC_WALLET_CREDENTIALS" != "enabled" ] ; then
+ sed -i "s/^daemon-login[ =].*$//" $wallet_rpc_conf_new
 fi
-if [ "$RPC_CREDENTIALS" == "disabled" ] ; then
- sed -i "s/^rpc-login=.*$//" $wallet_rpc_conf_new
+if [ "$RPC_CREDENTIALS" != "enabled" ] ; then
+ sed -i "s/^rpc-login[ =].*$//" $wallet_rpc_conf_new
 fi
 
 
