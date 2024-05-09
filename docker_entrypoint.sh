@@ -89,7 +89,7 @@ if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
  MASKED="true"
  echo '  RPC Username:' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
- echo '    value: "'"$RPC_WALLET_USERNAME"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    value: "'"$RPC_USERNAME"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo "    description: Username for connecting to the Monero daemon's unrestricted RPC Interface" >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
