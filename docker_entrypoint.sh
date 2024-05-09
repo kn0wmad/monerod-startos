@@ -96,7 +96,7 @@ if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
  echo '    qr: false' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '  RPC Password:' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
- echo '    value: "'"$RPC_WALLET_PASSWORD"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+ echo '    value: "'"$RPC_PASSWORD"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo "    description: Password for connecting to the Monero daemon's unrestricted RPC Interface" >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    masked: true' >> ${BITMONERO_DIR}/start9/stats.yaml
