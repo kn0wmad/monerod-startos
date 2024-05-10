@@ -144,9 +144,31 @@ alerts:
   restore: Restoring Monero will overwrite its current data. You will lose any transactions recorded in watch-only wallets, and any funds you have received to the hot wallet since the last backup.
 backup:
   create:
-    type: script
+    type: docker
+    image: compat
+    system: true
+    entrypoint: compat
+    args:
+      - duplicity
+      - create
+      - /mnt/backup
+      - /data/.bitmonero
+    mounts:
+      BACKUP: /mnt/backup
+      main: /data/.bitmonero
   restore:
-    type: script
+    type: docker
+    image: compat
+    system: true
+    entrypoint: compat
+    args:
+      - duplicity
+      - restore
+      - /mnt/backup
+      - /data/.bitmonero
+    mounts:
+      BACKUP: /mnt/backup
+      main: /data/.bitmonero
 actions: {}
 properties:
   type: script

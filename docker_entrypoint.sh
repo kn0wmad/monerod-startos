@@ -346,25 +346,25 @@ sed -i "s/RPC_WALLET_USERNAME/$RPC_WALLET_USERNAME/" $wallet_rpc_conf_new
 sed -i "s/RPC_WALLET_PASSWORD/$RPC_WALLET_PASSWORD/" $wallet_rpc_conf_new
 sed -i "s/RPC_USERNAME/$RPC_USERNAME/" $wallet_rpc_conf_new
 sed -i "s/RPC_PASSWORD/$RPC_PASSWORD/" $wallet_rpc_conf_new
-#Add RPC login details if credentials have been enabled
+#Add RPC login details if credentials have been enabled or disabled
 if [ "$RPC_WALLET_CREDENTIALS" == "enabled" ] ; then
- echo "daemon-login=$RPC_USERNAME:$RPC_PASSWORD" >> $wallet_rpc_conf_new
+ echo "rpc-login=$RPC_WALLET_USERNAME:$RPC_WALLET_PASSWORD" >> $wallet_rpc_conf_new
+else
+ echo "disable-rpc-login=1" >> $wallet_rpc_conf_new
 fi
 if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
- echo "rpc-login=$RPC_WALLET_USERNAME:$RPC_WALLET_PASSWORD" >> $wallet_rpc_conf_new
+ echo "daemon-login=$RPC_USERNAME:$RPC_PASSWORD" >> $wallet_rpc_conf_new
 fi
-
 
 #Create the final Monero config files and set permissions & attributes
 chown -R monero:monero $BITMONERO_DIR
 mv $wallet_rpc_conf_new $wallet_rpc_conf
 mv $conf_template_new $config_file
-monero_wallet_rpc_login_file="monero-wallet-rpc.$MONERO_RPC_PORT_WALLET_RPC.login"
-chmod 600 $monero_wallet_rpc_login_file
-chmod 640 $config_file $wallet_rpc_conf
+chown monero:monero $config_file
+chown monerowallet:monero $wallet_rpc_conf
+chmod 400 $config_file $wallet_rpc_conf
 chmod 770 $MONERO_LOGS_DIR/
-chown monerowallet:monero $monero_wallet_rpc_login_file
-chown root:monero $config_file $wallet_rpc_conf
+chmod 770 $BITMONERO_DIR/
 
 #Launch the Monero wallet RPC:
 exec /usr/bin/sudo -u monerowallet monero-wallet-rpc --non-interactive --config-file $wallet_rpc_conf &

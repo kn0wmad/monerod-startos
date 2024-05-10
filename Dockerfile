@@ -23,6 +23,8 @@ RUN sed -i "s|^\(monerowallet:x:30233:302340:\)Linux User,,,\(:/dev/null:/sbin/n
 
 # # Add config file for monerod
 COPY ./assets/*.conf.template /root/
+#Copy the backup ignore file that tells the backup functions to not backup the blockchain:
+COPY ./assets/.backupignore /data/.bitmonero/
 
 # # Expose p2p, unrestricted RPC, ZMQ, ZMQ-PUB, and restricted RPC ports
 EXPOSE 18080/tcp
