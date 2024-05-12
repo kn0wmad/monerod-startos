@@ -40,14 +40,14 @@ RPC_TOR_ADDRESS=$(yq e '.rpc-tor-address' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_LAN_ADDRESS_RESTRICTED=$(yq e '.rpc-lan-address-restricted' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_TOR_ADDRESS_RESTRICTED=$(yq e '.rpc-tor-address-restricted' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_CREDENTIALS=$(yq e '.rpc.rpc-credentials.enabled' ${BITMONERO_DIR}/start9/config.yaml)
-if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
+if [ "$RPC_CREDENTIALS" = "enabled" ] ; then
  RPC_USERNAME=$(yq e '.rpc.rpc-credentials.username' ${BITMONERO_DIR}/start9/config.yaml)
  RPC_PASSWORD=$(yq e '.rpc.rpc-credentials.password' ${BITMONERO_DIR}/start9/config.yaml)
 fi
 RPC_LAN_ADDRESS_WALLET=$(yq e '.rpc-lan-address-wallet' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_TOR_ADDRESS_WALLET=$(yq e '.rpc-tor-address-wallet' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_WALLET_CREDENTIALS=$(yq e '.rpc.wallet-rpc-credentials.enabled' ${BITMONERO_DIR}/start9/config.yaml)
-if [ "$RPC_WALLET_CREDENTIALS" == "enabled" ] ; then
+if [ "$RPC_WALLET_CREDENTIALS" = "enabled" ] ; then
  RPC_WALLET_USERNAME=$(yq e '.rpc.wallet-rpc-credentials.username' ${BITMONERO_DIR}/start9/config.yaml)
  RPC_WALLET_PASSWORD=$(yq e '.rpc.wallet-rpc-credentials.password' ${BITMONERO_DIR}/start9/config.yaml)
 fi
@@ -84,7 +84,7 @@ echo "    description: Hostname and port for connecting other nodes to yours to 
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: false' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: false' >> ${BITMONERO_DIR}/start9/stats.yaml
-if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
+if [ "$RPC_CREDENTIALS" = "enabled" ] ; then
  RPC_USER_PASS="${RPC_USERNAME}:${RPC_PASSWORD}@"
  MASKED="true"
  echo '  RPC Username:' >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -140,7 +140,7 @@ echo "    description: Connection string for accessing the unrestricted Monero R
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-if [ "$RPC_WALLET_CREDENTIALS" == "enabled" ] ; then
+if [ "$RPC_WALLET_CREDENTIALS" = "enabled" ] ; then
  RPC_WALLET_USER_PASS="${RPC_WALLET_USERNAME}:${RPC_WALLET_PASSWORD}@"
  MASKED="true"
  echo '  Wallet RPC Username:' >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -182,7 +182,7 @@ echo "    description: Address for connecting to the Monero wallet RPC interface
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-if [ "$ZMQ" == "true" ] ; then
+if [ "$ZMQ" = "true" ] ; then
  echo '  ZMQ Interface (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
  echo '    value: "'"$ZMQ_TOR_ADDRESS:$MONERO_ZMQ_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -239,7 +239,7 @@ fi
 echo -e "$zmq_config" >> $conf_template_new
 
 #RPC config:
-if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
+if [ "$RPC_CREDENTIALS" = "enabled" ] ; then
  echo -e "\n# RPC Credentials" >> $conf_template_new
  echo "rpc-login=$RPC_USERNAME:$RPC_PASSWORD    # Require a username and password to access the unrestricted RPC interface" >> $conf_template_new
 fi
@@ -314,10 +314,10 @@ while [[ $i -le $(expr $num_custom_peers - 1) ]] ; do
  peer_hostname=$(yq e ".advanced.p2p.peer[$i].hostname" ${BITMONERO_DIR}/start9/config.yaml)
  peer_port=$(yq e ".advanced.p2p.peer[$i].port" ${BITMONERO_DIR}/start9/config.yaml)
  peer_priority=$(yq e ".advanced.p2p.peer[$i].prioritynode" ${BITMONERO_DIR}/start9/config.yaml)
- if [ "$ADV_P2P_STRICTNODES" == "true" ] ; then
+ if [ "$ADV_P2P_STRICTNODES" = "true" ] ; then
   echo "add-exclusive-node=$peer_hostname:$peer_port" >> $conf_template_new
  else
-  if [ "$peer_priority" == "true" ] ; then
+  if [ "$peer_priority" = "true" ] ; then
    echo "add-priority-node=$peer_hostname:$peer_port" >> $conf_template_new
   else
    echo "add-peer=$peer_hostname:$peer_port" >> $conf_template_new
@@ -328,7 +328,7 @@ while [[ $i -le $(expr $num_custom_peers - 1) ]] ; do
 done
 
 #If the user has enabled BTCPayServer integration, send block notifications there
-if [ "$INT_ANN_BLOCKS_TO_BTCPAY" == "true" ] ; then
+if [ "$INT_ANN_BLOCKS_TO_BTCPAY" = "true" ] ; then
  btcpay_integration='block-notify=/usr/bin/curl -so /dev/null -X GET http://btcpayserver.embassy:23001/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s'
  echo -e "\n# BLOCK NOTIFICATIONS\n${btcpay_integration}" >> $conf_template_new
 fi
@@ -347,12 +347,12 @@ sed -i "s/RPC_WALLET_PASSWORD/$RPC_WALLET_PASSWORD/" $wallet_rpc_conf_new
 sed -i "s/RPC_USERNAME/$RPC_USERNAME/" $wallet_rpc_conf_new
 sed -i "s/RPC_PASSWORD/$RPC_PASSWORD/" $wallet_rpc_conf_new
 #Add RPC login details if credentials have been enabled or disabled
-if [ "$RPC_WALLET_CREDENTIALS" == "enabled" ] ; then
+if [ "$RPC_WALLET_CREDENTIALS" = "enabled" ] ; then
  echo "rpc-login=$RPC_WALLET_USERNAME:$RPC_WALLET_PASSWORD" >> $wallet_rpc_conf_new
 else
  echo "disable-rpc-login=1" >> $wallet_rpc_conf_new
 fi
-if [ "$RPC_CREDENTIALS" == "enabled" ] ; then
+if [ "$RPC_CREDENTIALS" = "enabled" ] ; then
  echo "daemon-login=$RPC_USERNAME:$RPC_PASSWORD" >> $wallet_rpc_conf_new
 fi
 
