@@ -308,16 +308,16 @@ fi
  
 #CUSTOM NODES config:
 echo -e "\n# CUSTOM NODES" >> $conf_template_new
-i=1
-num_custom_peers=$(yq e '.advanced.p2p.peer[]|length' ${BITMONERO_DIR}/start9/config.yaml | wc -l)
-while [[ $i -le $num_custom_peers ]] ; do
- peer_hostname=$(yq e '.advanced.p2p.peer[$i].hostname' ${BITMONERO_DIR}/start9/config.yaml)
- peer_port=$(yq e '.advanced.p2p.peer[$i].port' ${BITMONERO_DIR}/start9/config.yaml)
- peer_priority=$(yq e '.advanced.p2p.peer[$i].prioritynode' ${BITMONERO_DIR}/start9/config.yaml)
- if [ "$ADV_P2P_STRICTNODES" = "true" ] ; then
+i=0
+num_custom_peers=$(yq e ".advanced.p2p.peer[]|length" ${BITMONERO_DIR}/start9/config.yaml | wc -l)
+while [[ $i -le $(expr $num_custom_peers - 1) ]] ; do
+ peer_hostname=$(yq e ".advanced.p2p.peer[$i].hostname" ${BITMONERO_DIR}/start9/config.yaml)
+ peer_port=$(yq e ".advanced.p2p.peer[$i].port" ${BITMONERO_DIR}/start9/config.yaml)
+ peer_priority=$(yq e ".advanced.p2p.peer[$i].prioritynode" ${BITMONERO_DIR}/start9/config.yaml)
+ if [ "$ADV_P2P_STRICTNODES" == "true" ] ; then
   echo "add-exclusive-node=$peer_hostname:$peer_port" >> $conf_template_new
  else
-  if [ "$peer_priority" = "true" ] ; then
+  if [ "$peer_priority" == "true" ] ; then
    echo "add-priority-node=$peer_hostname:$peer_port" >> $conf_template_new
   else
    echo "add-peer=$peer_hostname:$peer_port" >> $conf_template_new
