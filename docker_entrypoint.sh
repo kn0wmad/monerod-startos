@@ -1,21 +1,21 @@
 #!/bin/bash
 
 BITMONERO_DIR="/data/.bitmonero"
-BITMONERO_DIR_ESC=$(echo "$BITMONERO_DIR" | sed "s/\//\\\\\\//g")
+#BITMONERO_DIR_ESC=$(echo "$BITMONERO_DIR" | sed "s/\//\\\\\\//g")
 MONERO_LOGS_DIR="$BITMONERO_DIR/logs"
 MONERO_WALLET_DIR="$BITMONERO_DIR/wallets"
-MONERO_WALLET_DIR_ESC=$(echo "$MONERO_WALLET_DIR" | sed "s/\//\\\\\\//g")
+#MONERO_WALLET_DIR_ESC=$(echo "$MONERO_WALLET_DIR" | sed "s/\//\\\\\\//g")
 mkdir -p $MONERO_LOGS_DIR $MONERO_WALLET_DIR
 MONERO_LOG="$MONERO_LOGS_DIR/monerod.log"
-MONERO_LOG_ESC=$(echo "$MONERO_LOG" | sed "s/\//\\\\\\//g")
+#MONERO_LOG_ESC=$(echo "$MONERO_LOG" | sed "s/\//\\\\\\//g")
 MONERO_WALLET_RPC_LOG="$MONERO_LOGS_DIR/monero-wallet-rpc.log"
-MONERO_WALLET_RPC_LOG_ESC=$(echo "$MONERO_WALLET_RPC_LOG" | sed "s/\//\\\\\\//g")
+#MONERO_WALLET_RPC_LOG_ESC=$(echo "$MONERO_WALLET_RPC_LOG" | sed "s/\//\\\\\\//g")
 #monero.conf
 conf_template="/root/monero.conf.template"
 conf_template_new="$BITMONERO_DIR/monero.conf.template"
 cp $conf_template $conf_template_new
 config_file="$BITMONERO_DIR/monero.conf"
-#moner-wallet-rpc.conf
+#monero-wallet-rpc.conf
 wallet_rpc_conf_template="/root/monero-wallet-rpc.conf.template"
 wallet_rpc_conf_new="$BITMONERO_DIR/monero-wallet-rpc.conf.template"
 cp $wallet_rpc_conf_template $wallet_rpc_conf_new
@@ -215,8 +215,8 @@ fi
 
 
 #Replace the easily replaceable variables in the config template
-sed -i "s/BITMONERO_DIR/$BITMONERO_DIR_ESC/" $conf_template_new
-sed -i "s/MONERO_LOG/$MONERO_LOG_ESC/" $conf_template_new
+sed -i "s|BITMONERO_DIR|$BITMONERO_DIR|" $conf_template_new
+sed -i "s|MONERO_LOG|$MONERO_LOG|" $conf_template_new
 sed -i "s/ADV_P2P_MAXNUMOUTPEERS/$ADV_P2P_MAXNUMOUTPEERS/" $conf_template_new
 sed -i "s/ADV_P2P_MAXNUMINPEERS/$ADV_P2P_MAXNUMINPEERS/" $conf_template_new
 sed -i "s/RATELIMIT_KBPSUP/$RATELIMIT_KBPSUP/" $conf_template_new
@@ -340,8 +340,8 @@ fi
 sed -i "s/MONERO_RPC_PORT_WALLET_RPC/$MONERO_RPC_PORT_WALLET_RPC/" $wallet_rpc_conf_new
 sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/" $wallet_rpc_conf_new
 sed -i "s/MONEROD_BIND_IP/$MONEROD_BIND_IP/" $wallet_rpc_conf_new
-sed -i "s/MONERO_WALLET_DIR/$MONERO_WALLET_DIR_ESC/" $wallet_rpc_conf_new
-sed -i "s/MONERO_WALLET_RPC_LOG/$MONERO_WALLET_RPC_LOG_ESC/" $wallet_rpc_conf_new
+sed -i "s|MONERO_WALLET_DIR|$MONERO_WALLET_DIR|" $wallet_rpc_conf_new
+sed -i "s|MONERO_WALLET_RPC_LOG|$MONERO_WALLET_RPC_LOG|" $wallet_rpc_conf_new
 sed -i "s/RPC_WALLET_USERNAME/$RPC_WALLET_USERNAME/" $wallet_rpc_conf_new
 sed -i "s/RPC_WALLET_PASSWORD/$RPC_WALLET_PASSWORD/" $wallet_rpc_conf_new
 sed -i "s/RPC_USERNAME/$RPC_USERNAME/" $wallet_rpc_conf_new
