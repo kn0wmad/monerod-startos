@@ -1,15 +1,11 @@
 #!/bin/bash
 
 BITMONERO_DIR="/data/.bitmonero"
-#BITMONERO_DIR_ESC=$(echo "$BITMONERO_DIR" | sed "s/\//\\\\\\//g")
 MONERO_LOGS_DIR="$BITMONERO_DIR/logs"
 MONERO_WALLET_DIR="$BITMONERO_DIR/wallets"
-#MONERO_WALLET_DIR_ESC=$(echo "$MONERO_WALLET_DIR" | sed "s/\//\\\\\\//g")
 mkdir -p $MONERO_LOGS_DIR $MONERO_WALLET_DIR
 MONERO_LOG="$MONERO_LOGS_DIR/monerod.log"
-#MONERO_LOG_ESC=$(echo "$MONERO_LOG" | sed "s/\//\\\\\\//g")
 MONERO_WALLET_RPC_LOG="$MONERO_LOGS_DIR/monero-wallet-rpc.log"
-#MONERO_WALLET_RPC_LOG_ESC=$(echo "$MONERO_WALLET_RPC_LOG" | sed "s/\//\\\\\\//g")
 #monero.conf
 conf_template="/root/monero.conf.template"
 conf_template_new="$BITMONERO_DIR/monero.conf.template"
@@ -68,7 +64,7 @@ ADV_TOR_MAXONIONCONNS=$(yq e '.advanced.tor.maxonionconns' ${BITMONERO_DIR}/star
 ADV_P2P_GOSSIP=$(yq e '.advanced.p2p.letneighborsgossip' ${BITMONERO_DIR}/start9/config.yaml)
 ADV_P2P_PUBLICRPC=$(yq e '.advanced.p2p.publicrpc' ${BITMONERO_DIR}/start9/config.yaml)
 ADV_P2P_STRICTNODES=$(yq e '.advanced.p2p.strictnodes' ${BITMONERO_DIR}/start9/config.yaml)
-#export ADV_P2P_UPNP=$(yq e '.advanced.p2p.upnp' ${BITMONERO_DIR}/start9/config.yaml)
+#ADV_P2P_UPNP=$(yq e '.advanced.p2p.upnp' ${BITMONERO_DIR}/start9/config.yaml)
 ADV_PRUNING_MODE=$(yq e '.advanced.pruning' ${BITMONERO_DIR}/start9/config.yaml)
 #ADV_PRUNING_MODE=$(yq e '.advanced.pruning.mode' ${BITMONERO_DIR}/start9/config.yaml)
 #ADV_PRUNING_SYNCPRUNEDBLOCKS=$(yq e '.advanced.pruning.syncprunedblocks' ${BITMONERO_DIR}/start9/config.yaml)
