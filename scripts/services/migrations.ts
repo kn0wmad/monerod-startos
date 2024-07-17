@@ -1,5 +1,5 @@
 import { types as T, compat } from "../deps.ts";
-import { migration_up_to_0_18_3_3 } from "./migrations/up-to-0_18_3_2.ts";
+import { migration_up_to_0_18_3_3 } from "./migrations/up-to-0_18_3_3.ts";
 
 export const migration: T.ExpectedExports.migration = async (
   effects,
