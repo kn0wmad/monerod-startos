@@ -9,12 +9,12 @@ MONERO_WALLET_RPC_LOG="$MONERO_LOGS_DIR/monero-wallet-rpc.log"
 #monero.conf
 conf_template="/root/monero.conf.template"
 config_file="$BITMONERO_DIR/monero.conf"
-#conf_template_new="$BITMONERO_DIR/monero.conf.template"
-cp $conf_template $config_file
+mv $conf_template $config_file
 
 #monero-wallet-rpc.conf
 wallet_rpc_conf_template="/root/monero-wallet-rpc.conf.template"
 wallet_rpc_conf="$BITMONERO_DIR/monero-wallet-rpc.conf"
+mv $wallet_rpc_conf_template $wallet_rpc_conf
 
 MONERO_LAN_HOSTNAME="monerod.embassy"
 MONEROD_LOCAL_HOST="127.0.0.1"
@@ -330,7 +330,6 @@ fi
 
 
 # Done setting monero.conf options.  Now process monero-wallet-rpc.conf:
-mv $wallet_rpc_conf_template $wallet_rpc_conf
 #Replace placeholders in monero-wallet-rpc.conf template with their corresponding values
 sed -i "s|MONERO_RPC_PORT_WALLET_RPC|$MONERO_RPC_PORT_WALLET_RPC|" $wallet_rpc_conf
 sed -i "s|MONERO_RPC_PORT|$MONERO_RPC_PORT|" $wallet_rpc_conf
@@ -364,5 +363,3 @@ exec /usr/bin/sudo -u monerowallet monero-wallet-rpc --non-interactive --config-
 
 #Launch Monero:
 exec /usr/bin/sudo -u monero monerod --non-interactive --config-file $config_file | tee $MONERO_LOG
-
-#exec find /usr/local/bin
