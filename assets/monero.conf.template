@@ -1,7 +1,7 @@
 #
 # monero.conf configuration file.  Things beginning with # are comments.
 #
-# See https://getmonero.dev/docs/interacting/monerod-reference
+# See https://getmonero.dev/interacting/monerod
 
 # Do not require tty as in foreground mode: "Helpful when running in a container."
 # This keeps monero from crashing because no tty is assigned.
