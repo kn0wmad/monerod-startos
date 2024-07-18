@@ -212,11 +212,11 @@ fi
 #Replace the easily replaceable variables in the config template
 sed -i "s|BITMONERO_DIR|$BITMONERO_DIR|" $config_file
 sed -i "s|MONERO_LOG|$MONERO_LOG|" $config_file
-sed -i "s/ADV_P2P_MAXNUMOUTPEERS/$ADV_P2P_MAXNUMOUTPEERS/" $config_file
-sed -i "s/ADV_P2P_MAXNUMINPEERS/$ADV_P2P_MAXNUMINPEERS/" $config_file
-sed -i "s/RATELIMIT_KBPSUP/$RATELIMIT_KBPSUP/" $config_file
-sed -i "s/RATELIMIT_KBPSDOWN/$RATELIMIT_KBPSDOWN/" $config_file
-sed -i "s/TXPOOL_MAXBYTES/$TXPOOL_MAXBYTES/" $config_file
+sed -i "s|ADV_P2P_MAXNUMOUTPEERS|$ADV_P2P_MAXNUMOUTPEERS|" $config_file
+sed -i "s|ADV_P2P_MAXNUMINPEERS|$ADV_P2P_MAXNUMINPEERS|" $config_file
+sed -i "s|RATELIMIT_KBPSUP|$RATELIMIT_KBPSUP|" $config_file
+sed -i "s|RATELIMIT_KBPSDOWN|$RATELIMIT_KBPSDOWN|" $config_file
+sed -i "s|TXPOOL_MAXBYTES|$TXPOOL_MAXBYTES|" $config_file
 
 ###
 #CONDITIONAL VARIABLES which we'll test for and then append to the end of the config file:
@@ -279,19 +279,19 @@ if [ "$ADV_P2P_PUBLICRPC" = "true" ] ; then
  echo "public-node=1" >> $config_file
 fi
 
-sed -i "s/MONEROD_BIND_IP/$MONEROD_BIND_IP/g" $config_file
-sed -i "s/PEER_TOR_ADDRESS/$PEER_TOR_ADDRESS/g" $config_file
-sed -i "s/TOR_PORT/$TOR_PORT/g" $config_file
-sed -i "s/ADV_TOR_MAXSOCKSCONNS/$ADV_TOR_MAXSOCKSCONNS/g" $config_file
-sed -i "s/RPC_TOR_ADDRESS_RESTRICTED/$RPC_TOR_ADDRESS_RESTRICTED/g" $config_file
-sed -i "s/RPC_TOR_ADDRESS/$RPC_TOR_ADDRESS/g" $config_file
-sed -i "s/MONERO_P2P_PORT_LOCAL_BIND/$MONERO_P2P_PORT_LOCAL_BIND/g" $config_file
-sed -i "s/MONERO_P2P_PORT/$MONERO_P2P_PORT/g" $config_file
-sed -i "s/MONERO_RPC_PORT_RESTRICTED/$MONERO_RPC_PORT_RESTRICTED/g" $config_file
-sed -i "s/MONERO_RPC_PORT/$MONERO_RPC_PORT/g" $config_file
-sed -i "s/MONEROD_LOCAL_HOST/$MONEROD_LOCAL_HOST/g" $config_file
-sed -i "s/ADV_TOR_MAXONIONCONNS/$ADV_TOR_MAXONIONCONNS/g" $config_file
-sed -i "s/TOR_SOCKS_PROXY_HOST/$TOR_SOCKS_PROXY_HOST/g" $config_file
+sed -i "s|MONEROD_BIND_IP|$MONEROD_BIND_IP|g" $config_file
+sed -i "s|PEER_TOR_ADDRESS|$PEER_TOR_ADDRESS|g" $config_file
+sed -i "s|TOR_PORT|$TOR_PORT|g" $config_file
+sed -i "s|ADV_TOR_MAXSOCKSCONNS|$ADV_TOR_MAXSOCKSCONNS|g" $config_file
+sed -i "s|RPC_TOR_ADDRESS_RESTRICTED|$RPC_TOR_ADDRESS_RESTRICTED|g" $config_file
+sed -i "s|RPC_TOR_ADDRESS|$RPC_TOR_ADDRESS|g" $config_file
+sed -i "s|MONERO_P2P_PORT_LOCAL_BIND|$MONERO_P2P_PORT_LOCAL_BIND|g" $config_file
+sed -i "s|MONERO_P2P_PORT|$MONERO_P2P_PORT|g" $config_file
+sed -i "s|MONERO_RPC_PORT_RESTRICTED|$MONERO_RPC_PORT_RESTRICTED|g" $config_file
+sed -i "s|MONERO_RPC_PORT|$MONERO_RPC_PORT|g" $config_file
+sed -i "s|MONEROD_LOCAL_HOST|$MONEROD_LOCAL_HOST|g" $config_file
+sed -i "s|ADV_TOR_MAXONIONCONNS|$ADV_TOR_MAXONIONCONNS|g" $config_file
+sed -i "s|TOR_SOCKS_PROXY_HOST|$TOR_SOCKS_PROXY_HOST|g" $config_file
 
 #PRUNING config:
 if [ "$ADV_PRUNING_MODE" = "true" ] ; then

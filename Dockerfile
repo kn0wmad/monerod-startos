@@ -16,7 +16,7 @@ RUN chmod a+x /usr/local/bin/*.sh
 
 #Modify gid & uid of monero user & group:
 RUN sed -i "s|^monero:x:1000:1000:Linux User,,,:/home/monero:/bin/bash|monero:x:30234:302340:Monero:/dev/null:/sbin/nologin|" /etc/passwd
-RUN sed -i "s/^\(monero:x\):1000:$/\1:302340:/" /etc/group
+RUN sed -i "s|^\(monero:x\):1000:$|\1:302340:|" /etc/group
 RUN sed -i "s|^\(monerowallet:x:30233:302340:\)Linux User,,,\(:/dev/null:/sbin/nologin\)|\1Monero Wallet RPC User\2|" /etc/passwd
 RUN adduser -h /dev/null -s /sbin/nologin -D -H -u 30233 -G monero monerowallet
 
