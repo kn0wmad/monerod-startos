@@ -324,7 +324,7 @@ done
 
 #If the user has enabled BTCPayServer integration, send block notifications there
 if [ "$INT_ANN_BLOCKS_TO_BTCPAY" = "true" ] ; then
- btcpay_integration='block-notify=/usr/bin/curl -so /dev/null -X GET http://btcpayserver.embassy:23001/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s'
+ btcpay_integration='block-notify=/usr/bin/curl -so /dev/null -X GET http://btcpayserver.embassy:23000/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s'
  echo -e "\n# BLOCK NOTIFICATIONS\n${btcpay_integration}" >> $config_file
 fi
 
