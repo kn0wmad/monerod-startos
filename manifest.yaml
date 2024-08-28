@@ -4,7 +4,7 @@ version: 0.18.3.4
 release-notes: |
   * Update to latest upstream [sethforprivacy Monero docker image](https://github.com/sethforprivacy/simple-monerod-docker)
   * Includes Monero 0.18.3.4 ([Release Notes](https://github.com/monero-project/monero/releases/tag/v0.18.3.4))
-  * Add features to monero-startos: rpc credentials for unrestricted rpc interface, zmq interfaces, monero-wallet-rpc
+  * Add features to monero-startos: expose daemon rpc interface, monero-wallet-rpc, (optional rpc credentials for both), and zmq interfaces
   * If Monero gets stuck in a "Stopping..." state, please restart your server via System > Restart
 license: BSD-3
 wrapper-repo: https://github.com/kn0wmad/monerod-startos
