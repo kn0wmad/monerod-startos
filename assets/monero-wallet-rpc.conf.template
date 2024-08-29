@@ -1,5 +1,5 @@
 #
-#Monero wallet RPC config file. Docs: https://getmonero.dev/interacting/monero-wallet-rpc
+#Monero wallet RPC config file. Docs: https://docs.getmonero.org/interacting/monero-wallet-rpc-reference/
 #
 wallet-dir=MONERO_WALLET_DIR
 
