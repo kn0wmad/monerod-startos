@@ -23,12 +23,19 @@ TOR_SOCKS_PROXY_HOST=$(ip -4 route list match 0/0 | awk '{print $3}')
 TOR_PORT=9050
 STARTOS_REVPROXY_PORT=443
 MONERO_P2P_PORT=18080
-MONERO_RPC_PORT=18081
+MONERO_RPC_PORT=18089
 MONERO_ZMQ_PORT=18082
 MONERO_ZMQ_PUBSUB_PORT=18083
 MONERO_P2P_PORT_LOCAL_BIND=18088
-MONERO_RPC_PORT_RESTRICTED=18089
+MONERO_RPC_PORT_RESTRICTED=18081
 MONERO_RPC_PORT_WALLET_RPC=28088
+MONERO_RPC_CERT_FILE="$BITMONERO_DIR/rpc_ssl.crt"
+MONERO_RPC_PRIVKEY="$BITMONERO_DIR/rpc_ssl.key"
+#MONERO_RPC_CERT_FILE="/mnt/cert-rpc/rpc-restricted.cert.pem"
+#MONERO_RPC_PRIVKEY="/mnt/cert-rpc/rpc-restricted.key.pem"
+#MONERO_RPC_CERT=$(tail -12 $MONER_RPC_CERT_FILE)
+#MONERO_RPC_CERT_FILE="$BITMONERO_DIR/"
+#echo -e "$MONERO_RPC_CERT" > $MONERO_RPC_CERT_FILE"
 PEER_TOR_ADDRESS=$(yq e '.peer-tor-address' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_LAN_ADDRESS=$(yq e '.rpc-lan-address' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_TOR_ADDRESS=$(yq e '.rpc-tor-address' ${BITMONERO_DIR}/start9/config.yaml)
@@ -114,23 +121,9 @@ echo '    description: Connection string for accessing the Monero RPC over Tor' 
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '  Unrestricted RPC URL (LAN):' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"https://$RPC_USER_PASS$RPC_LAN_ADDRESS:$STARTOS_REVPROXY_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    description: Connection string for accessing the unrestricted Monero RPC over LAN' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '  Unrestricted RPC URL (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"https://$RPC_USER_PASS$RPC_TOR_ADDRESS:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    description: Connection string for accessing the unrestricted Monero RPC via Tor' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Unrestricted RPC URL (Internal):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"https://$RPC_USER_PASS$MONERO_LAN_HOSTNAME:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_USER_PASS$MONEROD_LOCAL_HOST:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Connection string for accessing the unrestricted Monero RPC from another service's container." >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -165,7 +158,7 @@ echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Wallet RPC URL (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"https://$RPC_WALLET_USER_PASS$RPC_TOR_ADDRESS_WALLET:$MONERO_RPC_PORT_WALLET_RPC"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_WALLET_USER_PASS$RPC_LAN_ADDRESS_WALLET:$MONERO_RPC_PORT_WALLET_RPC"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Address for connecting to the Monero wallet RPC interface via Tor" >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -289,6 +282,8 @@ sed -i "s|MONERO_P2P_PORT_LOCAL_BIND|$MONERO_P2P_PORT_LOCAL_BIND|g" $config_file
 sed -i "s|MONERO_P2P_PORT|$MONERO_P2P_PORT|g" $config_file
 sed -i "s|MONERO_RPC_PORT_RESTRICTED|$MONERO_RPC_PORT_RESTRICTED|g" $config_file
 sed -i "s|MONERO_RPC_PORT|$MONERO_RPC_PORT|g" $config_file
+sed -i "s|MONERO_RPC_CERT_FILE|$MONERO_RPC_CERT_FILE|g" $config_file
+sed -i "s|MONERO_RPC_PRIVKEY|$MONERO_RPC_PRIVKEY|g" $config_file
 sed -i "s|MONEROD_LOCAL_HOST|$MONEROD_LOCAL_HOST|g" $config_file
 sed -i "s|ADV_TOR_MAXONIONCONNS|$ADV_TOR_MAXONIONCONNS|g" $config_file
 sed -i "s|TOR_SOCKS_PROXY_HOST|$TOR_SOCKS_PROXY_HOST|g" $config_file
@@ -331,15 +326,17 @@ fi
 
 # Done setting monero.conf options.  Now process monero-wallet-rpc.conf:
 #Replace placeholders in monero-wallet-rpc.conf template with their corresponding values
-sed -i "s|MONERO_RPC_PORT_WALLET_RPC|$MONERO_RPC_PORT_WALLET_RPC|" $wallet_rpc_conf
-sed -i "s|MONERO_RPC_PORT|$MONERO_RPC_PORT|" $wallet_rpc_conf
-sed -i "s|MONEROD_BIND_IP|$MONEROD_BIND_IP|" $wallet_rpc_conf
-sed -i "s|MONERO_WALLET_DIR|$MONERO_WALLET_DIR|" $wallet_rpc_conf
-sed -i "s|MONERO_WALLET_RPC_LOG|$MONERO_WALLET_RPC_LOG|" $wallet_rpc_conf
-sed -i "s|RPC_WALLET_USERNAME|$RPC_WALLET_USERNAME|" $wallet_rpc_conf
-sed -i "s|RPC_WALLET_PASSWORD|$RPC_WALLET_PASSWORD|" $wallet_rpc_conf
-sed -i "s|RPC_USERNAME|$RPC_USERNAME|" $wallet_rpc_conf
-sed -i "s|RPC_PASSWORD|$RPC_PASSWORD|" $wallet_rpc_conf
+sed -i "s|MONERO_RPC_PORT_WALLET_RPC|$MONERO_RPC_PORT_WALLET_RPC|g" $wallet_rpc_conf
+sed -i "s|MONERO_RPC_PORT_RESTRICTED|$MONERO_RPC_PORT_RESTRICTED|g" $wallet_rpc_conf
+sed -i "s|MONERO_RPC_PORT|$MONERO_RPC_PORT|g" $wallet_rpc_conf
+sed -i "s|MONERO_RPC_CERT_FILE|$MONERO_RPC_CERT_FILE|g" $wallet_rpc_conf
+sed -i "s|MONEROD_BIND_IP|$MONEROD_BIND_IP|g" $wallet_rpc_conf
+sed -i "s|MONERO_WALLET_DIR|$MONERO_WALLET_DIR|g" $wallet_rpc_conf
+sed -i "s|MONERO_WALLET_RPC_LOG|$MONERO_WALLET_RPC_LOG|g" $wallet_rpc_conf
+sed -i "s|RPC_WALLET_USERNAME|$RPC_WALLET_USERNAME|g" $wallet_rpc_conf
+sed -i "s|RPC_WALLET_PASSWORD|$RPC_WALLET_PASSWORD|g" $wallet_rpc_conf
+sed -i "s|RPC_USERNAME|$RPC_USERNAME|g" $wallet_rpc_conf
+sed -i "s|RPC_PASSWORD|$RPC_PASSWORD|g" $wallet_rpc_conf
 #Add RPC login details if credentials have been enabled or disabled
 if [ "$RPC_WALLET_CREDENTIALS" = "enabled" ] ; then
  echo "rpc-login=$RPC_WALLET_USERNAME:$RPC_WALLET_PASSWORD" >> $wallet_rpc_conf

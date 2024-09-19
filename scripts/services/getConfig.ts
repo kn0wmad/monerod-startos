@@ -11,24 +11,6 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     target: "tor-address",
     interface: "peer",
   },
-  "rpc-tor-address": {
-    name: "RPC Interface Address (Tor)",
-    description: "The Tor address of the unrestricted RPC interface",
-    type: "pointer",
-    subtype: "package",
-    "package-id": "monerod",
-    target: "tor-address",
-    interface: "rpc",
-  },
-  "rpc-lan-address": {
-    name: "RPC Interface Address (LAN)",
-    description: "The LAN address of the unrestricted RPC interface",
-    type: "pointer",
-    subtype: "package",
-    "package-id": "monerod",
-    target: "lan-address",
-    interface: "rpc",
-  },
   "rpc-tor-address-restricted": {
     name: "RPC Interface Address (Restricted Calls) (Tor)",
     description:
@@ -269,10 +251,10 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             nullable: true,
             name: "Max Peers Incoming",
             description:
-              "Maximum number of simultaneous peers connecting inbound to the Monero daemon <br/><b>Default:</b> 18 (Monero's default is unlimited but we prefer a ceiling to limit network surveillance from spy nodes and to discourage excessive bandwidth consumption)",
+              "Maximum number of simultaneous peers connecting inbound to the Monero daemon <br/><b>Default:</b> 24<br/>Monero's default is unlimited but we prefer a ceiling to limit network surveillance from spy nodes and to discourage excessive bandwidth consumption.  For the incoming limit, 2x the outgoing limit is commonly recommended, so our chosen default is 2x monero's default outgoing limit of 12.",
             range: "[0,9999]",
             integral: true,
-            default: 18,
+            default: 24,
           },
           maxnumoutpeers: {
             type: "number",

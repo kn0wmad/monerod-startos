@@ -27,8 +27,12 @@ in-peers=ADV_P2P_MAXNUMINPEERS          # The default is unlimited; we prefer to
 limit-rate-up=RATELIMIT_KBPSUP        # Default 2048 kB/s; contribute more to p2p network
 limit-rate-down=RATELIMIT_KBPSDOWN      # Default 8192 kB/s; allow for faster initial sync
 
-# RPC open node
-rpc-bind-ip=MONEROD_BIND_IP            # Unrestricted RPC IP and port. 0.0.0.0=Bind to all interfaces [So we can connect a wallet on the LAN]
+# SSL for RPC
+#rpc-ssl-certificate=MONERO_RPC_CERT_FILE
+#rpc-ssl-private-key=MONERO_RPC_PRIVKEY
+
+# Unrestricted RPC
+rpc-bind-ip=MONEROD_LOCAL_HOST          # Unrestricted RPC IP and port. 0.0.0.0=Bind to all interfaces [So we can connect a wallet on the LAN]
 rpc-bind-port=MONERO_RPC_PORT            # Bind on default port
 confirm-external-bind=1        # Confirm we want the unrestricted RPC (set by rpc-bind-ip) listening on all network interfaces
                                # confirm-external-bind=1 and public-node=1 are required for node to be advertized in p2p handshake
@@ -38,7 +42,7 @@ rpc-restricted-bind-ip=MONEROD_BIND_IP # Bind restricted RPC to all interfaces
 rpc-restricted-bind-port=MONERO_RPC_PORT_RESTRICTED # Bind restricted RPC on custom port to differentiate from default unrestricted RPC (18081)
 
 # Slow but reliable db writes
-db-sync-mode=safe
+db-sync-mode=safe:sync
 
 # Attempt to salvage block database if it seems corrupted:
 #db-salvage=1

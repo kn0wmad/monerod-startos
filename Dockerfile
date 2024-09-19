@@ -24,12 +24,12 @@ RUN adduser -h /dev/null -s /sbin/nologin -D -H -u 30235 -G monero monerowallet
 COPY ./assets/*.conf.template /root/
 
 # # Expose p2p, unrestricted RPC, ZMQ, ZMQ-PUB, and restricted RPC ports
-EXPOSE 18080/tcp
-EXPOSE 18081/tcp
-EXPOSE 18082/tcp
-EXPOSE 18083/tcp
-EXPOSE 18089/tcp
-EXPOSE 28088/tcp
+#EXPOSE 18080/tcp
+#EXPOSE 18081/tcp
+#EXPOSE 18082/tcp
+#EXPOSE 18083/tcp
+##EXPOSE 18089/tcp
+#EXPOSE 28088/tcp
 
 WORKDIR "/data/.bitmonero"
 

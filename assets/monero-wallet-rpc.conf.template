@@ -8,7 +8,8 @@ max-log-file-size=10000000 #10MiB
 max-log-files=2
 
 trusted-daemon=1
-daemon-port=MONERO_RPC_PORT
+daemon-port=MONERO_RPC_PORT_RESTRICTED
+#daemon-ssl-certificate=MONERO_RPC_CERT_FILE
 
 confirm-external-bind=1
 rpc-bind-ip=MONEROD_BIND_IP
