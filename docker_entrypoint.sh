@@ -29,13 +29,13 @@ MONERO_ZMQ_PUBSUB_PORT=18083
 MONERO_P2P_PORT_LOCAL_BIND=18088
 MONERO_RPC_PORT_RESTRICTED=18081
 MONERO_RPC_PORT_WALLET_RPC=28088
-MONERO_RPC_CERT_FILE="$BITMONERO_DIR/rpc_ssl.crt"
-MONERO_RPC_PRIVKEY="$BITMONERO_DIR/rpc_ssl.key"
+#If we want to use the StartOS container-mounted keys:
 #MONERO_RPC_CERT_FILE="/mnt/cert-rpc/rpc-restricted.cert.pem"
 #MONERO_RPC_PRIVKEY="/mnt/cert-rpc/rpc-restricted.key.pem"
-#MONERO_RPC_CERT=$(tail -12 $MONER_RPC_CERT_FILE)
-#MONERO_RPC_CERT_FILE="$BITMONERO_DIR/"
-#echo -e "$MONERO_RPC_CERT" > $MONERO_RPC_CERT_FILE"
+#^This is disabled for now as ephemeral self-signed keys are the standard until something changes.
+#We also don't need to specify them below as these paths will be the default and currently all key/cert references are commented in monero.conf:
+#MONERO_RPC_CERT_FILE="$BITMONERO_DIR/rpc_ssl.crt"
+#MONERO_RPC_PRIVKEY="$BITMONERO_DIR/rpc_ssl.key"
 PEER_TOR_ADDRESS=$(yq e '.peer-tor-address' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_LAN_ADDRESS=$(yq e '.rpc-lan-address' ${BITMONERO_DIR}/start9/config.yaml)
 RPC_TOR_ADDRESS=$(yq e '.rpc-tor-address' ${BITMONERO_DIR}/start9/config.yaml)
