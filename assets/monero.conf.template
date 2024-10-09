@@ -39,7 +39,7 @@ confirm-external-bind=1        # Confirm we want the unrestricted RPC (set by rp
 #restricted-rpc=1              # Prevent unsafe RPC calls (can be used to restrict the normally unrestricted RPC interface)
 rpc-access-control-origins=*
 rpc-restricted-bind-ip=MONEROD_BIND_IP # Bind restricted RPC to all interfaces
-rpc-restricted-bind-port=MONERO_RPC_PORT_RESTRICTED # Bind restricted RPC on custom port to differentiate from default unrestricted RPC (18081)
+rpc-restricted-bind-port=MONERO_RPC_PORT_RESTRICTED # Bind restricted RPC on custom port to differentiate from default unrestricted RPC (18081 by default)
 
 # Slow but reliable db writes
 db-sync-mode=safe:sync

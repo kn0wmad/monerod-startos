@@ -1,4 +1,4 @@
-FROM ghcr.io/sethforprivacy/simple-monero-wallet-rpc:v0.18.3.3 as monero-wallet-rpc
+FROM ghcr.io/sethforprivacy/simple-monero-wallet-rpc:v0.18.3.4 as monero-wallet-rpc
 FROM ghcr.io/sethforprivacy/simple-monerod:v0.18.3.4
 COPY --from=monero-wallet-rpc "/usr/local/bin/monero-wallet-rpc" /usr/local/bin/
 
@@ -25,10 +25,10 @@ COPY ./assets/*.conf.template /root/
 
 # # Expose p2p, ZMQ, ZMQ-PUB, and restricted RPC ports to other services' containers
 EXPOSE 18080/tcp
-EXPOSE 18081/tcp
+#EXPOSE 18081/tcp
 EXPOSE 18082/tcp
 EXPOSE 18083/tcp
-#EXPOSE 18089/tcp
+EXPOSE 18089/tcp
 EXPOSE 28088/tcp
 
 WORKDIR "/data/.bitmonero"

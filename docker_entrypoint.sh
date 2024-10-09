@@ -23,11 +23,11 @@ TOR_SOCKS_PROXY_HOST=$(ip -4 route list match 0/0 | awk '{print $3}')
 TOR_PORT=9050
 STARTOS_REVPROXY_PORT=443
 MONERO_P2P_PORT=18080
-MONERO_RPC_PORT=18089
+MONERO_RPC_PORT=18081
 MONERO_ZMQ_PORT=18082
 MONERO_ZMQ_PUBSUB_PORT=18083
 MONERO_P2P_PORT_LOCAL_BIND=18088
-MONERO_RPC_PORT_RESTRICTED=18081
+MONERO_RPC_PORT_RESTRICTED=18089
 MONERO_RPC_PORT_WALLET_RPC=28088
 #If we want to use the StartOS container-mounted keys:
 #MONERO_RPC_CERT_FILE="/mnt/cert-rpc/rpc-restricted.cert.pem"
@@ -229,7 +229,7 @@ echo -e "$zmq_config" >> $config_file
 #RPC config:
 if [ "$RPC_CREDENTIALS" = "enabled" ] ; then
  echo -e "\n# RPC Credentials" >> $config_file
- echo "rpc-login=$RPC_USERNAME:$RPC_PASSWORD    # Require a username and password to access the unrestricted RPC interface" >> $config_file
+ echo "rpc-login=$RPC_USERNAME:$RPC_PASSWORD    # Require a username and password to access the RPC interface(s)" >> $config_file
 fi
 if [ "$ADV_TOR_RPCBAN" = "false" ] ; then
  disable_rpc_ban="disable-rpc-ban=1              # Do not ban hosts on RPC errors. May help prevent monerod from banning traffic originating from the Tor daemon."
@@ -352,8 +352,9 @@ chown -R monero:monero $BITMONERO_DIR
 chown monero:monero $config_file
 chown monerowallet:monero $wallet_rpc_conf
 chmod 400 $config_file $wallet_rpc_conf
-chmod 770 $MONERO_LOGS_DIR/
-chmod 770 $BITMONERO_DIR/
+chmod 770 $MONERO_LOGS_DIR
+chmod 770 $BITMONERO_DIR
+chmod 750 $MONERO_WALLET_DIR
 
 #Launch the Monero wallet RPC:
 exec /usr/bin/sudo -u monerowallet monero-wallet-rpc --non-interactive --config-file $wallet_rpc_conf &
