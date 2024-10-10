@@ -3,7 +3,7 @@
 source creds-rpc.sh
 METHOD='get_info'
 PARAMS='""'
-STATUS=$(curl -X POST --digest $CURL_RPC_CREDS -s http://127.0.0.1:18081/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"'$METHOD'","params":'$PARAMS'}')
+STATUS=$(curl -X POST --digest $CURL_RPC_CREDS -s http://127.0.0.1:18089/json_rpc -H 'Content-Type: application/json' -d '{"jsonrpc":"2.0","id":"0","method":"'$METHOD'","params":'$PARAMS'}')
 STATUS_EXIT_CODE=$?
 SYNCED=$(echo $STATUS | yq e '.result.synchronized')
 BLOCKS_SYNCED=$(echo $STATUS | yq e '.result.height')

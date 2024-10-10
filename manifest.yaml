@@ -75,11 +75,11 @@ interfaces:
     description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
     tor-config:
       port-mapping:
-        18081: "18081"
+        18089: "18089"
     lan-config:
       443:
         ssl: true
-        internal: 18081
+        internal: 18089
     ui: false
     protocols:
       - tcp
