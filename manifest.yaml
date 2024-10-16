@@ -1,10 +1,10 @@
 id: monerod
 title: "Monero"
-version: 0.18.3.2
+version: 0.18.3.4
 release-notes: |
   * Update to latest upstream [sethforprivacy Monero docker image](https://github.com/sethforprivacy/simple-monerod-docker)
-  * Includes Monero 0.18.3.2 ([Release Notes](https://github.com/monero-project/monero/releases/tag/v0.18.3.2))
-  * Add features to monero-startos: rpc credentials for unrestricted rpc interface, zmq interface
+  * Includes Monero 0.18.3.4 ([Release Notes](https://github.com/monero-project/monero/releases/tag/v0.18.3.4))
+  * Add features to monero-startos: expose daemon rpc interface, monero-wallet-rpc, (optional rpc credentials for both), and zmq interfaces
   * If Monero gets stuck in a "Stopping..." state, please restart your server via System > Restart
 license: BSD-3
 wrapper-repo: https://github.com/kn0wmad/monerod-startos
@@ -14,7 +14,7 @@ marketing-site: https://getmonero.org
 build: ["make"]
 description:
   short: A Monero Full Node
-  long: Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.  This is a headless (no GUI) server, used via an external Monero wallet of your choice over Tor.
+  long: Monero is a private, secure, untraceable, decentralised digital currency. You are your bank, you control your funds, and nobody can trace your transfers unless you allow them to do so.  This is a headless (no GUI) server, used via an external Monero wallet of your choice over LAN or Tor.
 assets:
   license: LICENSE
   icon: icon.png
@@ -69,33 +69,33 @@ interfaces:
     protocols:
       - tcp
       - monero
-  rpc:
-    name: RPC Interface
-    #description: Listens for JSON-RPC commands
-    description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
-    tor-config:
-      port-mapping:
-        18081: "18081"
-    lan-config:
-      18081:
-        ssl: true
-        internal: 18081
-    ui: false
-    protocols:
-      - tcp
-      - http
-      - json-rpc
   rpc-restricted:
-    name: RPC Interface (Restricted Calls)
+    name: RPC Interface
     #description: Listens for JSON-RPC commands
     description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
     tor-config:
       port-mapping:
         18089: "18089"
     lan-config:
-      18089:
+      443:
         ssl: true
         internal: 18089
+    ui: false
+    protocols:
+      - tcp
+      - http
+      - json-rpc
+  rpc-wallet:
+    name: Wallet RPC Interface
+    #description: Listens for JSON-RPC commands
+    description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
+    tor-config:
+      port-mapping:
+        28088: "28088"
+    lan-config:
+      28088:
+        ssl: true
+        internal: 28088
     ui: false
     protocols:
       - tcp
@@ -108,6 +108,17 @@ interfaces:
     tor-config:
       port-mapping:
         18082: "18082"
+    ui: false
+    protocols:
+      - tcp
+      - zmq
+  zmq-pubsub:
+    name: ZeroMQ Pub-Sub Interface
+    #description: Listens for subscriptions to the ZeroMQ raw block and raw transaction event streams
+    description: Do not use the URL below.  Instead, look in Monero's Properties section for your interface addresses.
+    tor-config:
+      port-mapping:
+        18083: "18083"
     ui: false
     protocols:
       - tcp

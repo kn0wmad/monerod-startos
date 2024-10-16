@@ -2,34 +2,17 @@ import { compat, types as T } from "../deps.ts";
 
 export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
   "peer-tor-address": {
-    name: "Peer Tor Address",
-    description: "The Tor address of the peer interface",
+    name: "Peer Address (Tor)",
+    description:
+      "The Tor address of the peer interface for incoming P2P connections",
     type: "pointer",
     subtype: "package",
     "package-id": "monerod",
     target: "tor-address",
     interface: "peer",
   },
-  "rpc-tor-address": {
-    name: "RPC Tor Address",
-    description: "The Tor address of the RPC interface",
-    type: "pointer",
-    subtype: "package",
-    "package-id": "monerod",
-    target: "tor-address",
-    interface: "rpc",
-  },
-  "rpc-lan-address": {
-    name: "RPC LAN Address",
-    description: "The LAN address of the RPC interface",
-    type: "pointer",
-    subtype: "package",
-    "package-id": "monerod",
-    target: "lan-address",
-    interface: "rpc",
-  },
   "rpc-tor-address-restricted": {
-    name: "RPC Tor Address (Restricted Calls)",
+    name: "RPC Interface Address (Restricted Calls) (Tor)",
     description:
       "The Tor address of the RPC interface that allows only a restricted set of API calls",
     type: "pointer",
@@ -39,7 +22,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     interface: "rpc-restricted",
   },
   "rpc-lan-address-restricted": {
-    name: "RPC LAN Address (Restricted Calls)",
+    name: "RPC Interface Address (Restricted Calls) (LAN)",
     description:
       "The LAN address of the RPC interface that allows only a restricted set of API calls",
     type: "pointer",
@@ -48,8 +31,26 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     target: "lan-address",
     interface: "rpc-restricted",
   },
+  "rpc-tor-address-wallet": {
+    name: "Wallet RPC Interface Address (Tor)",
+    description: "The Tor address of the wallet RPC interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "tor-address",
+    interface: "rpc-wallet",
+  },
+  "rpc-lan-address-wallet": {
+    name: "Wallet RPC Interface Address (LAN)",
+    description: "The LAN address of the wallet RPC interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "lan-address",
+    interface: "rpc-wallet",
+  },
   "zmq-tor-address": {
-    name: "ZMQ Tor Address",
+    name: "ZMQ Interface Address (Tor)",
     description: "The Tor address of the ZMQ interface",
     type: "pointer",
     subtype: "package",
@@ -58,13 +59,22 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
     interface: "zmq",
   },
   "zmq-lan-address": {
-    name: "ZMQ LAN Address",
+    name: "ZMQ Interface Address (LAN)",
     description: "The LAN address of the ZMQ interface",
     type: "pointer",
     subtype: "package",
     "package-id": "monerod",
     target: "lan-address",
     interface: "zmq",
+  },
+  "zmq-pubsub-tor-address": {
+    name: "ZMQ Pub-Sub Interface Address (Tor)",
+    description: "The Tor address of the ZMQ publish-subscribe interface",
+    type: "pointer",
+    subtype: "package",
+    "package-id": "monerod",
+    target: "tor-address",
+    interface: "zmq-pubsub",
   },
   txpool: {
     type: "object",
@@ -117,9 +127,9 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
   rpc: {
     type: "object",
     name: "RPC Settings",
-    description: "Remote Procedure Call configuration options",
+    description: "Remote Procedure Call interface configuration options",
     spec: {
-      credentials: {
+      "rpc-credentials": {
         type: "union",
         name: "RPC Credentials",
         description: "Username and password for accessing the Monero RPC",
@@ -127,7 +137,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           id: "enabled",
           name: "RPC Credentials",
           description:
-            'Enable or disable a username and password to access the Monero RPC <br/><b>Default:</b> Disabled (all API access is restricted to a "safe" set of RPC calls)',
+            "Enable or disable a username and password to access the Monero RPC <br/><b>Default:</b> Disabled",
           "variant-names": {
             disabled: "Disabled",
             enabled: "Enabled",
@@ -171,6 +181,59 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
           },
         },
       },
+      "wallet-rpc-credentials": {
+        type: "union",
+        name: "Wallet RPC Credentials",
+        description:
+          "Username and password for accessing the Monero wallet RPC",
+        tag: {
+          id: "enabled",
+          name: "Wallet RPC Credentials",
+          description:
+            "Enable or disable a username and password to access the Monero wallet RPC, which is an RPC for issuing commands that reference wallets hosted on the server.  Wallets on client computers should use the standard RPC interface.<br/><b>Default:</b> Disabled",
+          "variant-names": {
+            disabled: "Disabled",
+            enabled: "Enabled",
+          },
+        },
+        default: "disabled",
+        variants: {
+          disabled: {},
+          enabled: {
+            username: {
+              type: "string",
+              nullable: false,
+              name: "Wallet RPC Username",
+              description:
+                "The username for connecting to Monero's wallet RPC interface",
+              warning:
+                "Changing this value will necessitate a restart of all services that depend on Monero's wallet RPC.",
+              default: "monero_wallet",
+              pattern: "^[a-zA-Z0-9_]+$",
+              "pattern-description":
+                "Must be alphanumeric and/or can contain an underscore",
+            },
+            password: {
+              type: "string",
+              nullable: false,
+              name: "Wallet RPC Password",
+              description:
+                "The password for connecting to Monero's wallet RPC interface",
+              warning:
+                "Changing this value will necessitate a restart of all services that depend on Monero's wallet RPC.",
+              default: {
+                charset: "a-z,A-Z,0-9,_",
+                len: 22,
+              },
+              pattern: "^[a-zA-Z0-9_]+$",
+              "pattern-description":
+                "Must be alphanumeric (can contain underscore)",
+              copyable: true,
+              masked: true,
+            },
+          },
+        },
+      },
     },
   },
   advanced: {
@@ -188,10 +251,10 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             nullable: true,
             name: "Max Peers Incoming",
             description:
-              "Maximum number of simultaneous peers connecting inbound to the Monero daemon <br/><b>Default:</b> 16 (Monero's default is unlimited but we prefer a ceiling to limit network surveillance from spy nodes and to discourage excessive bandwidth consumption)",
+              "Maximum number of simultaneous peers connecting inbound to the Monero daemon <br/><b>Default:</b> 24<br/>Monero's default is unlimited but we prefer a ceiling to limit network surveillance from spy nodes and to discourage excessive bandwidth consumption.  For the incoming limit, 2x the outgoing limit is commonly recommended, so our chosen default is 2x monero's default outgoing limit of 12.",
             range: "[0,9999]",
             integral: true,
-            default: 16,
+            default: 24,
           },
           maxnumoutpeers: {
             type: "number",
@@ -207,14 +270,14 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             type: "boolean",
             name: "Peer Gossip",
             description:
-              "Disabling peer gossip will tell connected peers not to gossip our node info to their peers. This will make your node more private by stopping other nodes from learning how to make an inbound connection to it. Leaving this enabled will result in more connections for your node. <br/><b>Default:</b> Enabled",
+              "Disabling peer gossip will tell connected peers not to gossip your node info to their peers. This will make your node more private by stopping other nodes from learning how to make an inbound connection to it. Leaving this enabled will result in more connections for your node. <br/><b>Default:</b> Enabled",
             default: true,
           },
           publicrpc: {
             type: "boolean",
-            name: "Advertise RPC Node",
+            name: "Advertise RPC Remote Node",
             description:
-              'Advertise to end-user wallets crawling the p2p network, and to other p2p network peers, that anyone can use this node\'s RPC interface (using a restricted, "safe" set of RPC calls) as a "Remote Node" for connecting their wallets.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled',
+              'Advertise on the P2P network that your restricted RPC port offers "Remote Node" services.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled',
             default: false,
           },
           /*
@@ -300,7 +363,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             nullable: false,
             name: "Max Tor RPC Connections",
             description:
-              "Maximum number of simultaneous connections allowed to be made to Monero's .onion RPC <b>Default:</b> 16",
+              "Maximum number of simultaneous connections allowed to be made to Monero's .onion RPC <br/><b>Default:</b> 16",
             range: "[1,256]",
             integral: true,
             units: "Connections",
@@ -356,7 +419,7 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
             type: "boolean",
             name: "BTCPayServer",
             description:
-              "Send notifications of new Monero blocks to the BTCPayServer backend. <br/><b>Default:</b> Disabled",
+              "Send notifications of new Monero blocks to the BTCPayServer back-end. <br/><b>Default:</b> Disabled",
             default: false,
           },
         },
