@@ -158,7 +158,7 @@ echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Wallet RPC URL (Tor):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"https://$RPC_WALLET_USER_PASS$RPC_LAN_ADDRESS_WALLET:$MONERO_RPC_PORT_WALLET_RPC"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_WALLET_USER_PASS$RPC_TOR_ADDRESS_WALLET:$MONERO_RPC_PORT_WALLET_RPC"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Address for connecting to the Monero wallet RPC interface via Tor" >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml

@@ -4,6 +4,6 @@ To begin using Monero, simply hit "Configure," making changes if you wish, or us
 
 ## Connecting a Wallet
 
-You can connect a wallet by using the "RPC URL" string from the "Properties" section of the Monero service page. User/pass authentication is optional and configurable in Config > RPC Settings > RPC Credentials. Check out the [guides](https://github.com/kn0wmad/monerod-wrapper/tree/master/docs/guides.md) for tested wallets and detailed walk-throughs.
+You can connect a wallet by using the "Restricted RPC URL" string from the "Properties" section of the Monero service page. User/pass authentication is optional and configurable in Config > RPC Settings > RPC Credentials. Check out the [guides](https://github.com/kn0wmad/monerod-wrapper/tree/master/docs/guides.md) for tested wallets and detailed walk-throughs.
 
 Welcome to Monero!
