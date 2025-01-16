@@ -12,7 +12,7 @@
 
 1. Download for your OS - https://www.getmonero.org/downloads/
 1. Go to Setting -> Node -> Remote Node, then click "+ Add Remote Node"
-1. Copy your RPC connection string (LAN or Tor) from your server's Monero page -> Interfaces and paste it in as a new line (or as the only line, removing others, to only use your private node), then click OK
+1. Copy your "Restricted RPC URL" connection string (LAN or Tor) from your server's Monero page -> Interfaces and paste it in as a new line (or as the only line, removing others, to only use your private node), then click OK
    - Be sure that the format is `yourUniqueString.local` (LAN) or `yourUniqueString.onion` (Tor)
 1. Enter the port `18081`, "Mark as Trusted Daemon," then click OK
    - If you are using Tor, select the "Interface" tab, select "Socks5 Proxy," and then point to your system daemon at `127.0.0.1` (Host), `9050` (Port)
