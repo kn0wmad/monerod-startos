@@ -12,7 +12,7 @@ export const migration: T.ExpectedExports.migration = async (
   });
   return compat.migrations.fromMapping(
     {
-      //
+      // Updating to v0.18.3.4 and above
       "0.18.3.4": {
         up: compat.migrations.updateConfig(
           (config) => {
@@ -24,6 +24,18 @@ export const migration: T.ExpectedExports.migration = async (
         down: () => {
           throw new Error("Downgrade not possible");
         },
+      },
+    },
+    {
+      // Updating to v0.18.4.0 and above
+      "0.18.4.0": {
+        up: compat.migrations.updateConfig(
+          (config) => {
+            return migration_up_to_0_18_4_0(config);
+          },
+          false,
+          { version: "0.18.4.0", type: "up" }
+        ),
       },
     },
     "0.18.4.0"
