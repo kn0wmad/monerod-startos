@@ -273,11 +273,18 @@ export const getConfig: T.ExpectedExports.getConfig = compat.getConfig({
               "Disabling peer gossip will tell connected peers not to gossip your node info to their peers. This will make your node more private by stopping other nodes from learning how to make an inbound connection to it. Leaving this enabled will result in more connections for your node. <br/><b>Default:</b> Enabled",
             default: true,
           },
+          spynodebanlist: {
+            type: "boolean",
+            name: "Spy Nodes Ban List",
+            description:
+              'Use a third-party provided list to implement the banning of spy nodes.<br />"These nodes were found displaying behaviour that the normal Monero nodes would not do." For More information, see:<br/>https://github.com/Boog900/monero-ban-list<br/><b>Default:</b> Enabled',
+            default: true,
+          },
           publicrpc: {
             type: "boolean",
             name: "Advertise RPC Remote Node",
             description:
-              'Advertise on the P2P network that your restricted RPC port offers "Remote Node" services.  Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled',
+              'Advertise on the P2P network that your restricted RPC port offers "Remote Node" services.<br/>Caution: this could significantly increase CPU, network, and RAM use, as well as disk (read) IO of the Monero daemon. <br/><b>Default:</b> Disabled',
             default: false,
           },
           /*

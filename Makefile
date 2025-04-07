@@ -14,7 +14,9 @@ clean:
 	rm -f scripts/*.js
 
 verify: $(PKG_ID).s9pk
-	start-sdk verify s9pk $(PKG_ID).s9pk
+	@start-sdk verify s9pk $(PKG_ID).s9pk
+	@echo " Done!"
+	@echo "   Filesize: $(shell du -h $(PKG_ID).s9pk) is ready"
 
 install: $(PKG_ID).s9pk
 	start-cli package install $(PKG_ID).s9pk
@@ -31,4 +33,4 @@ docker-images/x86_64.tar: Dockerfile docker_entrypoint.sh scripts/*.sh assets/*
 	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) --platform=linux/amd64 --build-arg ARCH=x86_64 -o type=docker,dest=docker-images/x86_64.tar .
 
 scripts/embassy.js: $(TS_FILES)
-	deno bundle scripts/embassy.ts scripts/embassy.js
+	deno run --allow-read --allow-write --allow-env --allow-net scripts/bundle.ts

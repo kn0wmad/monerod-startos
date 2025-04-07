@@ -70,6 +70,7 @@ ADV_TOR_MAXONIONCONNS=$(yq e '.advanced.tor.maxonionconns' ${BITMONERO_DIR}/star
 ADV_P2P_GOSSIP=$(yq e '.advanced.p2p.letneighborsgossip' ${BITMONERO_DIR}/start9/config.yaml)
 ADV_P2P_PUBLICRPC=$(yq e '.advanced.p2p.publicrpc' ${BITMONERO_DIR}/start9/config.yaml)
 ADV_P2P_STRICTNODES=$(yq e '.advanced.p2p.strictnodes' ${BITMONERO_DIR}/start9/config.yaml)
+ADV_P2P_SPY_NODE_BAN_LIST=$(yq e '.advanced.p2p.spynodebanlist' ${BITMONERO_DIR}/start9/config.yaml)
 #ADV_P2P_UPNP=$(yq e '.advanced.p2p.upnp' ${BITMONERO_DIR}/start9/config.yaml)
 ADV_PRUNING_MODE=$(yq e '.advanced.pruning' ${BITMONERO_DIR}/start9/config.yaml)
 #ADV_PRUNING_MODE=$(yq e '.advanced.pruning.mode' ${BITMONERO_DIR}/start9/config.yaml)
@@ -316,6 +317,12 @@ while [[ $i -le $(expr $num_custom_peers - 1) ]] ; do
  fi
  i=$(expr $i + 1)
 done
+
+#P2P Spy nodes banlist
+echo -e "\n# SPY NODES BAN LIST" >> $config_file
+if [ "$ADV_P2P_SPY_NODE_BAN_LIST" = "true" ] ; then
+  echo -e "ban-list=/home/monero/ban_list.txt\n" >> $config_file
+fi
 
 #If the user has enabled BTCPayServer integration, send block notifications there
 if [ "$INT_ANN_BLOCKS_TO_BTCPAY" = "true" ] ; then
