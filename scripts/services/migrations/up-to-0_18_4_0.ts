@@ -16,10 +16,8 @@ export const migration_up_to_0_18_4_0 = (config: T.Config): T.Config => {
       })
       .test(config)
   ) {
-    config = {
-      ...config,
-      .advanced.p2p.spynodebanlist = true,
-    };
+    config.advanced.p2p.spynodebanlist = true
+    return config
   }
 
   return config;
