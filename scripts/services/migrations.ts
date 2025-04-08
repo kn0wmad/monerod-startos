@@ -28,7 +28,6 @@ export const migration: T.ExpectedExports.migration = async (
         },
       },
     },
-    {
       // Updating to v0.18.4.0 and above
       "0.18.4.0": {
         up: compat.migrations.updateConfig(
