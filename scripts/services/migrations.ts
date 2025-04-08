@@ -27,7 +27,6 @@ export const migration: T.ExpectedExports.migration = async (
           throw new Error("Downgrade not possible");
         },
       },
-    },
       // Updating to v0.18.4.0 and above
       "0.18.4.0": {
         up: compat.migrations.updateConfig(
@@ -42,9 +41,10 @@ export const migration: T.ExpectedExports.migration = async (
             return migration_down_from_0_18_4_0(config);
           },
           false,
-          { version: "0.18.4.0", type: "up" }
+          { version: "0.18.4.0", type: "down" }
         ),
       },
+    },
     "0.18.4.0"
   )(effects, version, ...args);
 };
