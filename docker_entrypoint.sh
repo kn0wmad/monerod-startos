@@ -319,8 +319,8 @@ while [[ $i -le $(expr $num_custom_peers - 1) ]] ; do
 done
 
 #P2P Spy nodes banlist
-echo -e "\n# SPY NODES BAN LIST" >> $config_file
 if [ "$ADV_P2P_SPY_NODE_BAN_LIST" = "true" ] ; then
+  echo -e "\n# SPY NODES BAN LIST" >> $config_file
   echo -e "ban-list=/home/monero/ban_list.txt\n" >> $config_file
 fi
 
