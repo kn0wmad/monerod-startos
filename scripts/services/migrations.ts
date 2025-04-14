@@ -1,5 +1,7 @@
 import { types as T, compat } from "../deps.ts";
 import { migration_up_to_0_18_3_4 } from "./migrations/up-to-0_18_3_4.ts";
+import { migration_up_to_0_18_4_0 } from "./migrations/up-to-0_18_4_0.ts";
+import { migration_down_from_0_18_4_0 } from "./migrations/down-from-0_18_4_0.ts";
 
 export const migration: T.ExpectedExports.migration = async (
   effects,
@@ -12,7 +14,7 @@ export const migration: T.ExpectedExports.migration = async (
   });
   return compat.migrations.fromMapping(
     {
-      //
+      // Updating to v0.18.3.4 and above
       "0.18.3.4": {
         up: compat.migrations.updateConfig(
           (config) => {
@@ -25,7 +27,24 @@ export const migration: T.ExpectedExports.migration = async (
           throw new Error("Downgrade not possible");
         },
       },
+      // Updating to v0.18.4.0 and above
+      "0.18.4.0": {
+        up: compat.migrations.updateConfig(
+          (config) => {
+            return migration_up_to_0_18_4_0(config);
+          },
+          false,
+          { version: "0.18.4.0", type: "up" }
+        ),
+        down: compat.migrations.updateConfig(
+          (config) => {
+            return migration_down_from_0_18_4_0(config);
+          },
+          false,
+          { version: "0.18.4.0", type: "down" }
+        ),
+      },
     },
-    "0.18.3.4"
+    "0.18.4.0"
   )(effects, version, ...args);
 };
