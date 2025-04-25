@@ -143,8 +143,5 @@ Nostr: npub1yrtcvcqx0ev27ykxx4gh9s27wy3qa8zj6swal4g43k9wpwup4m9stheuas
 
 ### Bitcoin
 
-Paynym:
-`+quietwind179`
-
 BOLT12 Offer (Lightning Network):
 `lno1pg25getkypjx7mnpw35k7m3qgp4kuvrhd4skg93pq04aj923rc9pyr7z5tsf8hkp05lq7rcsdu2try95lh9umwhzde5qg`
