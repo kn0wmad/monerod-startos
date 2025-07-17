@@ -1,36 +1,83 @@
-PKG_ID := $(shell yq e ".id" manifest.yaml)
-PKG_VERSION := $(shell yq e ".version" manifest.yaml)
-TS_FILES := $(shell find ./ -name \*.ts)
+PACKAGE_ID := $(shell awk -F"'" '/id:/ {print $$2}' startos/manifest.ts)
+INGREDIENTS := $(shell start-cli s9pk list-ingredients 2>/dev/null)
 
-# delete the target of a rule if it has changed and its recipe exits with a nonzero exit status
+CMD_ARCH_GOAL := $(filter aarch64 x86_64, $(MAKECMDGOALS))
+ifeq ($(CMD_ARCH_GOAL),)
+  BUILD := universal
+  S9PK := $(PACKAGE_ID).s9pk
+else
+  BUILD := $(firstword $(CMD_ARCH_GOAL))
+  S9PK := $(PACKAGE_ID)_$(BUILD).s9pk
+endif
+
+.PHONY: all aarch64 x86_64 clean install check-deps check-init package ingredients
 .DELETE_ON_ERROR:
 
-all: verify
+define SUMMARY
+	@manifest=$$(start-cli s9pk inspect $(1) manifest); \
+	size=$$(du -h $(1) | awk '{print $$1}'); \
+	title=$$(echo $$manifest | jq -r .title); \
+	version=$$(echo $$manifest | jq -r .version); \
+	arches=$$(echo $$manifest | jq -r '.hardwareRequirements.arch | join(", ")'); \
+	sdkv=$$(echo $$manifest | jq -r .sdkVersion); \
+	gitHash=$$(echo "$$manifest" | jq -r .gitHash | sed -E 's/(.*-modified)$$/\x1b[0;31m\1\x1b[0m/'); \
+	echo ""; \
+	echo "\033[1;32m✅ Build Complete!\033[0m"; \
+	echo ""; \
+	echo "\033[1;37m📦 $$title\033[0m   \033[36mv$$version\033[0m"; \
+	echo "───────────────────────────────"; \
+	printf " \033[1;36mFilename:\033[0m   %s\n" "$(1)"; \
+	printf " \033[1;36mSize:\033[0m       %s\n" "$$size"; \
+	printf " \033[1;36mArch:\033[0m       %s\n" "$$arches"; \
+	printf " \033[1;36mSDK:\033[0m        %s\n" "$$sdkv"; \
+	printf " \033[1;36mGit:\033[0m        %s\n" "$$gitHash"; \
+	echo ""
+endef
+
+all: $(PACKAGE_ID).s9pk
+	$(call SUMMARY,$(S9PK))
+
+$(BUILD): $(PACKAGE_ID)_$(BUILD).s9pk
+	$(call SUMMARY,$(S9PK))
+
+$(S9PK): $(INGREDIENTS) .git/HEAD .git/index
+	@$(MAKE) --no-print-directory ingredients
+	@echo "   Packing '$(S9PK)'..."
+	BUILD=$(BUILD) start-cli s9pk pack -o $(S9PK)
+
+ingredients: $(INGREDIENTS)
+	@echo "   Re-evaluating ingredients..."
+
+install: package | check-deps check-init
+	@HOST=$$(awk -F'/' '/^host:/ {print $$3}' ~/.startos/config.yaml); \
+	if [ -z "$$HOST" ]; then \
+		echo "Error: You must define \"host: http://server-name.local\" in ~/.startos/config.yaml"; \
+		exit 1; \
+	fi; \
+	echo "\n🚀 Installing to $$HOST ..."; \
+	start-cli package install -s $(S9PK)
+
+check-deps:
+	@command -v start-cli >/dev/null || \
+		(echo "Error: start-cli not found. Please see https://docs.start9.com/latest/developer-guide/sdk/installing-the-sdk" && exit 1)
+	@command -v npm >/dev/null || \
+		(echo "Error: npm not found. Please install Node.js and npm." && exit 1)
+
+check-init:
+	@if [ ! -f ~/.startos/developer.key.pem ]; then \
+		echo "Initializing StartOS developer environment..."; \
+		start-cli init; \
+	fi
+
+javascript/index.js: $(shell find startos -type f) tsconfig.json node_modules
+	npm run build
+
+node_modules: package-lock.json
+	npm ci
+
+package-lock.json: package.json
+	npm i
 
 clean:
-	rm -rf docker-images
-	rm -f $(PKG_ID).s9pk
-	rm -f image.tar
-	rm -f scripts/*.js
-
-verify: $(PKG_ID).s9pk
-	@start-sdk verify s9pk $(PKG_ID).s9pk
-	@echo " Done!"
-	@echo "   Filesize: $(shell du -h $(PKG_ID).s9pk) is ready"
-
-install: $(PKG_ID).s9pk
-	start-cli package install $(PKG_ID).s9pk
-
-$(PKG_ID).s9pk: manifest.yaml LICENSE docs/instructions.md icon.png scripts/embassy.js docker-images/aarch64.tar docker-images/x86_64.tar
-	start-sdk pack
-
-docker-images/aarch64.tar: Dockerfile docker_entrypoint.sh scripts/*.sh assets/*
-	mkdir -p docker-images
-	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) --platform=linux/arm64 --build-arg ARCH=aarch64 -o type=docker,dest=docker-images/aarch64.tar .
-
-docker-images/x86_64.tar: Dockerfile docker_entrypoint.sh scripts/*.sh assets/*
-	mkdir -p docker-images
-	docker buildx build --tag start9/$(PKG_ID)/main:$(PKG_VERSION) --platform=linux/amd64 --build-arg ARCH=x86_64 -o type=docker,dest=docker-images/x86_64.tar .
-
-scripts/embassy.js: $(TS_FILES)
-	deno run --allow-read --allow-write --allow-env --allow-net scripts/bundle.ts
+	@echo "Cleaning up build artifacts..."
+	@rm -rf $(PACKAGE_ID).s9pk $(PACKAGE_ID)_x86_64.s9pk $(PACKAGE_ID)_aarch64.s9pk javascript node_modules
