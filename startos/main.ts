@@ -1,7 +1,5 @@
 import { sdk } from './sdk'
-import { ports } from './utils'
-
-const { peer, rpcRestricted } = ports
+import { MONERO_RPC_PORT } from './utils'
 
 export const main = sdk.setupMain(async ({ effects, started }) => {
   /**
@@ -34,7 +32,7 @@ export const main = sdk.setupMain(async ({ effects, started }) => {
     ready: {
       display: 'Web Interface',
       fn: () =>
-        sdk.healthCheck.checkPortListening(effects, rpcRestricted, {
+        sdk.healthCheck.checkPortListening(effects, MONERO_RPC_PORT, {
           successMessage: 'The web interface is ready',
           errorMessage: 'The web interface is not ready',
         }),
