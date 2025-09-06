@@ -44,7 +44,24 @@ export const migration: T.ExpectedExports.migration = async (
           { version: "0.18.4.0", type: "down" }
         ),
       },
+      // Updating to v0.18.4.2 and above
+      "0.18.4.2": {
+        up: compat.migrations.updateConfig(
+          (config) => {
+            return migration_up_to_0_18_4_2(config);
+          },
+          false,
+          { version: "0.18.4.2", type: "up" }
+        ),
+        down: compat.migrations.updateConfig(
+          (config) => {
+            return migration_down_from_0_18_4_2(config);
+          },
+          false,
+          { version: "0.18.4.2", type: "down" }
+        ),
+      },
     },
-    "0.18.4.0"
+    "0.18.4.2"
   )(effects, version, ...args);
 };

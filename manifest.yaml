@@ -1,12 +1,9 @@
 id: monerod
 title: "Monero"
-version: 0.18.4.0
+version: 0.18.4.2
 release-notes: |
   * Update to latest upstream [sethforprivacy Monero docker image](https://github.com/sethforprivacy/simple-monerod-docker)
-  * Includes Monero 0.18.4.0 ([Release Notes](https://github.com/monero-project/monero/releases/tag/v0.18.4.0))
-  * Includes Boog900's [Spy Nodes Ban List](https://github.com/Boog900/monero-ban-list) enabled by default in config
-  * Wrapper package maintenance around Deno v2
-  * Add RetoSwap guide to docs
+  * Includes Monero 0.18.4.2 ([Release Notes](https://github.com/monero-project/monero/releases/tag/v0.18.4.2))
 license: BSD-3
 wrapper-repo: https://github.com/kn0wmad/monerod-startos
 upstream-repo: https://github.com/monero-project/monero
