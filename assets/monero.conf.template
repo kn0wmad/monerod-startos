@@ -32,7 +32,7 @@ limit-rate-down=RATELIMIT_KBPSDOWN      # Default 8192 kB/s; allow for faster in
 #rpc-ssl-private-key=MONERO_RPC_PRIVKEY
 
 # Unrestricted RPC
-rpc-bind-ip=MONEROD_LOCAL_HOST          # Unrestricted RPC IP and port. 0.0.0.0=Bind to all interfaces [So we can connect a wallet on the LAN]
+rpc-bind-ip=MONERO_RPC_BIND_IP          # Unrestricted RPC IP and port. 0.0.0.0=Bind to all interfaces [So we can connect a wallet on the LAN]
 rpc-bind-port=MONERO_RPC_PORT            # Bind on default port
 confirm-external-bind=1        # Confirm we want the unrestricted RPC (set by rpc-bind-ip) listening on all network interfaces
                                # confirm-external-bind=1 and public-node=1 are required for node to be advertized in p2p handshake
