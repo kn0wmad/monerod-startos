@@ -125,7 +125,7 @@ echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Unrestricted RPC URL (Internal):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"https://$RPC_USER_PASS$MONERO_RPC_BIND_IP:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_USER_PASS$MONERO_LAN_HOSTNAME:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Connection string for accessing the unrestricted Monero RPC from another service's container." >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
