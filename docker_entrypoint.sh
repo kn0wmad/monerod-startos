@@ -17,8 +17,9 @@ wallet_rpc_conf="$BITMONERO_DIR/monero-wallet-rpc.conf"
 mv $wallet_rpc_conf_template $wallet_rpc_conf
 
 MONERO_LAN_HOSTNAME="monerod.embassy"
-MONEROD_LOCAL_HOST="127.0.0.1"
+LOCAL_HOST="127.0.0.1"
 MONEROD_BIND_IP="0.0.0.0"
+MONERO_RPC_BIND_IP="0.0.0.0"
 TOR_SOCKS_PROXY_HOST=$(ip -4 route list match 0/0 | awk '{print $3}')
 TOR_PORT=9050
 STARTOS_REVPROXY_PORT=443
@@ -124,7 +125,7 @@ echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    qr: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '  Unrestricted RPC URL (Internal):' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    type: string' >> ${BITMONERO_DIR}/start9/stats.yaml
-echo '    value: "'"https://$RPC_USER_PASS$MONEROD_LOCAL_HOST:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
+echo '    value: "'"https://$RPC_USER_PASS$MONERO_LAN_HOSTNAME:$MONERO_RPC_PORT"'"' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo "    description: Connection string for accessing the unrestricted Monero RPC from another service's container." >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    copyable: true' >> ${BITMONERO_DIR}/start9/stats.yaml
 echo '    masked: '$MASKED >> ${BITMONERO_DIR}/start9/stats.yaml
@@ -260,7 +261,7 @@ if [ "$ADV_P2P_GOSSIP" = "false" ] ; then
  echo "igd=disabled" >> $config_file
 elif [ "$ADV_TOR_TORONLY" = "true" ] ; then
   echo "# Advertise our onion as the reachable host for incoming P2P connections" >> $config_file
-  echo "anonymous-inbound=PEER_TOR_ADDRESS:MONERO_P2P_PORT,MONEROD_LOCAL_HOST:MONERO_P2P_PORT_LOCAL_BIND,ADV_TOR_MAXONIONCONNS" >> $config_file
+  echo "anonymous-inbound=PEER_TOR_ADDRESS:MONERO_P2P_PORT,LOCAL_HOST:MONERO_P2P_PORT_LOCAL_BIND,ADV_TOR_MAXONIONCONNS" >> $config_file
   echo "# Disable UPnP port mapping" >> $config_file
   echo "igd=disabled" >> $config_file
 fi
@@ -274,6 +275,8 @@ if [ "$ADV_P2P_PUBLICRPC" = "true" ] ; then
 fi
 
 sed -i "s|MONEROD_BIND_IP|$MONEROD_BIND_IP|g" $config_file
+sed -i "s|MONERO_RPC_BIND_IP|$MONERO_RPC_BIND_IP|g" $config_file
+sed -i "s|LOCAL_HOST|$LOCAL_HOST|g" $config_file
 sed -i "s|PEER_TOR_ADDRESS|$PEER_TOR_ADDRESS|g" $config_file
 sed -i "s|TOR_PORT|$TOR_PORT|g" $config_file
 sed -i "s|ADV_TOR_MAXSOCKSCONNS|$ADV_TOR_MAXSOCKSCONNS|g" $config_file
@@ -285,7 +288,6 @@ sed -i "s|MONERO_RPC_PORT_RESTRICTED|$MONERO_RPC_PORT_RESTRICTED|g" $config_file
 sed -i "s|MONERO_RPC_PORT|$MONERO_RPC_PORT|g" $config_file
 sed -i "s|MONERO_RPC_CERT_FILE|$MONERO_RPC_CERT_FILE|g" $config_file
 sed -i "s|MONERO_RPC_PRIVKEY|$MONERO_RPC_PRIVKEY|g" $config_file
-sed -i "s|MONEROD_LOCAL_HOST|$MONEROD_LOCAL_HOST|g" $config_file
 sed -i "s|ADV_TOR_MAXONIONCONNS|$ADV_TOR_MAXONIONCONNS|g" $config_file
 sed -i "s|TOR_SOCKS_PROXY_HOST|$TOR_SOCKS_PROXY_HOST|g" $config_file
 
