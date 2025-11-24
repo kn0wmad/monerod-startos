@@ -4,6 +4,7 @@ version: 0.18.4.4
 release-notes: |
   * Update to latest upstream [sethforprivacy Monero docker image](https://github.com/sethforprivacy/simple-monerod-docker)
   * Includes Monero 0.18.4.4 ([Release Notes](https://www.getmonero.org/2025/11/14/monero-0.18.4.4-released.html))
+  * Exposed Unrestricted RPC to other StartOS service containers
 license: BSD-3
 wrapper-repo: https://github.com/kn0wmad/monerod-startos
 upstream-repo: https://github.com/monero-project/monero
