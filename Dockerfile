@@ -1,5 +1,5 @@
-FROM ghcr.io/sethforprivacy/simple-monero-wallet-rpc:v0.18.4.4 AS monero-wallet-rpc
-FROM ghcr.io/sethforprivacy/simple-monerod:v0.18.4.4
+FROM ghcr.io/sethforprivacy/simple-monero-wallet-rpc:v0.18.4.5 AS monero-wallet-rpc
+FROM ghcr.io/sethforprivacy/simple-monerod:v0.18.4.5
 COPY --from=monero-wallet-rpc "/usr/local/bin/monero-wallet-rpc" /usr/local/bin/
 
 USER root
